@@ -55,18 +55,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BankInside\Clients.cs" />
-    <Compile Include="UI\AccountsListWindow.xaml.cs">
-      <DependentUpon>AccountsListWindow.xaml</DependentUpon>
+    <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
+    <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
+    <Compile Include="BankInside\GoodBank-TransactionsLog.cs" />
+    <Compile Include="Interfaces_Data\IAccountDTO.cs" />
+    <Compile Include="Account Classes\Account.cs" />
+    <Compile Include="Account Classes\AccountEnums.cs" />
+    <Compile Include="Account Classes\CreditAccount.cs" />
+    <Compile Include="Account Classes\CurrentAccount.cs" />
+    <Compile Include="Account Classes\DepositAccount.cs" />
+    <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
+    <Compile Include="Interfaces_Actions\ITransactions.cs" />
+    <Compile Include="BankInside\GoodBank.cs" />
+    <Compile Include="Binding_UI_CondeBehind\ActionsUI.cs" />
+    <Compile Include="Client Classes\ClientEnums.cs" />
+    <Compile Include="Interfaces_Data\IClientDTO.cs" />
+    <Compile Include="Client Classes\ORGclient.cs" />
+    <Compile Include="Client Classes\SIMclient.cs" />
+    <Compile Include="Client Classes\VIPclient.cs" />
+    <Compile Include="Interfaces_Actions\IClientsActions.cs" />
+    <Compile Include="Client Classes\Client.cs" />
+    <Compile Include="Interfaces_Data\IGoodBank.cs" />
+    <Compile Include="Interfaces_Data\IOrgClient.cs" />
+    <Compile Include="Interfaces_Data\ISimpleClient.cs" />
+    <Compile Include="Interfaces_Data\ITransactionDTO.cs" />
+    <Compile Include="Interfaces_Data\IVIPClient.cs" />
+    <Compile Include="Transaction Class\Transaction.cs" />
+    <Compile Include="UI_clients\ALLclientsWindow.xaml.cs">
+      <DependentUpon>ALLclientsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ClientsListWindow.xaml.cs">
-      <DependentUpon>ClientsListWindow.xaml</DependentUpon>
+    <Compile Include="UI_clients\ORGclientsWindow.xaml.cs">
+      <DependentUpon>ORGclientsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\OneAccountWindow.xaml.cs">
-      <DependentUpon>OneAccountWindow.xaml</DependentUpon>
+    <Compile Include="UI_clients\SIMclientsWindow.xaml.cs">
+      <DependentUpon>SIMclientsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\OneClientWindow.xaml.cs">
-      <DependentUpon>OneClientWindow.xaml</DependentUpon>
+    <Compile Include="UI_clients\VIPclientsWindow.xaml.cs">
+      <DependentUpon>VIPclientsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\AccountWindow.xaml.cs">
+      <DependentUpon>AccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
+      <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -80,19 +111,27 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI\AccountsListWindow.xaml">
+    <Page Include="UI_clients\ALLclientsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ClientsListWindow.xaml">
+    <Page Include="UI_clients\ORGclientsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\OneAccountWindow.xaml">
+    <Page Include="UI_clients\SIMclientsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\OneClientWindow.xaml">
+    <Page Include="UI_clients\VIPclientsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\AccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\ClientWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,6 +162,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Imitation\" />
+    <Folder Include="Search\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

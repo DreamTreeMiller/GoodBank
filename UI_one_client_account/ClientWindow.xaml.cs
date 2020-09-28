@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBank.UI
+namespace GoodBank.UI_one_client_account
 {
 	/// <summary>
-	/// Interaction logic for OneAccountWindow.xaml
+	/// Interaction logic for ClientWindow.xaml
 	/// </summary>
-	public partial class OneAccountWindow : Window
+	public partial class ClientWindow : Window
 	{
-		public OneAccountWindow()
+		public ClientWindow()
 		{
 			InitializeComponent();
 		}

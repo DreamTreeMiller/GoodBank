@@ -5,8 +5,194 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodBank"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Добрый банк" 
+		Height="600" Width="800"
+		MinHeight="400" MinWidth="650"
+		WindowStartupLocation="CenterScreen"
+		>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid x:Name="MainMenu"
+			  Grid.Row="0"
+			  >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Menu x:Name="DeptMenu" 
+				  Grid.Row="0" Grid.Column="0"
+				  VerticalAlignment="Stretch"
+				  HorizontalAlignment="Stretch"
+				  FontSize="14"
+				  FontWeight="Bold"
+				  Background="Aquamarine"
+				  Foreground="DarkSlateGray"
+				  >
+				<Menu.ItemsPanel>
+					<ItemsPanelTemplate>
+						<DockPanel HorizontalAlignment="Center"></DockPanel>
+					</ItemsPanelTemplate>
+				</Menu.ItemsPanel>
+				<MenuItem Header="Отделы">
+					<MenuItem x:Name="VipClientsDeptButton"		Header="ВИП"	Click="VipClientsDeptButton_Click"/>
+					<MenuItem x:Name="SimpleClientsDeptButton"	Header="Физики" Click="SimpleClientsDeptButton_Click"/>
+					<MenuItem x:Name="OrgClientsDeptButton"		Header="Юрики"	Click="OrgClientsDeptButton_Click" />
+				</MenuItem>
+			</Menu>
+			<Button x:Name="BankManagerButton"
+						Grid.Column="1"
+						Content="Управляющий"
+						Foreground="DarkBlue"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0" 
+					Click="BankManagerButton_Click"
+						>
+				<!-- Все эти пляски с бубном, чтобы установить другой цвет при наведении мыши на копку-->
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="PaleTurquoise"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Управление всеми клиентами и счетами
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<Button x:Name="SearchButton"
+						Grid.Row="0" Grid.Column="2"
+						Content="Поиск"
+						Foreground="DarkSlateGray"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0"
+						>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="Aquamarine"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Поиск клиентов и счетов
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<Button x:Name="TimeMachineButton"
+						Grid.Row="0" Grid.Column="3"
+						Content="Машина времени"
+						Foreground="DarkBlue"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0"
+						>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="PaleTurquoise"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Прокрутка времени вперёд, 
+						чтобы посмотреть изменения в счетах
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<Button x:Name="GenerateButton"
+						Grid.Row="0" Grid.Column="4"
+						Content="Генерировать"
+						Foreground="DarkSlateGray"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0"
+						>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="Aquamarine"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Создание случайных клиентов и счетов
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+		</Grid>
+		<Grid x:Name="TitleBackground"
+			  Grid.Row="1"
+			  Background="LightCyan"
+			  >
+			<TextBlock Text="ДОБРЫЙ БАНК"
+					   HorizontalAlignment="Center"
+					   VerticalAlignment="Center"
+					   Foreground="Maroon"
+					   FontSize="40"
+					   FontWeight="ExtraBold"
+					   FontFamily="Space" 
+					   />
+		</Grid>
+	</Grid>
 </Window>
