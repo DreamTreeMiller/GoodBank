@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.BankInside
+namespace GoodBank.Interfaces_Data
 {
-	public class ClientsMangement
+	public interface IGoodBank
 	{
 	}
 }
