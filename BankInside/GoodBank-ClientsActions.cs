@@ -14,7 +14,7 @@ namespace GoodBank.BankInside
 		{
 			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
 			foreach (var c in clients)
-				if (c is TClient) clientsList.Add(c as IClientDTO);
+				if (c is TClient) clientsList.Add(c);
 			return clientsList;
 		}
 	}
