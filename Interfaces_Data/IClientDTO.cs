@@ -8,17 +8,17 @@ namespace GoodBank.Interfaces_Data
 {
 	public interface IClientDTO
 	{
-		uint ID { get; }
-		string FullName { get; set; }
-		DateTime BirthDate { get; set; }
-		string PassportNum { get; set; }
-		string Tel { get; set; }
-		string Email { get; set; }
-		string Address { get; set; }
-		int NumberOfCurrAccs { get; set; }
-		int NumOfDeposits { get; set; }
-		int NumOfCredits { get; set; }
-		int NumOfClosedAccs { get; set; }
+		uint	 ID						 { get; }
+		string	 DisplayName			 { get; set; }
+		string	 IdNumber				 { get; set; }
+		DateTime CreationDate			 { get; set; }
+		string	 Telephone				 { get; set; }
+		string	 Email					 { get; set; }
+		string	 Address				 { get; set; }
+		int		 NumberOfCurrentAccounts { get; set; }
+		int		 NumberOfDeposits		 { get; set; }
+		int		 NumberOfCredits		 { get; set; }
+		int		 NumberOfClosedAccounts	 { get; set; }
 
 	}
 }

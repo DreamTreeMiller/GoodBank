@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.Interfaces_Data
 {
-	public interface IVIPClient
+	public interface IVIPClient : IClientDTO
 	{
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.Interfaces_Data
 {
-	public interface ISimpleClient
+	public interface ISimpleClient : IClientDTO
 	{
 	}
 }
