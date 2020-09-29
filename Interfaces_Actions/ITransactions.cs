@@ -1,4 +1,4 @@
-﻿using GoodBank.Interfaces_Data;
+﻿using GoodBank.DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +10,6 @@ namespace GoodBank.Interfaces_Actions
 {
 	public interface ITransactions
 	{
-		ObservableCollection<ITransactionDTO> GetTransactionsLog(IAccountDTO account);
+		ObservableCollection<TransactionDTO> GetTransactionsLog(AccountDTO account);
 	}
 }

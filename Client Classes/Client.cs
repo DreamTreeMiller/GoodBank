@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.ClientClasses
 {
-	public abstract class Client : IClientDTO
+	public abstract class Client
 	{
 
 		#region Статическая часть для генерации уникального ID
@@ -37,35 +37,12 @@ namespace GoodBank.ClientClasses
 
 		#endregion
 
+		#region Свойства одинаковые для всех клиентов
+
 		/// <summary>
 		/// ID клиента в базе
 		/// </summary>
-		public uint ID { get; }
-
-		#region Абстрактные свойства - реализация зависит от типа
-		// нужны для показа общего списка клиентов - людей и организаций
-		// они у каждого потомка будут реализованы по-разному
-		// будут брать соответствующую информацию из конкретного свойства
-
-		/// <summary>
-		/// Отображаемое имя - ФИО для человека, название для организации
-		/// </summary>
-		public abstract string		DisplayName  { get; set; }
-
-		/// <summary>
-		/// Официальный Id клиента - номер паспорта для человека, ИНН - для организации
-		/// </summary>
-		public abstract string		IdNumber	 { get; set;  }
-
-		/// <summary>
-		/// Либо день рождения, либо дата регистрации компании
-		/// </summary>
-		public abstract	DateTime	CreationDate { get; set; }
-
-		#endregion
-
-		#region Свойства одинаковые для всех клиентов
-		// Названия полей ниже говорят сами за себя
+		public uint		ID						{ get; }
 
 		public string	Telephone				{ get; set; }
 		public string	Email					{ get; set; }
@@ -78,7 +55,7 @@ namespace GoodBank.ClientClasses
 
 		#endregion
 
-		#region Конструктор нового счёта
+		#region Конструктор нового клиента
 		public Client(string tel, string email, string address)
 		{
 			ID						= NextID();

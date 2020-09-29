@@ -1,5 +1,5 @@
 ﻿using GoodBank.AccountClasses;
-using GoodBank.Interfaces_Data;
+using GoodBank.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.Transaction_Class
 {
-	public class Transaction : ITransactionDTO
+	public class Transaction : TransactionDTO
 	{
 		/// <summary>
 		/// Текущий ID счета

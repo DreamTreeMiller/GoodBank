@@ -9,16 +9,6 @@ namespace GoodBank.ClientClasses
 {
 	public class ORGclient : Client, IOrgClient
 	{
-		#region Перегрузка абстрактных свойств
-
-		public override string	 DisplayName	=> OrgName;
-
-		public override string	 IdNumber		=> TIN;
-
-		public override DateTime CreationDate	=> RegistrationDate;
-
-		#endregion
-
 		#region Название организации, ФИО директора, ИНН, дата регистрации
 
 		public string	OrgName				{ get; set; }

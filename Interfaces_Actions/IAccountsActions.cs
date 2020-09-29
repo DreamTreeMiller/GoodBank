@@ -1,6 +1,6 @@
 ﻿using GoodBank.AccountClasses;
 using GoodBank.Client_Classes;
-using GoodBank.Interfaces_Data;
+using GoodBank.DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +19,6 @@ namespace GoodBank.Interfaces_Actions
 		/// <returns>
 		/// Коллекцию счетов, принадлежащих клиентам данного типа
 		/// </returns>
-		ObservableCollection<IAccountDTO> GetAccountsList(ClientType clientType);
+		ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType);
 	}
 }

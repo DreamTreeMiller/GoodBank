@@ -9,19 +9,6 @@ namespace GoodBank.ClientClasses
 {
 	public class SIMclient : Client, ISimpleClient
 	{
-		#region Перегрузка абстрактных свойств
-
-		public override string	 DisplayName	=>
-			FirstName + " " +
-			MiddleName + (String.IsNullOrEmpty(MiddleName) ? "" : " ") +
-			LastName;
-
-		public override string	 IdNumber		=> PasspostNumber;
-
-		public override DateTime CreationDate	=> BirthDate;
-
-		#endregion
-
 		#region ФИО, № паспорта, дата рождения
 
 		public string	FirstName		{ get; set; }

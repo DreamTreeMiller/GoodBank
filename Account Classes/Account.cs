@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace GoodBank.AccountClasses
 {
-	public abstract class Account : IAccountDTO
+	public abstract class Account
 	{
+		#region Статическая часть для генерации уникального ID
+
 		/// <summary>
 		/// Текущий ID счета
 		/// </summary>
@@ -31,6 +33,10 @@ namespace GoodBank.AccountClasses
 			staticID++;
 			return staticID;
 		}
+
+		#endregion
+
+		#region Общие поля для всех счетов
 
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
@@ -76,5 +82,22 @@ namespace GoodBank.AccountClasses
 		/// Дата закрытия счета. Только для закрытых
 		/// </summary>
 		public DateTime			Closed			{ get; set; }
+
+		#endregion
+
+		#region Конструктор
+
+		public Account()
+		{
+			AccountType   = AccountType.Current;
+			ID			  = NextID();
+			AccountNumber = $"{ID:000000000000}";
+			Balance		  = 0;
+			Interest	  = 0;
+			AccountStatus = AccountStatus.Opened;
+			Opened		  = DateTime.Now;
+		}
+
+		#endregion
 	}
 }

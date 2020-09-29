@@ -58,7 +58,7 @@
     <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
     <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
     <Compile Include="BankInside\GoodBank-TransactionsLog.cs" />
-    <Compile Include="Interfaces_Data\IAccountDTO.cs" />
+    <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="Account Classes\Account.cs" />
     <Compile Include="Account Classes\AccountEnums.cs" />
     <Compile Include="Account Classes\CreditAccount.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="BankInside\GoodBank.cs" />
     <Compile Include="Binding_UI_CondeBehind\ActionsUI.cs" />
     <Compile Include="Client Classes\ClientEnums.cs" />
-    <Compile Include="Interfaces_Data\IClientDTO.cs" />
+    <Compile Include="DTO\ClientDTO.cs" />
     <Compile Include="Client Classes\ORGclient.cs" />
     <Compile Include="Client Classes\SIMclient.cs" />
     <Compile Include="Client Classes\VIPclient.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="Interfaces_Data\IGoodBank.cs" />
     <Compile Include="Interfaces_Data\IOrgClient.cs" />
     <Compile Include="Interfaces_Data\ISimpleClient.cs" />
-    <Compile Include="Interfaces_Data\ITransactionDTO.cs" />
+    <Compile Include="DTO\TransactionDTO.cs" />
     <Compile Include="Interfaces_Data\IVIPClient.cs" />
     <Compile Include="Transaction Class\Transaction.cs" />
     <Compile Include="UI_clients\ALLclientsWindow.xaml.cs">

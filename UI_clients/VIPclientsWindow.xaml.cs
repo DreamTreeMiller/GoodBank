@@ -1,4 +1,4 @@
-﻿using GoodBank.Interfaces_Data;
+﻿using GoodBank.DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,8 +21,8 @@ namespace GoodBank.UI_clients
 	/// </summary>
 	public partial class VIPclientsWindow : Window
 	{
-		private ObservableCollection<IClientDTO>  vipClients  { get; set; }
-		private ObservableCollection<IAccountDTO> vipAccoutns { get; set; }
+		private ObservableCollection<ClientDTO>  vipClients  { get; set; }
+		private ObservableCollection<AccountDTO> vipAccoutns { get; set; }
 		public VIPclientsWindow()
 		{
 			InitializeComponent();
