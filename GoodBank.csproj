@@ -64,6 +64,7 @@
     <Compile Include="Account Classes\AccountCredit.cs" />
     <Compile Include="Account Classes\AccountCurrent.cs" />
     <Compile Include="Account Classes\AccountDeposit.cs" />
+    <Compile Include="Imitation\Generate.cs" />
     <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
     <Compile Include="Interfaces_Actions\ITransactions.cs" />
     <Compile Include="BankInside\GoodBank.cs" />
@@ -166,7 +167,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Imitation\" />
     <Folder Include="Search\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

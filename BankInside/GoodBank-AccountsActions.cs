@@ -13,7 +13,7 @@ namespace GoodBank.BankInside
 			ObservableCollection<ShowAccountDTO> accList = new ObservableCollection<ShowAccountDTO>();
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientType == clientType)
-					accList.Add(new ShowAccountDTO(accounts[i]));
+					accList.Add(new ShowAccountDTO(accounts[i], GetClientByID(accounts[i].ClientID)));
 			return accList;
 		}
 	}

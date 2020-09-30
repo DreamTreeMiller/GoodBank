@@ -19,15 +19,16 @@ namespace GoodBank.BankInside
 			clients  = new List<Client>();
 			accounts = new List<Account>();
 			log		 = new List<Transaction>();
-			GenerateSimpleBank();
 		}
 
-		private void GenerateSimpleBank()
+		/// <summary>
+		/// Находит клиента с указанным ID
+		/// </summary>
+		/// <param name="id">ID клиента</param>
+		/// <returns></returns>
+		public IClient GetClientByID(uint id)
 		{
-			for(int i = 0; i < 100; i++)
-			{
-
-			}
+			return clients.Find(c => c.ID == id);
 		}
 
 	}

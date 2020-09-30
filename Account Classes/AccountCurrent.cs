@@ -8,7 +8,9 @@ namespace GoodBank.AccountClasses
 {
 	public class AccountCurrent : Account
 	{
+		public override AccountType AccountType { get => AccountType.Current; }
 		public override int Balance { get; set; }
+
 		public AccountCurrent()
 		{
 			AccountNumber = "CUR" + AccountNumber;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.Interfaces_Data
 {
-	interface IAccount
+	public interface IAccount
 	{
 		/// <summary>
 		/// Тип клиента, которому принадлежит счет.
@@ -27,7 +27,7 @@ namespace GoodBank.Interfaces_Data
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
 		/// </summary>
-		AccountType AccountType { get; set; }
+		AccountType AccountType { get; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
@@ -67,6 +67,6 @@ namespace GoodBank.Interfaces_Data
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
 		/// </summary>
-		DateTime Closed { get; set; }
+		DateTime? Closed { get; set; }
 	}
 }

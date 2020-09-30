@@ -81,12 +81,13 @@
 				</Button.ToolTip>
 			</Button>
 			<Button x:Name="SearchButton"
-						Grid.Row="0" Grid.Column="2"
-						Content="Поиск"
-						Foreground="DarkSlateGray"
-						FontSize="14"
-						FontWeight="Bold"
-						BorderThickness="0"
+					Grid.Row="0" Grid.Column="2"
+					Content="Поиск"
+					Foreground="DarkSlateGray"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					Click="SearchButton_Click"
 						>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -114,13 +115,14 @@
 				</Button.ToolTip>
 			</Button>
 			<Button x:Name="TimeMachineButton"
-						Grid.Row="0" Grid.Column="3"
-						Content="Машина времени"
-						Foreground="DarkBlue"
-						FontSize="14"
-						FontWeight="Bold"
-						BorderThickness="0"
-						>
+					Grid.Row="0" Grid.Column="3"
+					Content="Машина времени"
+					Foreground="DarkBlue"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					Click="TimeMachineButton_Click"
+					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
 						<Setter Property="Background" Value="PaleTurquoise"/>
@@ -148,13 +150,14 @@
 				</Button.ToolTip>
 			</Button>
 			<Button x:Name="GenerateButton"
-						Grid.Row="0" Grid.Column="4"
-						Content="Генерировать"
-						Foreground="DarkSlateGray"
-						FontSize="14"
-						FontWeight="Bold"
-						BorderThickness="0"
-						>
+					Grid.Row="0" Grid.Column="4"
+					Content="Генерировать"
+					Foreground="DarkSlateGray"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					Click="GenerateButton_Click"
+					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
 						<Setter Property="Background" Value="Aquamarine"/>

@@ -1,4 +1,5 @@
 ﻿using GoodBank.Binding_UI_CondeBehind;
+using GoodBank.Imitation;
 using GoodBank.Interfaces_Data;
 using GoodBank.UI_clients;
 using System;
@@ -49,6 +50,22 @@ namespace GoodBank
 		private void BankManagerButton_Click(object sender, RoutedEventArgs e)
 		{
 
+		}
+
+		private void SearchButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void GenerateButton_Click(object sender, RoutedEventArgs e)
+		{
+			GoodBank = Generate.Bank(20, 100, 40);
+			MessageBox.Show("Клиенты и счета созданы!");
 		}
 	}
 }

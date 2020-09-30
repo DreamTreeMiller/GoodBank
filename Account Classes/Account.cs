@@ -55,8 +55,9 @@ namespace GoodBank.AccountClasses
 
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
+		/// Дублирование, т.к. тип счета определяется его классом
 		/// </summary>
-		public AccountType		AccountType		{ get; set; }
+		public abstract AccountType		AccountType		{ get; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
@@ -95,8 +96,9 @@ namespace GoodBank.AccountClasses
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
+		/// Если счет открыт, то равен null
 		/// </summary>
-		public DateTime			Closed			{ get; set; }
+		public DateTime?		Closed			{ get; set; } = null;
 
 		#endregion
 
