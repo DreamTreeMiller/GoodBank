@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.DTO
+namespace GoodBank.Interfaces_Data
 {
-	public struct TransactionDTO
+	public interface ITransactionDTO
 	{
 		/// <summary>
 		/// Уникальный ID транзакции

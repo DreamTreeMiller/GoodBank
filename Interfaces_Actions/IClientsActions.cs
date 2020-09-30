@@ -10,6 +10,6 @@ namespace GoodBank.Interfaces_Actions
 {
 	public interface IClientsActions
 	{
-		ObservableCollection<ClientDTO> GetClientsList<TClient>();
+		ObservableCollection<ShowClientDTO> GetClientsList<TClient>();
 	}
 }

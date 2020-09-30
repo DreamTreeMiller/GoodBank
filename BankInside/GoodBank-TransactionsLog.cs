@@ -1,5 +1,6 @@
 ﻿using GoodBank.DTO;
 using GoodBank.Interfaces_Actions;
+using GoodBank.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,11 +17,11 @@ namespace GoodBank.BankInside
 		/// </summary>
 		/// <param name="account"></param>
 		/// <returns></returns>
-		public ObservableCollection<TransactionDTO> GetTransactionsLog(AccountDTO account)
+		public ObservableCollection<ITransactionDTO> GetTransactionsLog(ShowAccountDTO account)
 		{
-			ObservableCollection<TransactionDTO> log = new ObservableCollection<TransactionDTO>();
+			ObservableCollection<ITransactionDTO> log = new ObservableCollection<ITransactionDTO>();
 			foreach (var t in log)
-				if (t.Account.ID == account.ID) log.Add(t as TransactionDTO);
+				if (t.Account.ID == account.ID) log.Add(t);
 			return log;
 		}
 	}

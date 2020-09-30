@@ -10,11 +10,11 @@ namespace GoodBank.BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
-		public ObservableCollection<ClientDTO> GetClientsList<TClient>()
+		public ObservableCollection<ShowClientDTO> GetClientsList<TClient>()
 		{
-			ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
+			ObservableCollection<ShowClientDTO> clientsList = new ObservableCollection<ShowClientDTO>();
 			foreach (var c in clients)
-				if (c is TClient) clientsList.Add(new ClientDTO(c));
+				if (c is TClient) clientsList.Add(new ShowClientDTO(c));
 			return clientsList;
 		}
 	}

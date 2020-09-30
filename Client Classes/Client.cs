@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.ClientClasses
 {
-	public abstract class Client
+	public abstract class Client : IClient
 	{
 
 		#region Статическая часть для генерации уникального ID
@@ -56,6 +56,13 @@ namespace GoodBank.ClientClasses
 		#endregion
 
 		#region Конструктор нового клиента
+
+		/// <summary>
+		/// Базовый конструктор для любого клиента. Обнуляет количество всех счетов
+		/// </summary>
+		/// <param name="tel">Телефон</param>
+		/// <param name="email">Электронная почта</param>
+		/// <param name="address">Адрес</param>
 		public Client(string tel, string email, string address)
 		{
 			ID						= NextID();

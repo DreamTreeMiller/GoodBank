@@ -21,8 +21,8 @@ namespace GoodBank.UI_clients
 	/// </summary>
 	public partial class VIPclientsWindow : Window
 	{
-		private ObservableCollection<ClientDTO>  vipClients  { get; set; }
-		private ObservableCollection<AccountDTO> vipAccoutns { get; set; }
+		private ObservableCollection<ShowClientDTO>  vipClients  { get; set; }
+		private ObservableCollection<ShowAccountDTO> vipAccoutns { get; set; }
 		public VIPclientsWindow()
 		{
 			InitializeComponent();

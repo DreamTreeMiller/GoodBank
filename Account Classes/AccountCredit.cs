@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Data
+namespace GoodBank.AccountClasses
 {
-	public interface IVIPClient
+	public class AccountCredit : Account
 	{
+		public override int Balance { get; set; }
 	}
 }

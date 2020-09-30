@@ -1,5 +1,5 @@
 ﻿using GoodBank.AccountClasses;
-using GoodBank.DTO;
+using GoodBank.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace GoodBank.Transaction_Class
 {
-	public class Transaction : TransactionDTO
+	public class Transaction : ITransactionDTO
 	{
+		#region Статический генератор уникального ID
+
 		/// <summary>
 		/// Текущий ID счета
 		/// </summary>
@@ -32,6 +34,8 @@ namespace GoodBank.Transaction_Class
 			staticID++;
 			return staticID;
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Конструктор для создания новой транзакции

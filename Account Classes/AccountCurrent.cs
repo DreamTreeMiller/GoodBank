@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace GoodBank.AccountClasses
 {
-	public class CurrentAccount : Account
+	public class AccountCurrent : Account
 	{
 		public override int Balance { get; set; }
-		public CurrentAccount()
+		public AccountCurrent()
 		{
 			AccountNumber = "CUR" + AccountNumber;
 		}

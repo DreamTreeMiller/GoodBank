@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoodBank.ClientClasses
 {
-	public class VIPclient : Client, IVIPClient
+	public class ClientVIP : Client, IClientVIP
 	{
 		#region ФИО, № паспорта, дата рождения
 
@@ -21,7 +21,19 @@ namespace GoodBank.ClientClasses
 
 		#region Конструктор
 
-		public VIPclient (string fn,  string mn,	string ln, string passNum, DateTime bd,
+		/// <summary>
+		/// Конструктор созадет ВИП клиента
+		/// </summary>
+		/// <param name="fn">Имя</param>
+		/// <param name="mn">Отчество</param>
+		/// <param name="ln">Фамилия</param>
+		/// <param name="passNum">Номер паспорта</param>
+		/// <param name="bd">Дата рождения</param>
+		/// <param name="tel">Телефон</param>
+		/// <param name="email">Электронная почта</param>
+		/// <param name="address">Адрес</param>
+
+		public ClientVIP (string fn,  string mn,	string ln, string passNum, DateTime bd,
 						  string tel, string email, string address)
 			: base(tel, email, address)
 		{
