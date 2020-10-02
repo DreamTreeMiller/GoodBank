@@ -34,15 +34,15 @@
 				   FontWeight="Bold"
 				   FontSize="16" 
 				   />
-		<DockPanel x:Name="VIPWinMenuBar" 
-					Grid.Row="1" Grid.Column="1"
-					VerticalAlignment="Center"
-					HorizontalAlignment="Left" Grid.ColumnSpan="2"
-					>
+		<UniformGrid x:Name="VIPWinMenuBar" 
+					 Grid.Row="1" Grid.Column="1"
+					 Rows="1" Columns="4"
+					 Height="30"
+					 VerticalAlignment="Center"
+					 HorizontalAlignment="Stretch" 
+					 >
 			<Button x:Name="VIPWinMenu_SelectClient"
-					Content="Карточка персоны"
-					Width="200"
-					Height="30"
+					Content="Показать персону"
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
@@ -73,10 +73,8 @@
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<Button x:Name="VIPWinMenu_SelectAccount"
-					Content="Карточка сундучка"
-					Width="200"
-					Height="30"
+			<Button x:Name="VIPWinMenu_AddClient"
+					Content="Добавить персону"
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
@@ -103,14 +101,12 @@
 				</Button.Style>
 				<Button.ToolTip>
 					<ToolTip>
-						Открыть карточку работы со счётом
+						Внести данные новго клиента
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<Button x:Name="VIPWinMenu_Search"
-					Content="Поиск"
-					Width="200"
-					Height="30"
+			<Button x:Name="VIPWinMenu_SelectAccount"
+					Content="Открыть сундучок"
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
@@ -137,11 +133,43 @@
 				</Button.Style>
 				<Button.ToolTip>
 					<ToolTip>
-						Поиск клиенов и счетов
+						Открыть карточку работы со счетом
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-		</DockPanel>
+			<Button x:Name="VIPWinMenu_Search" 
+					Content="Поиск"
+					Foreground="DarkBlue"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0"
+					>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="PaleTurquoise"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Поиск клиента или счета
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+		</UniformGrid>
 		<DockPanel x:Name="VIPclientsCheckBoxes"
 				   Grid.Row="2" Grid.Column="1"
 				   VerticalAlignment="Bottom"

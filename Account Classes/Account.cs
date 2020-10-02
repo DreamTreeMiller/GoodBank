@@ -106,7 +106,6 @@ namespace GoodBank.AccountClasses
 
 		public Account()
 		{
-			AccountType   = AccountType.Current;
 			ID			  = NextID();
 			AccountNumber = $"{ID:000000000000}";
 			Balance		  = 0;

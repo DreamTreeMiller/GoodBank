@@ -11,10 +11,11 @@ namespace GoodBank.DTO
 {
 	/// <summary>
 	/// Структура для показа данных о любом счете
+	/// Либо для передачи данных при открытии счета
 	/// Не меняется в процессе, поэтому все поля заполняются на этапе создания
 	/// через конструктор
 	/// </summary>
-	public struct ShowAccountDTO
+	public struct AccountDTO
 	{
 		public string			ClientType		{ get; }
 		public string			ClientName		{ get; }
@@ -29,7 +30,7 @@ namespace GoodBank.DTO
 		public DateTime			Opened			{ get; }
 		public DateTime?		Closed			{ get; }
 
-		public ShowAccountDTO(IAccount acc, IClient c)
+		public AccountDTO(IAccount acc, IClient c)
 		{
 			ID				= acc.ID;    // Account ID
 			AccountNumber	= acc.AccountNumber;

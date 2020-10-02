@@ -14,16 +14,16 @@ namespace GoodBank.Imitation
 		public static IGoodBank Bank(int vip, int sim, int org)
 		{
 			goodBank = new BankInside.GoodBank();
-			GenerateVIPclientsAndAccounts(vip);
-			GenerateSIMclientsAndAccounts(sim);
-			GenerateORGclientsAndAccounts(org);
+			//GenerateVIPclientsAndAccounts(vip);
+			//GenerateSIMclientsAndAccounts(sim);
+			//GenerateORGclientsAndAccounts(org);
 			return goodBank;
 		}
 
-		private void GenerateVIPclientsAndAccounts(int num)
-		{
-			for(int i = 0; i < num; i++)
-				goodBank.AddClient(ClientType.VIP)
-		}
+		//private void GenerateVIPclientsAndAccounts(int num)
+		//{
+		//	for (int i = 0; i < num; i++)
+		//		goodBank.AddClient(ClientType.VIP);
+		//}
 	}
 }

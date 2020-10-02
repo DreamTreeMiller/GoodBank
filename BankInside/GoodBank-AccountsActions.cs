@@ -1,4 +1,5 @@
-﻿using GoodBank.Client_Classes;
+﻿using GoodBank.AccountClasses;
+using GoodBank.Client_Classes;
 using GoodBank.DTO;
 using GoodBank.Interfaces_Actions;
 using GoodBank.Interfaces_Data;
@@ -8,12 +9,17 @@ namespace GoodBank.BankInside
 {
 	public partial class GoodBank : IAccountsActions
 	{
-		public ObservableCollection<ShowAccountDTO> GetAccountsList(ClientType clientType)
+		public void AddAccount(IAccount account)
 		{
-			ObservableCollection<ShowAccountDTO> accList = new ObservableCollection<ShowAccountDTO>();
+			accounts.Add(account as Account);
+		}
+
+		public ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType)
+		{
+			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientType == clientType)
-					accList.Add(new ShowAccountDTO(accounts[i], GetClientByID(accounts[i].ClientID)));
+					accList.Add(new AccountDTO(accounts[i], GetClientByID(accounts[i].ClientID)));
 			return accList;
 		}
 	}

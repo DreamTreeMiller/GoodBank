@@ -17,7 +17,7 @@ namespace GoodBank.BankInside
 		/// </summary>
 		/// <param name="account"></param>
 		/// <returns></returns>
-		public ObservableCollection<ITransactionDTO> GetTransactionsLog(ShowAccountDTO account)
+		public ObservableCollection<ITransactionDTO> GetTransactionsLog(AccountDTO account)
 		{
 			ObservableCollection<ITransactionDTO> log = new ObservableCollection<ITransactionDTO>();
 			foreach (var t in log)

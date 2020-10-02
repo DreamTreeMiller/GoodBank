@@ -19,6 +19,6 @@ namespace GoodBank.Interfaces_Actions
 		/// <returns>
 		/// Коллекцию счетов, принадлежащих клиентам данного типа
 		/// </returns>
-		ObservableCollection<ShowAccountDTO> GetAccountsList(ClientType clientType);
+		ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType);
 	}
 }
