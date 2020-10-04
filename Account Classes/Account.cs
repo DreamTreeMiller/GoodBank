@@ -1,4 +1,4 @@
-﻿using GoodBank.Client_Classes;
+﻿using GoodBank.ClientClasses;
 using GoodBank.Interfaces_Data;
 using System;
 using System.Collections.Generic;

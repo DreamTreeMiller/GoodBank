@@ -1,5 +1,5 @@
 ﻿using GoodBank.AccountClasses;
-using GoodBank.Client_Classes;
+using GoodBank.ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;

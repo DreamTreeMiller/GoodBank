@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Client_Classes
+namespace GoodBank.ClientClasses
 {
 	public enum ClientType
 	{

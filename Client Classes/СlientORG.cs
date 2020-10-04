@@ -55,6 +55,12 @@ namespace GoodBank.ClientClasses
 			DirectorLastName	= dln;
 		}
 
+		public СlientORG(IClientDTO newClient)
+			: base(newClient.Telephone, newClient.Email, newClient.Address)
+		{
+
+		}
+
 		#endregion
 	}
 }

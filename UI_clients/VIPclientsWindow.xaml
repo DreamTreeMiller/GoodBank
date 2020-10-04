@@ -46,7 +46,8 @@
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0"
+					BorderThickness="0" 
+					Click="VIPWinMenu_SelectClient_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -78,7 +79,8 @@
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0"
+					BorderThickness="0" 
+					Click="VIPWinMenu_AddClient_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -110,7 +112,8 @@
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0"
+					BorderThickness="0" 
+					Click="VIPWinMenu_SelectAccount_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -142,7 +145,7 @@
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0"
+					BorderThickness="0" Click="VIPWinMenu_Search_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">

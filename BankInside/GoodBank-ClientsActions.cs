@@ -1,5 +1,4 @@
 ﻿using GoodBank.AccountClasses;
-using GoodBank.Client_Classes;
 using GoodBank.ClientClasses;
 using GoodBank.DTO;
 using GoodBank.Interfaces_Actions;
@@ -11,9 +10,20 @@ namespace GoodBank.BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
-		public void AddClient(IClient client)
+		public void AddClient(IClientDTO client)
 		{
-			clients.Add(client as Client);
+			switch (client.ClientType)
+			{
+				case ClientType.VIP:
+					clients.Add(new ClientVIP(client));
+					break;
+				case ClientType.Simple:
+					clients.Add(new СlientSIM(client));
+					break;
+				case ClientType.Organization:
+					clients.Add(new СlientORG(client));
+					break;
+			}
 		}
 
 		public ObservableCollection<ClientDTO> GetClientsList<TClient>()

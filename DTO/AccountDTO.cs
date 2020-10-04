@@ -15,7 +15,7 @@ namespace GoodBank.DTO
 	/// Не меняется в процессе, поэтому все поля заполняются на этапе создания
 	/// через конструктор
 	/// </summary>
-	public struct AccountDTO
+	public class AccountDTO
 	{
 		public string			ClientType		{ get; }
 		public string			ClientName		{ get; }

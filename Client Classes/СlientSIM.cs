@@ -43,6 +43,12 @@ namespace GoodBank.ClientClasses
 			BirthDate		= bd;
 		}
 
+		public СlientSIM(IClientDTO newClient)
+			: base(newClient.Telephone, newClient.Email, newClient.Address)
+		{
+
+		}
+
 		#endregion
 	}
 }

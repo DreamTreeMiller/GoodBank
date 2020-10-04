@@ -78,6 +78,7 @@
     <Compile Include="Client Classes\Client.cs" />
     <Compile Include="Interfaces_Data\IAccount.cs" />
     <Compile Include="Interfaces_Data\IClient.cs" />
+    <Compile Include="Interfaces_Data\IClientDTO.cs" />
     <Compile Include="Interfaces_Data\IGoodBank.cs" />
     <Compile Include="Interfaces_Data\IClientOrg.cs" />
     <Compile Include="Interfaces_Data\IClientSimple.cs" />
@@ -98,6 +99,9 @@
     </Compile>
     <Compile Include="UI_one_client_account\AccountWindow.xaml.cs">
       <DependentUpon>AccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\AddVIPClientWindow.xaml.cs">
+      <DependentUpon>AddVIPClientWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
@@ -131,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI_one_client_account\AccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\AddVIPClientWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

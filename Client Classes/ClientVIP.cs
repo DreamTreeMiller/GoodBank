@@ -33,15 +33,21 @@ namespace GoodBank.ClientClasses
 		/// <param name="email">Электронная почта</param>
 		/// <param name="address">Адрес</param>
 
-		public ClientVIP (string fn,  string mn,	string ln, string passNum, DateTime bd,
+		public ClientVIP(string fn, string mn, string ln, string passNum, DateTime bd,
 						  string tel, string email, string address)
 			: base(tel, email, address)
 		{
-			FirstName		= fn;
-			MiddleName		= mn;
-			LastName		= ln;
-			PasspostNumber	= passNum;
-			BirthDate		= bd;
+			FirstName = fn;
+			MiddleName = mn;
+			LastName = ln;
+			PasspostNumber = passNum;
+			BirthDate = bd;
+		}
+
+		public ClientVIP(IClientDTO newClient)
+			: base(newClient.Telephone, newClient.Email, newClient.Address)
+		{
+
 		}
 
 		#endregion

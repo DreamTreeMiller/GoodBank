@@ -1,4 +1,5 @@
 ﻿using GoodBank.DTO;
+using GoodBank.UI_one_client_account;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,26 @@ namespace GoodBank.UI_clients
 		{
 			VIPaccountsDataGrid.ItemsSource = vipAccoutns;
 		}
+		private void VIPWinMenu_SelectClient_Click(object sender, RoutedEventArgs e)
+		{
 
+		}
+
+		private void VIPWinMenu_AddClient_Click(object sender, RoutedEventArgs e)
+		{
+			AddVIPClientWindow addVIPclientWin = new AddVIPClientWindow();
+			bool? result = addVIPclientWin.ShowDialog();
+			ClientDTO ccc = addVIPclientWin.newClientData;
+		}
+
+		private void VIPWinMenu_SelectAccount_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void VIPWinMenu_Search_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }

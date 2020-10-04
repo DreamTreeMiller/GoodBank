@@ -1,5 +1,5 @@
 ﻿using GoodBank.AccountClasses;
-using GoodBank.Client_Classes;
+using GoodBank.ClientClasses;
 using GoodBank.DTO;
 using GoodBank.Interfaces_Actions;
 using GoodBank.Interfaces_Data;
