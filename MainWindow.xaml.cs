@@ -46,7 +46,7 @@ namespace GoodBankNS
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-			VIPclientsWindow vipClientsWin = new VIPclientsWindow(BA);
+			DepartmentWindow vipClientsWin = new DepartmentWindow(BA);
 			vipClientsWin.ShowDialog();
 		}
 

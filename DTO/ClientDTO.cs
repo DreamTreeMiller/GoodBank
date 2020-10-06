@@ -18,7 +18,7 @@ namespace GoodBankNS.DTO
 	{
 		public uint			ID						{ get; }
 		public ClientType	ClientType				{ get; set; }
-		public string		ClientTypeShow			
+		public string		ClientTypeTag			
 		{
 			get
 			{

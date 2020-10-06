@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.UI_clients
+namespace GoodBankNS.UserControlsLists
 {
 	/// <summary>
-	/// Interaction logic for SIMclientsWindow.xaml
+	/// Interaction logic for AccountsList.xaml
 	/// </summary>
-	public partial class SIMclientsWindow : Window
+	public partial class AccountsList : UserControl
 	{
-		public SIMclientsWindow()
+		public AccountsList()
 		{
 			InitializeComponent();
 		}

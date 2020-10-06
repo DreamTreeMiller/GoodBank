@@ -24,10 +24,10 @@ namespace GoodBankNS.UI_clients
 	/// <summary>
 	/// Interaction logic for VIPclientsWindow.xaml
 	/// </summary>
-	public partial class VIPclientsWindow : Window
+	public partial class DepartmentWindow : Window
 	{
 		private BankActions BA;
-		public VIPclientsWindow(BankActions ba)
+		public DepartmentWindow(BankActions ba)
 		{
 			InitializeComponent();
 			InitializeView(ba);
@@ -70,7 +70,7 @@ namespace GoodBankNS.UI_clients
 
 		private void VIPWinMenu_AddClient_Click(object sender, RoutedEventArgs e)
 		{
-			AddIndividualClientWindow addVIPclientWin = new AddIndividualClientWindow();
+			AddClientWindow addVIPclientWin = new AddClientWindow();
 			bool? result = addVIPclientWin.ShowDialog();
 			
 			if (result != true) return;

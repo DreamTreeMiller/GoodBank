@@ -18,10 +18,10 @@ namespace GoodBankNS.UI_one_client_account
 	/// <summary>
 	/// Interaction logic for AddVIPClientWindow.xaml
 	/// </summary>
-	public partial class AddIndividualClientWindow : Window
+	public partial class AddClientWindow : Window
 	{
 		public ClientDTO newClientData = new ClientDTO();
-		public AddIndividualClientWindow()
+		public AddClientWindow()
 		{
 			InitializeComponent();
 			InitializeTextFields();
