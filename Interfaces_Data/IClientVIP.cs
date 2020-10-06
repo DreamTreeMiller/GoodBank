@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Data
+namespace GoodBankNS.Interfaces_Data
 {
 	public interface IClientVIP : IClient
 	{

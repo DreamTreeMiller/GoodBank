@@ -1,12 +1,12 @@
-﻿using GoodBank.AccountClasses;
-using GoodBank.ClientClasses;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Data
+namespace GoodBankNS.Interfaces_Data
 {
 	public interface IAccount
 	{

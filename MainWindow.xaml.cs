@@ -1,7 +1,8 @@
-﻿using GoodBank.Binding_UI_CondeBehind;
-using GoodBank.Imitation;
-using GoodBank.Interfaces_Data;
-using GoodBank.UI_clients;
+﻿using GoodBankNS.Binding_UI_CondeBehind;
+using GoodBankNS.Imitation;
+using GoodBankNS.Interfaces_Data;
+using GoodBankNS.UI_clients;
+using GoodBankNS.BankInside;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoodBank
+namespace GoodBankNS
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -25,15 +26,27 @@ namespace GoodBank
 	public partial class MainWindow : Window
 	{
 		private IGoodBank GoodBank;
-		private ActionsUI UI;
+		private BankActions BA;
 		public MainWindow()
 		{
 			InitializeComponent();
+			InitializeBank();
+			InitializeUI();
+		}
+
+		private void InitializeBank()
+		{
+			GoodBank = new GoodBank();
+		}
+
+		private void InitializeUI()
+		{
+			BA = new BankActions(GoodBank);
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-			VIPclientsWindow vipClientsWin = new VIPclientsWindow();
+			VIPclientsWindow vipClientsWin = new VIPclientsWindow(BA);
 			vipClientsWin.ShowDialog();
 		}
 

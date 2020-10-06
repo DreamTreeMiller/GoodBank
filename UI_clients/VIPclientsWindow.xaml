@@ -1,9 +1,9 @@
-﻿<Window x:Class="GoodBank.UI_clients.VIPclientsWindow"
+﻿<Window x:Class="GoodBankNS.UI_clients.VIPclientsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GoodBank.UI_clients"
+        xmlns:local="clr-namespace:GoodBankNS.UI_clients"
         mc:Ignorable="d"
         Title="Богатые клиенты" 
 		Height="700" Width="700"
@@ -11,6 +11,13 @@
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
+	<Window.Resources>
+		<!-- Это выравнивание закоголовков дата гриды по центру-->
+		<Style TargetType="{x:Type DataGridColumnHeader}">
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна ВИП клиенты-->
@@ -26,7 +33,8 @@
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition MinWidth="5" MaxWidth="10" Width="10*"/> 	<!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
-		<TextBlock Text="ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ"
+		<TextBlock x:Name="MainTitle" 
+				   Text="ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ"
 				   Grid.Row="0" Grid.Column="1"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center"
@@ -34,6 +42,7 @@
 				   FontWeight="Bold"
 				   FontSize="16" 
 				   />
+		<!-- Менюшка - показать клиента, добавить клиента, показать счет, поиск -->
 		<UniformGrid x:Name="VIPWinMenuBar" 
 					 Grid.Row="1" Grid.Column="1"
 					 Rows="1" Columns="4"
@@ -147,6 +156,7 @@
 					FontWeight="Bold"
 					BorderThickness="0" Click="VIPWinMenu_Search_Click"
 					>
+				<!-- Примочка для изменения цвета кнопки при наведении-->
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
 						<Setter Property="Background" Value="PaleTurquoise"/>
@@ -173,6 +183,7 @@
 				</Button.ToolTip>
 			</Button>
 		</UniformGrid>
+		<!-- Чекбоксы - день рождения, паспорт, телефон, имейл, адрес -->
 		<DockPanel x:Name="VIPclientsCheckBoxes"
 				   Grid.Row="2" Grid.Column="1"
 				   VerticalAlignment="Bottom"
@@ -182,39 +193,46 @@
 					  Content="День рождения"
 					  VerticalAlignment="Center"
 					  Margin="40,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsBirthDateCB_Click"
 					  />
 			<CheckBox x:Name="VIPclientsPassportCB" 
 					  Content="Паспорт"
 					  VerticalAlignment="Center"
 					  Margin="20,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsPassportCB_Click"
 					  />
 			<CheckBox x:Name="VIPclientsTelCB" 
 					  Content="Телефон"
 					  VerticalAlignment="Center"
 					  Margin="20,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsTelCB_Click"
 					  />
 			<CheckBox x:Name="VIPclientsEmailCB" 
 					  Content="Email"
 					  VerticalAlignment="Center"
 					  Margin="20,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsEmailCB_Click"
 					  />
 			<CheckBox x:Name="VIPclientsAddressCB" 
 					  Content="Адрес"
 					  VerticalAlignment="Center"
 					  Margin="20,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsAddressCB_Click"
 					  />
 			<CheckBox x:Name="VIPclientsClosedAccountsCB" 
 					  Content="Закрытые счета"
 					  VerticalAlignment="Center"
 					  Margin="20,0,0,0"
-					  FontSize="12"
+					  FontSize="12" 
+					  Click="VIPclientsClosedAccountsCB_Click"
 					  />
 		</DockPanel>
+		<!-- DataGrid клиентов и сводные данные-->
 		<Grid Grid.Row="3" Grid.Column="1" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*" /> 	<!-- 0 - 3. DataGrid клентов-->
@@ -223,14 +241,67 @@
 			<DataGrid x:Name="VIPclientsDataGrid"
 					  Grid.Row="0" 
 					  IsReadOnly="True"
-					  />
+					  AutoGenerateColumns="False"
+					  CanUserResizeColumns="True"
+					  GridLinesVisibility="None"
+					  RowBackground="LightGray" 
+					  AlternatingRowBackground="White" 
+					  >
+				<DataGrid.CellStyle>
+					<Style>
+						<!-- Это надо, чтобы выделялась вся строка, а не только значения в клеточках-->
+						<Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
+						
+						<!-- Это выравнивание содержание клеточек дата гриды по центру-->
+						<Setter Property="TextBlock.TextAlignment" Value="Center"/>
+					</Style>
+				</DataGrid.CellStyle>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="№" Binding="{Binding ID}"/>
+					<DataGridTextColumn Header="ФИО"		
+										Binding="{Binding MainName}" 
+										CellStyle="{x:Null}"
+										/>
+					<DataGridTextColumn x:Name="CreationDateColumn"
+										Header="Дата рождения" 
+										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
+										Visibility="Collapsed"
+										/>
+					<DataGridTextColumn x:Name="PassportOrTINColumn" 
+										Header="Паспорт"	
+										Binding="{Binding PassportOrTIN}" 
+										Visibility="Collapsed"
+										/>
+					<DataGridTextColumn x:Name="TelephoneColumn" 
+										Header="Телефон"	
+										Binding="{Binding Telephone}" 
+										/>
+					<DataGridTextColumn x:Name="EmailColumn" 
+										Header="Email"		
+										Binding="{Binding Email}" 
+										/>
+					<DataGridTextColumn x:Name="AddressColumn" 
+										Header="Адрес"		
+										Binding="{Binding Address}" 
+										Visibility="Collapsed"
+										/>
+					<DataGridTextColumn Header="Текущие"	Binding="{Binding NumberOfCurrentAccounts}" />
+					<DataGridTextColumn Header="Вклады"		Binding="{Binding NumberOfDeposits}" />
+					<DataGridTextColumn Header="Кредиты"	Binding="{Binding NumberOfCredits}" />
+					<DataGridTextColumn x:Name="NummberOfClosedAccountsColumn" 
+										Header="Закрытые"	
+										Binding="{Binding NumberOfClosedAccounts}" 
+										Visibility="Collapsed"
+										/>
+				</DataGrid.Columns>
+			</DataGrid>
 			<StackPanel x:Name="VIPclientsTotalsBar"
 						Orientation="Horizontal"
 						Grid.Row="1" 
 						VerticalAlignment="Center"
 						HorizontalAlignment="Left"
 						>
-				<TextBlock Text="ВИП клиенов"
+				<TextBlock Text="ВИП клиенов   "
 						   FontSize="14"
 						   FontWeight="Bold"
 						   Foreground="DarkSlateGray"
@@ -238,7 +309,7 @@
 				<TextBlock x:Name="VIPclientsTotalNumTB" 
 						   FontSize="14"
 						   FontWeight="Bold"
-						   Foreground="DarkBlue"
+						   Foreground="Blue"
 						   />
 			</StackPanel>
 		</Grid>
@@ -262,6 +333,7 @@
 					   FontWeight="Heavy"
 					   Foreground="Maroon" Grid.ColumnSpan="2"
 					   />
+			<!-- Чекбоксы - Текущие, вклады, кредиты, закрытые -->
 			<DockPanel x:Name="VIPaccountsCheckBoxes"
 					   Grid.Row="1" 
 					   VerticalAlignment="Bottom"
@@ -269,33 +341,89 @@
 					   >
 				<CheckBox x:Name="VIPCurrentAccountsCB" 
 						  Content="Текущие"
+						  IsChecked="True"
 						  VerticalAlignment="Center"
 						  Margin="40,0,0,0"
-						  FontSize="12"
+						  FontSize="12" 
+						  Click="VIPCurrentAccountsCB_Click"
 						  />
 				<CheckBox x:Name="VIPDepositsCB" 
 						  Content="Вклады"
+						  IsChecked="True"
 						  VerticalAlignment="Center"
 						  Margin="40,0,10,0"
-						  FontSize="12"
+						  FontSize="12" 
+						  Click="VIPDepositsCB_Click"
 						  />
 				<CheckBox x:Name="VIPCreditsCB" 
 						  Content="Кредиты"
+						  IsChecked="True"
 						  VerticalAlignment="Center"
 						  Margin="40,0,10,0"
-						  FontSize="12"
+						  FontSize="12" 
+						  Click="VIPCreditsCB_Click"
 						  />
 				<CheckBox x:Name="VIPClosedAccountsCB" 
 						  Content="Закрытые"
 						  VerticalAlignment="Center"
 						  Margin="40,0,10,0"
-						  FontSize="12"
+						  FontSize="12" 
+						  Click="VIPClosedAccountsCB_Click" 
 						  />
 			</DockPanel>
 			<DataGrid x:Name="VIPaccountsDataGrid"
 					  Grid.Row="2"
 					  IsReadOnly="True" 
-					  />
+					  AutoGenerateColumns="False"
+					  CanUserResizeColumns="True"
+					  GridLinesVisibility="None"
+					  RowBackground="LightGray" 
+					  AlternatingRowBackground="White" 
+					  >
+				<DataGrid.CellStyle>
+					<Style>
+						<!-- Это надо, чтобы выделялась вся строка, а не только значения в клеточках-->
+						<Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
+						
+						<!-- Это выравнивание содержание клеточек дата гриды по центру-->
+						<Setter Property="TextBlock.TextAlignment" Value="Center"/>
+					</Style>
+				</DataGrid.CellStyle>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="№"			Binding="{Binding ID}"/>
+					<DataGridTextColumn Header="ФИО" 
+										Binding="{Binding ClientName}"
+										CellStyle="{x:Null}"
+										/>
+					<DataGridTextColumn Header="№ счета" Binding="{Binding AccountNumber}"/>
+					<DataGridTextColumn x:Name="VIPCurrAccountColumn" 
+										Header="Текущий" 
+										Binding="{Binding CurrentAmount}"
+										/>
+					<DataGridTextColumn x:Name="VIPDepositColumn" 
+										Header="Вклад"	 
+										Binding="{Binding DepositAmount}"
+										/>
+					<DataGridTextColumn x:Name="VIPCreditColumn" 
+										Header="Долг"	 
+										Binding="{Binding DebtAmount}"
+										/>
+					<DataGridTextColumn Header=" %  " Binding="{Binding Interest}"/>
+					<!--DataGridTextColumn x:Name="VIPAccStatusColumn" 
+										Header="Статус" 
+										Binding="{Binding AccStatus}"
+										Visibility="Collapsed"
+										/-->
+					<DataGridTextColumn Header="Открыт" 
+										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Opened}"
+										/>
+					<DataGridTextColumn x:Name="VIPClosedDateColumn" 
+										Header="Закрыт" 
+										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Closed}"
+										Visibility="Collapsed"
+										/>
+				</DataGrid.Columns>
+			</DataGrid>
 		</Grid>
 		<StackPanel x:Name="VIPaccountsTotalsBar"
 					Orientation="Horizontal"

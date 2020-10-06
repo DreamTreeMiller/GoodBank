@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.AccountClasses
+namespace GoodBankNS.AccountClasses
 {
 	public class AccountCurrent : Account
 	{

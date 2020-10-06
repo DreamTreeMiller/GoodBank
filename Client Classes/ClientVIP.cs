@@ -1,18 +1,18 @@
-﻿using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.ClientClasses
+namespace GoodBankNS.ClientClasses
 {
 	public class ClientVIP : Client, IClientVIP
 	{
 		#region ФИО, № паспорта, дата рождения
 
 		public string	FirstName		{ get; set; }
-		public string	MiddleName		{ get; set; } = "";
+		public string	MiddleName		{ get; set; }
 		public string	LastName		{ get; set; }
 		public string	PasspostNumber	{ get; set; }
 		public DateTime	BirthDate		{ get; set; }
@@ -37,17 +37,16 @@ namespace GoodBank.ClientClasses
 						  string tel, string email, string address)
 			: base(tel, email, address)
 		{
-			FirstName = fn;
-			MiddleName = mn;
-			LastName = ln;
-			PasspostNumber = passNum;
-			BirthDate = bd;
 		}
 
 		public ClientVIP(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
-
+			FirstName		= newClient.FirstName;
+			MiddleName		= newClient.MiddleName;
+			LastName		= newClient.LastName;
+			PasspostNumber	= newClient.PassportOrTIN;
+			BirthDate		= newClient.CreationDate;
 		}
 
 		#endregion

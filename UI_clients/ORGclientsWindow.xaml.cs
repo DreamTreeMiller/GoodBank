@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBank.UI_clients
+namespace GoodBankNS.UI_clients
 {
 	/// <summary>
 	/// Interaction logic for ORGclientsWindow.xaml

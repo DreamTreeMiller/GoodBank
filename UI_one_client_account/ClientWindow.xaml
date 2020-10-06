@@ -1,12 +1,315 @@
-﻿<Window x:Class="GoodBank.UI_one_client_account.ClientWindow"
+﻿<Window x:Class="GoodBankNS.UI_one_client_account.ClientWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GoodBank.UI_one_client_account"
+        xmlns:local="clr-namespace:GoodBankNS.UI_one_client_account"
         mc:Ignorable="d"
-        Title="ClientWindow" Height="450" Width="800">
+        Title="ВИП" 
+		Height="450" Width="800"
+		MinHeight="450" MinWidth="600"
+		WindowStartupLocation="CenterScreen"
+		Background="LightCyan"
+		>
+	<Window.Resources>
+		<!-- Это выравнивание закоголовков дата гриды по центру-->
+		<Style TargetType="{x:Type DataGridColumnHeader}">
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+		<!-- Стиль названий полей -->
+		<Style x:Key="PersonalInfoFieldNameStyle">
+			<Setter Property="TextBlock.FontSize"			 Value="14"/>
+			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
+			<Setter Property="TextBlock.Margin"				 Value="0,0,5,0"/>
+			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
+			<Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
+		</Style>
+		<!-- Стиль значений полей -->
+		<Style x:Key="PersonalInfoValueFieldStyle">
+			<Setter Property="TextBlock.FontSize"			 Value="14"/>
+			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>
+			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
+			<Setter Property="TextBlock.Margin"				 Value="5,0,0,0"/>
+			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
+			<Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
+		</Style>
+	</Window.Resources>
     <Grid>
-        
-    </Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна ВИП клиенты-->
+			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. "Персональные данные"-->
+			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - все поля перс. данных-->
+			<RowDefinition MinHeight="15" MaxHeight="15"/>	<!-- 3. Пустое место-->
+			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 5. Меню "Открыть" "Пополнить" "Снять кэш" "Перевести" "Закрыть"-->
+			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 6. Чекбоксы "текущий" "вклады" "кредиты" "закрытые"-->
+			<RowDefinition Height="*" MinHeight="120"/>		<!-- 7. Дата грид счетов-->
+			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 8. Сводные данные-->
+			<RowDefinition MinHeight="50" MaxHeight="50"/>	<!-- 9. Пустое место-->
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition MinWidth="20" MaxWidth="20"/>	<!-- Отступ слева-->
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition MinWidth="20" MaxWidth="20"/> <!-- Отступ справа-->
+		</Grid.ColumnDefinitions>
+		<TextBlock x:Name="MainTitle" 
+				   Text="ОЧЕНЬ ВАЖНАЯ ПЕРСОНА"
+				   Grid.Row="0" Grid.Column="1"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center"
+				   Foreground="Maroon"
+				   FontWeight="Bold"
+				   FontSize="16" 
+				   />
+		<!--надпись: Персональные данные - кнопка: Редактировать -->
+		<StackPanel Grid.Row="1" Grid.Column="1" 
+					Orientation="Horizontal"
+					VerticalAlignment="Stretch"
+					>
+			<TextBlock x:Name="ClientInfoTitle"
+					   Text="Персональные данные"
+					   Margin="0,0,30,0"
+					   VerticalAlignment="Center"
+					   FontSize="14"
+					   FontWeight="Bold"
+					   Foreground="DarkSlateGray"
+					   />
+			<!-- Кнопка редактировать данные-->
+			<Button x:Name="ClientWindow_EditClient"
+					Content="   Редактировать   "
+					Foreground="DarkSlateGray"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					Click="ClientWindow_EditClient_Click" 
+					>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="Aquamarine"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Открыть карточку работы с клиентом
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+		</StackPanel>
+		<!--Поля данных о клиенте -->
+		<Grid x:Name="ClientInfo" 
+			  Grid.Row="2" Grid.Column="1"
+			  Margin="0,5"
+			  >
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="30"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock x:Name="ClientWindow_ClientNameTitle" 
+					   Grid.Row="0" Grid.Column="0"
+					   Text="Фамилия:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientNameValue" 
+					   Grid.Row="0" Grid.Column="1"
+					   Text="Пупкин"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_Client2ndNameTitle" 
+					   Grid.Row="1" Grid.Column="0"
+					   Text="Имя, отчество:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_Client2ndNameValue" 
+					   Grid.Row="1" Grid.Column="1"
+					   Text="Василий Ануфриевич"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientDateTitle" 
+					   Grid.Row="0" Grid.Column="2"
+					   Text="Дата рождения:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientDateValue" 
+					   Grid.Row="0" Grid.Column="3"
+					   Text="01.01.1999"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientNumTitle" 
+					   Grid.Row="1" Grid.Column="2"
+					   Text="№ паспорта:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientNumValue" 
+					   Grid.Row="1" Grid.Column="3"
+					   Text="1234 567-890"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientTelTitle" 
+					   Grid.Row="2" Grid.Column="0"
+					   Text="Телефон:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientTelValue" 
+					   Grid.Row="2" Grid.Column="1"
+					   Text="+1 234 567-8901"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientEmailTitle" 
+					   Grid.Row="2" Grid.Column="2"
+					   Text="Email:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientEmailValue" 
+					   Grid.Row="2" Grid.Column="3"
+					   Text="pupkin@mail.com"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientAddressTitle" 
+					   Grid.Row="3" Grid.Column="0"
+					   Text="Адрес:"
+					   Style="{StaticResource PersonalInfoFieldNameStyle}"
+					   />
+			<TextBlock x:Name="ClientWindow_ClientAddressValue" 
+					   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+					   Text="23 - 87, Fifth Avenue, New York, New York, 10001, United States"
+					   Style="{StaticResource PersonalInfoValueFieldStyle}"
+					   />
+		</Grid>
+		<!--надпись: Счета - меню: Открыть новый, Закрыть -->
+		<StackPanel Grid.Row="4" Grid.Column="1" 
+					Orientation="Horizontal"
+					VerticalAlignment="Stretch"
+					>
+			<TextBlock Text="Счета"
+					   Margin="0,0,30,0"
+					   VerticalAlignment="Center"
+					   FontSize="14"
+					   FontWeight="Bold"
+					   Foreground="DarkSlateGray"
+					   />
+			<!-- Кнопка Открыть новый счет-->
+			<Button x:Name="ClientWindow_OpenAccount"
+					Content="   Открыть новый   "
+					Foreground="DarkSlateGray"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="Aquamarine"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Открыть карточку работы с клиентом
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<!-- Кнопка Закрыть счет-->
+			<Button x:Name="ClientWindow_CloseAccount"
+					Content="     Закрыть счет     "
+					Foreground="DarkBlue"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="PaleTurquoise"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Внести данные новго клиента
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+		</StackPanel>
+		<!-- Чекбоксы - Текущие, вклады, кредиты, закрытые -->
+		<DockPanel x:Name="ClientWindowAccountsCheckBoxes"
+					Grid.Row="5" Grid.Column="1"
+					VerticalAlignment="Bottom"
+					Margin="0,0,0,3" 
+					>
+			<CheckBox x:Name="ClientWindowCurrentAccountsCB" 
+						Content="Текущие"
+						IsChecked="True"
+						VerticalAlignment="Center"
+						Margin="40,0,0,0"
+						FontSize="12" 
+						/>
+			<CheckBox x:Name="ClientWindowDepositsCB" 
+						Content="Вклады"
+						IsChecked="True"
+						VerticalAlignment="Center"
+						Margin="40,0,10,0"
+						FontSize="12" 
+						/>
+			<CheckBox x:Name="ClientWindowCreditsCB" 
+						Content="Кредиты"
+						IsChecked="True"
+						VerticalAlignment="Center"
+						Margin="40,0,10,0"
+						FontSize="12" 
+						/>
+			<CheckBox x:Name="ClientWindowClosedAccountsCB" 
+						Content="Закрытые"
+						VerticalAlignment="Center"
+						Margin="40,0,10,0"
+						FontSize="12" 
+						/>
+		</DockPanel>
+
+	</Grid>
 </Window>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GoodBank.Properties
+namespace GoodBankNS.Properties
 {
 
 

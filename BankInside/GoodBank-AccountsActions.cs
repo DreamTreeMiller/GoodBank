@@ -1,11 +1,11 @@
-﻿using GoodBank.AccountClasses;
-using GoodBank.ClientClasses;
-using GoodBank.DTO;
-using GoodBank.Interfaces_Actions;
-using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
+using GoodBankNS.DTO;
+using GoodBankNS.Interfaces_Actions;
+using GoodBankNS.Interfaces_Data;
 using System.Collections.ObjectModel;
 
-namespace GoodBank.BankInside
+namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IAccountsActions
 	{

@@ -1,12 +1,12 @@
-﻿using GoodBank.AccountClasses;
-using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Transaction_Class
+namespace GoodBankNS.Transaction_Class
 {
 	public class Transaction : ITransactionDTO
 	{

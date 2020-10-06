@@ -1,6 +1,6 @@
-﻿using GoodBank.AccountClasses;
-using GoodBank.ClientClasses;
-using GoodBank.DTO;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
+using GoodBankNS.DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Actions
+namespace GoodBankNS.Interfaces_Actions
 {
 	public interface IAccountsActions
 	{

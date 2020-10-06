@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBank.UI_one_client_account
+namespace GoodBankNS.UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for ClientWindow.xaml
@@ -22,6 +22,11 @@ namespace GoodBank.UI_one_client_account
 		public ClientWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void ClientWindow_EditClient_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

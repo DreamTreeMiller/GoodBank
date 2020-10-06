@@ -1,12 +1,12 @@
-﻿using GoodBank.AccountClasses;
-using GoodBank.ClientClasses;
-using GoodBank.Interfaces_Actions;
-using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
+using GoodBankNS.Interfaces_Actions;
+using GoodBankNS.Interfaces_Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using GoodBank.Transaction_Class;
+using GoodBankNS.Transaction_Class;
 
-namespace GoodBank.BankInside
+namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IGoodBank
 	{
