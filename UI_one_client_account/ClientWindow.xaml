@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ВИП" 
 		Height="450" Width="800"
-		MinHeight="450" MinWidth="600"
+		MinHeight="470" MinWidth="600"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
@@ -41,10 +41,8 @@
 			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. "Персональные данные"-->
 			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - все поля перс. данных-->
 			<RowDefinition MinHeight="15" MaxHeight="15"/>	<!-- 3. Пустое место-->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 5. Меню "Открыть" "Пополнить" "Снять кэш" "Перевести" "Закрыть"-->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 6. Чекбоксы "текущий" "вклады" "кредиты" "закрытые"-->
-			<RowDefinition Height="*" MinHeight="120"/>		<!-- 7. Дата грид счетов-->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 8. Сводные данные-->
+			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 4. Меню "Открыть" 4"Закрыть" -->
+			<RowDefinition Height="*"    MinHeight="180"/>	<!-- 5. Дата грид счетов-->
 			<RowDefinition MinHeight="50" MaxHeight="50"/>	<!-- 9. Пустое место-->
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
@@ -276,40 +274,8 @@
 				</Button.ToolTip>
 			</Button>
 		</StackPanel>
-		<!-- Чекбоксы - Текущие, вклады, кредиты, закрытые -->
-		<DockPanel x:Name="ClientWindowAccountsCheckBoxes"
-					Grid.Row="5" Grid.Column="1"
-					VerticalAlignment="Bottom"
-					Margin="0,0,0,3" 
-					>
-			<CheckBox x:Name="ClientWindowCurrentAccountsCB" 
-						Content="Текущие"
-						IsChecked="True"
-						VerticalAlignment="Center"
-						Margin="40,0,0,0"
-						FontSize="12" 
-						/>
-			<CheckBox x:Name="ClientWindowDepositsCB" 
-						Content="Вклады"
-						IsChecked="True"
-						VerticalAlignment="Center"
-						Margin="40,0,10,0"
-						FontSize="12" 
-						/>
-			<CheckBox x:Name="ClientWindowCreditsCB" 
-						Content="Кредиты"
-						IsChecked="True"
-						VerticalAlignment="Center"
-						Margin="40,0,10,0"
-						FontSize="12" 
-						/>
-			<CheckBox x:Name="ClientWindowClosedAccountsCB" 
-						Content="Закрытые"
-						VerticalAlignment="Center"
-						Margin="40,0,10,0"
-						FontSize="12" 
-						/>
-		</DockPanel>
-
+		<ContentPresenter x:Name="AccountsList"
+						  Grid.Row="5" Grid.Column="1"
+						  />
 	</Grid>
 </Window>

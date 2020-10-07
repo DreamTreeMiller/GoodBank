@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoodBankNS.UserControlsLists;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace GoodBankNS.UI_one_client_account
 	/// </summary>
 	public partial class ClientWindow : Window
 	{
+		private AccountsList		 accountsListView;
+		private AccountsViewNameTags alntag;
+
 		public ClientWindow()
 		{
 			InitializeComponent();
+			InitializeAccountsView();
+		}
+
+		private void InitializeAccountsView()
+		{
+			accountsListView = new AccountsList();
+			AccountsList.Content = accountsListView;
+			accountsListView.WordAccountsTag.Visibility = Visibility.Collapsed;
 		}
 
 		private void ClientWindow_EditClient_Click(object sender, RoutedEventArgs e)

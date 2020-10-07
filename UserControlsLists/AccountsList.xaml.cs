@@ -25,7 +25,11 @@ namespace GoodBankNS.UserControlsLists
 			InitializeComponent();
 			AccountsDataGrid.Items.Clear(); // Почему-то вставляется пустой элемент после инициализации
 											// надо удалить, чтобы корректно всё работало
+			InitializeTagsAndColumns();
 		}
+
+		private void InitializeTagsAndColumns()
+		{ }
 
 		#region Accounts DataGrid CheckBoxes handlers
 
