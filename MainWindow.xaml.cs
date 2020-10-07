@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GoodBankNS.UserControlsLists;
 
 namespace GoodBankNS
 {
@@ -46,7 +47,14 @@ namespace GoodBankNS
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-			DepartmentWindow vipClientsWin = new DepartmentWindow(BA);
+			ClientsViewNameTags cvnt = new ClientsViewNameTags();
+			cvnt.CreationDateCBTag		= "Дата рождения";    
+			cvnt.PassportOrTIN_CB_Tag	= "Паспорт";		  
+			cvnt.ClientTypeColumn		= false;			  
+			cvnt.MainNameTag			= "ФИО";              
+			cvnt.ClientNameTag			= "ВИП клиентов:   "; 
+
+			DepartmentWindow vipClientsWin = new DepartmentWindow(BA, cvnt);
 			vipClientsWin.ShowDialog();
 		}
 

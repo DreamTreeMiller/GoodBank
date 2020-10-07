@@ -5,19 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GoodBankNS.UserControlsLists"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="680">
+             d:DesignHeight="180" d:DesignWidth="680"
+			 >
 	<UserControl.Resources>
 		<!-- Стиль чекбокса-->
 		<Style TargetType="{x:Type CheckBox}">
 			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="Margin"			 Value="40,0,0,0"/>
+			<Setter Property="Margin"			 Value="20,0,0,0"/>
 			<Setter Property="FontSize"			 Value="12"/>
 		</Style>
 	</UserControl.Resources>
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition MinHeight="30"	MaxHeight="30"/>	<!-- чекбоксы-->
-			<RowDefinition Height="*"		MinHeight="120"/>	<!-- DataGrid Клиенты-->
+			<RowDefinition Height="*"/>							<!-- DataGrid Клиенты-->
 			<RowDefinition MinHeight="30"	MaxHeight="30"/>	<!-- Сводные данные-->
 		</Grid.RowDefinitions>  
 		<!-- Чекбоксы - день рождения, паспорт, телефон, имейл, адрес -->
@@ -25,15 +26,33 @@
 				   VerticalAlignment="Bottom"
 				   Margin="0,0,0,3" 
 				   >
-			<CheckBox x:Name="CreationDateCheckBox" Content="Дата рождения"/>
-			<CheckBox x:Name="PassportOrTINCheckBox" Content="Паспорт"/>
-			<CheckBox Content="Телефон"/>
-			<CheckBox Content="Email"/>
-			<CheckBox Content="Адрес"/>
-			<CheckBox Content="Закрытые счета"/>
+			<CheckBox x:Name="CreationDateCheckBox" 
+					  Click="CreationDateCheckBox_Click"
+					  />
+			<CheckBox x:Name="PassportOrTINCheckBox" 
+					  Click="PassportOrTINCheckBox_Click" 
+					  />
+			<CheckBox x:Name="TelCheckBox" 
+					  Content="Телефон" 
+					  IsChecked="True" 
+					  Click="TelCheckBox_Click"
+					  />
+			<CheckBox x:Name="EmailCheckBox" 
+					  Content="Email"	
+					  IsChecked="True" 
+					  Click="EmailCheckBox_Click"
+					  />
+			<CheckBox x:Name="AddressCheckBox" 
+					  Content="Адрес" 
+					  Click="AddressCheckBox_Click"
+					  />
+			<CheckBox x:Name="NumOfClosedAccountsCheckBox" 
+					  Content="Закрытые счета" 
+					  Click="NumOfClosedAccountsCheckBox_Click"
+					  />
 		</DockPanel>
 		<!-- DataGrid Клиенты- -->
-			<DataGrid x:Name="СlientsDataGrid"
+			<DataGrid x:Name="ClientsDataGrid"
 					  Grid.Row="1" 
 					  IsReadOnly="True"
 					  AutoGenerateColumns="False"
@@ -64,7 +83,6 @@
 										Visibility="Collapsed"
 										/>
 					<DataGridTextColumn x:Name="MainNameColumn"
-										Header="ФИО"
 										Binding="{Binding MainName}" 
 										CellStyle="{x:Null}"
 										/>
@@ -104,12 +122,11 @@
 		<!-- Сводные данные -->
 		<StackPanel x:Name="ClientsTotalsBar"
 					Orientation="Horizontal"
-					Grid.Row="1" 
+					Grid.Row="2" 
 					VerticalAlignment="Center"
 					HorizontalAlignment="Left"
 					>
 			<TextBlock x:Name="ClientsTotalNumberTitle"
-					   Text="ВИП клиентов"
 					   FontSize="14"
 					   FontWeight="Bold"
 					   Foreground="DarkSlateGray"

@@ -3,6 +3,7 @@ using GoodBankNS.ClientClasses;
 using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Data;
 using GoodBankNS.UI_one_client_account;
+using GoodBankNS.UserControlsLists;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,10 +28,12 @@ namespace GoodBankNS.UI_clients
 	public partial class DepartmentWindow : Window
 	{
 		private BankActions BA;
-		public DepartmentWindow(BankActions ba)
+		private ClientsList clientsListView;
+		private ClientsViewNameTags clntag;
+		public DepartmentWindow(BankActions ba, ClientsViewNameTags clntag)
 		{
 			InitializeComponent();
-			InitializeView(ba);
+			InitializeView(ba, clntag);
 			ShowVIPClients();
 			ShowVIPAccounts();
 		}
@@ -41,18 +44,19 @@ namespace GoodBankNS.UI_clients
 		/// Привязываем 
 		/// </summary>
 		/// <param name="ui"></param>
-		private void InitializeView(BankActions ba)
+		private void InitializeView(BankActions ba, ClientsViewNameTags clntag)
 		{
 			BA = ba;
-			VIPclientsTelCB.IsChecked	= true;
-			VIPclientsEmailCB.IsChecked = true;
+			this.clntag = clntag;
+			MainTitle.Text = "ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ";
+			clientsListView = new ClientsList(clntag);
+			ClientsList.Content = clientsListView;
 		}
 		private void ShowVIPClients()
 		{
 			var vipClients = BA.Clients.GetClientsList<IClientVIP>();
-			VIPclientsDataGrid.ItemsSource = vipClients;
-			VIPclientsTotalNumTB.Text = $"{vipClients.Count}";
-
+			clientsListView.ClientsDataGrid.ItemsSource = vipClients;
+			clientsListView.ClientsTotalNumberValue.Text = $"{vipClients.Count}";
 		}
 
 		private void ShowVIPAccounts()
@@ -88,58 +92,6 @@ namespace GoodBankNS.UI_clients
 		{
 
 		}
-
-		#region Clients DataGrid CheckBoxes handlers
-
-		private void VIPclientsBirthDateCB_Click(object sender, RoutedEventArgs e)
-		{
-			if(VIPclientsBirthDateCB.IsChecked == true)
-				CreationDateColumn.Visibility = Visibility.Visible;
-			else
-				CreationDateColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPclientsPassportCB_Click(object sender, RoutedEventArgs e)
-		{
-			if (VIPclientsPassportCB.IsChecked == true)
-				PassportOrTINColumn.Visibility = Visibility.Visible;
-			else
-				PassportOrTINColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPclientsTelCB_Click(object sender, RoutedEventArgs e)
-		{
-			if (VIPclientsTelCB.IsChecked == true)
-				TelephoneColumn.Visibility = Visibility.Visible;
-			else
-				TelephoneColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPclientsEmailCB_Click(object sender, RoutedEventArgs e)
-		{
-			if (VIPclientsEmailCB.IsChecked == true)
-				EmailColumn.Visibility = Visibility.Visible;
-			else
-				EmailColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPclientsAddressCB_Click(object sender, RoutedEventArgs e)
-		{
-			if (VIPclientsAddressCB.IsChecked == true)
-				AddressColumn.Visibility = Visibility.Visible;
-			else
-				AddressColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPclientsClosedAccountsCB_Click(object sender, RoutedEventArgs e)
-		{
-			if (VIPclientsClosedAccountsCB.IsChecked == true)
-				NummberOfClosedAccountsColumn.Visibility = Visibility.Visible;
-			else
-				NummberOfClosedAccountsColumn.Visibility = Visibility.Collapsed;
-		}
-
-		#endregion
 
 		#region Accounts DataGrid CheckBoxes handlers
 

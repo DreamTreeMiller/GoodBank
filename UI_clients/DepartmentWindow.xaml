@@ -22,9 +22,8 @@
 		<Grid.RowDefinitions>
 			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна ВИП клиенты-->
 			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. Меню "Выбрать клиента" "Выбрать счёт" "Поиск"-->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 2. "Показать" чекбоксы-->
-			<RowDefinition Height="*" MinHeight="120"/>		<!-- 3. Клиенты-->
-			<RowDefinition Height="Auto" />					<!-- 4. разделитель GridSplitter -->
+			<RowDefinition Height="*" MinHeight="120"/>		<!-- 2. Клиенты-->
+			<RowDefinition Height="Auto" />					<!-- 3. разделитель GridSplitter -->
 			<RowDefinition Height="*" MinHeight="120"/>		<!-- 5. Cчета-->
 			<RowDefinition MinHeight="50" MaxHeight="50"/>	<!-- 6. Сводные данные-->
 		</Grid.RowDefinitions>
@@ -34,7 +33,6 @@
 			<ColumnDefinition MinWidth="10" MaxWidth="10"/> <!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
 		<TextBlock x:Name="MainTitle" 
-				   Text="ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ"
 				   Grid.Row="0" Grid.Column="1"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center"
@@ -183,142 +181,16 @@
 				</Button.ToolTip>
 			</Button>
 		</UniformGrid>
-		<!-- Чекбоксы - день рождения, паспорт, телефон, имейл, адрес -->
-		<DockPanel x:Name="VIPclientsCheckBoxes"
-				   Grid.Row="2" Grid.Column="1"
-				   VerticalAlignment="Bottom"
-				   Margin="0,0,0,3" Grid.ColumnSpan="2"
-				   >
-			<CheckBox x:Name="VIPclientsBirthDateCB" 
-					  Content="День рождения"
-					  VerticalAlignment="Center"
-					  Margin="40,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsBirthDateCB_Click"
-					  />
-			<CheckBox x:Name="VIPclientsPassportCB" 
-					  Content="Паспорт"
-					  VerticalAlignment="Center"
-					  Margin="20,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsPassportCB_Click"
-					  />
-			<CheckBox x:Name="VIPclientsTelCB" 
-					  Content="Телефон"
-					  VerticalAlignment="Center"
-					  Margin="20,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsTelCB_Click"
-					  />
-			<CheckBox x:Name="VIPclientsEmailCB" 
-					  Content="Email"
-					  VerticalAlignment="Center"
-					  Margin="20,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsEmailCB_Click"
-					  />
-			<CheckBox x:Name="VIPclientsAddressCB" 
-					  Content="Адрес"
-					  VerticalAlignment="Center"
-					  Margin="20,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsAddressCB_Click"
-					  />
-			<CheckBox x:Name="VIPclientsClosedAccountsCB" 
-					  Content="Закрытые счета"
-					  VerticalAlignment="Center"
-					  Margin="20,0,0,0"
-					  FontSize="12" 
-					  Click="VIPclientsClosedAccountsCB_Click"
-					  />
-		</DockPanel>
-		<!-- DataGrid клиентов и сводные данные-->
-		<Grid Grid.Row="3" Grid.Column="1" >
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*" /> 	<!-- 0 - 3. DataGrid клентов-->
-				<RowDefinition Height="30"/>	<!-- 0 - 4. Сводные данные-->
-			</Grid.RowDefinitions>
-			<DataGrid x:Name="VIPclientsDataGrid"
-					  Grid.Row="0" 
-					  IsReadOnly="True"
-					  AutoGenerateColumns="False"
-					  CanUserResizeColumns="True"
-					  GridLinesVisibility="None"
-					  RowBackground="LightGray" 
-					  AlternatingRowBackground="White" 
-					  >
-				<DataGrid.CellStyle>
-					<Style>
-						<!-- Это надо, чтобы выделялась вся строка, а не только значения в клеточках-->
-						<Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
-						
-						<!-- Это выравнивание содержание клеточек дата гриды по центру-->
-						<Setter Property="TextBlock.TextAlignment" Value="Center"/>
-					</Style>
-				</DataGrid.CellStyle>
-				<DataGrid.Columns>
-					<DataGridTextColumn Header="№" Binding="{Binding ID}"/>
-					<DataGridTextColumn Header="ФИО"		
-										Binding="{Binding MainName}" 
-										CellStyle="{x:Null}"
-										/>
-					<DataGridTextColumn x:Name="CreationDateColumn"
-										Header="Дата рождения" 
-										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
-										Visibility="Collapsed"
-										/>
-					<DataGridTextColumn x:Name="PassportOrTINColumn" 
-										Header="Паспорт"	
-										Binding="{Binding PassportOrTIN}" 
-										Visibility="Collapsed"
-										/>
-					<DataGridTextColumn x:Name="TelephoneColumn" 
-										Header="Телефон"	
-										Binding="{Binding Telephone}" 
-										/>
-					<DataGridTextColumn x:Name="EmailColumn" 
-										Header="Email"		
-										Binding="{Binding Email}" 
-										/>
-					<DataGridTextColumn x:Name="AddressColumn" 
-										Header="Адрес"		
-										Binding="{Binding Address}" 
-										Visibility="Collapsed"
-										/>
-					<DataGridTextColumn Header="Текущие"	Binding="{Binding NumberOfCurrentAccounts}" />
-					<DataGridTextColumn Header="Вклады"		Binding="{Binding NumberOfDeposits}" />
-					<DataGridTextColumn Header="Кредиты"	Binding="{Binding NumberOfCredits}" />
-					<DataGridTextColumn x:Name="NummberOfClosedAccountsColumn" 
-										Header="Закрытые"	
-										Binding="{Binding NumberOfClosedAccounts}" 
-										Visibility="Collapsed"
-										/>
-				</DataGrid.Columns>
-			</DataGrid>
-			<StackPanel x:Name="VIPclientsTotalsBar"
-						Orientation="Horizontal"
-						Grid.Row="1" 
-						VerticalAlignment="Center"
-						HorizontalAlignment="Left"
-						>
-				<TextBlock Text="ВИП клиенов   "
-						   FontSize="14"
-						   FontWeight="Bold"
-						   Foreground="DarkSlateGray"
-						   />
-				<TextBlock x:Name="VIPclientsTotalNumTB" 
-						   FontSize="14"
-						   FontWeight="Bold"
-						   Foreground="Blue"
-						   />
-			</StackPanel>
-		</Grid>
-		<GridSplitter Grid.Row="4" Grid.Column="1" 
+		<!-- Чекбоксы, список клиентов и сводные данные-->
+		<ContentPresenter x:Name="ClientsList"
+						  Grid.Row="2" Grid.Column="1"
+						  />
+		<GridSplitter Grid.Row="3" Grid.Column="1" 
 					  Height="4"
 					  HorizontalAlignment="Stretch"
 					  Background="DarkGray" 
 					  />
-		<Grid Grid.Row="5" Grid.Column="1">
+		<Grid Grid.Row="4" Grid.Column="1">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="30"/> 	<!-- 6. "Счета"-->
 				<RowDefinition Height="20"/>	<!-- 7. "Показать" чекбоксы-->
@@ -427,7 +299,7 @@
 		</Grid>
 		<StackPanel x:Name="VIPaccountsTotalsBar"
 					Orientation="Horizontal"
-					Grid.Row="6" Grid.Column="1"
+					Grid.Row="5" Grid.Column="1"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Left"
 					>
