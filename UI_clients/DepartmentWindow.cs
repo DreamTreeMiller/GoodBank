@@ -30,6 +30,8 @@ namespace GoodBankNS.UI_clients
 		private BankActions BA;
 		private ClientsList clientsListView;
 		private ClientsViewNameTags clntag;
+		private AccountsList accountsListView;
+		private AccountsViewNameTags alntag;
 		public DepartmentWindow(BankActions ba, ClientsViewNameTags clntag)
 		{
 			InitializeComponent();
@@ -51,6 +53,9 @@ namespace GoodBankNS.UI_clients
 			MainTitle.Text = "ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ";
 			clientsListView = new ClientsList(clntag);
 			ClientsList.Content = clientsListView;
+
+			accountsListView = new AccountsList();
+			AccountsList.Content = accountsListView;
 		}
 		private void ShowVIPClients()
 		{
@@ -61,7 +66,7 @@ namespace GoodBankNS.UI_clients
 
 		private void ShowVIPAccounts()
 		{
-			VIPaccountsDataGrid.ItemsSource = BA.Accounts.GetAccountsList(ClientType.VIP);
+			accountsListView.AccountsDataGrid.ItemsSource = BA.Accounts.GetAccountsList(ClientType.VIP);
 		}
 
 		#endregion
@@ -93,84 +98,5 @@ namespace GoodBankNS.UI_clients
 
 		}
 
-		#region Accounts DataGrid CheckBoxes handlers
-
-		private void VIPCurrentAccountsCB_Click(object sender, RoutedEventArgs e)
-		{
-			// Если все другие галочки уже сняты, и эта тоже только что была снята
-			if (VIPCurrentAccountsCB.IsChecked == false &&
-					   VIPDepositsCB.IsChecked == false &&
-						VIPCreditsCB.IsChecked == false &&
-				 VIPClosedAccountsCB.IsChecked == false)
-			{
-				// То устанавливаем галочку обратно и выходим
-				VIPCurrentAccountsCB.IsChecked = true;
-				return;
-			}
-
-			if (VIPCurrentAccountsCB.IsChecked == true)
-				VIPCurrAccountColumn.Visibility = Visibility.Visible;
-			else
-				VIPCurrAccountColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPDepositsCB_Click(object sender, RoutedEventArgs e)
-		{
-			// Если все другие галочки уже сняты, и эта тоже только что была снята
-			if (VIPCurrentAccountsCB.IsChecked == false &&
-					   VIPDepositsCB.IsChecked == false &&
-						VIPCreditsCB.IsChecked == false &&
-				 VIPClosedAccountsCB.IsChecked == false)
-			{
-				// То устанавливаем галочку обратно и выходим
-				VIPDepositsCB.IsChecked = true;
-				return;
-			}
-
-			if (VIPDepositsCB.IsChecked == true)
-				VIPDepositColumn.Visibility = Visibility.Visible;
-			else
-				VIPDepositColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPCreditsCB_Click(object sender, RoutedEventArgs e)
-		{
-			// Если все другие галочки уже сняты, и эта тоже только что была снята
-			if (VIPCurrentAccountsCB.IsChecked == false &&
-					   VIPDepositsCB.IsChecked == false &&
-						VIPCreditsCB.IsChecked == false &&
-				 VIPClosedAccountsCB.IsChecked == false)
-			{
-				// То устанавливаем галочку обратно и выходим
-				VIPCreditsCB.IsChecked = true;
-				return;
-			}
-
-			if (VIPCreditsCB.IsChecked == true)
-				VIPCreditColumn.Visibility = Visibility.Visible;
-			else
-				VIPCreditColumn.Visibility = Visibility.Collapsed;
-		}
-
-		private void VIPClosedAccountsCB_Click(object sender, RoutedEventArgs e)
-		{
-			// Если все другие галочки уже сняты, и эта тоже только что была снята
-			if (VIPCurrentAccountsCB.IsChecked == false &&
-					   VIPDepositsCB.IsChecked == false &&
-						VIPCreditsCB.IsChecked == false &&
-				 VIPClosedAccountsCB.IsChecked == false)
-			{
-				// То устанавливаем галочку обратно и выходим
-				VIPClosedAccountsCB.IsChecked = true;
-				return;
-			}
-
-			if (VIPClosedAccountsCB.IsChecked == true)
-				VIPClosedDateColumn.Visibility = Visibility.Visible;
-			else
-				VIPClosedDateColumn.Visibility = Visibility.Collapsed;
-		}
-
-		#endregion
 	}
 }

@@ -5,8 +5,175 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GoodBankNS.UserControlsLists"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="180" d:DesignWidth="680">
     <Grid>
-            
+			<Grid.RowDefinitions>
+				<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 0. "Счета"-->
+				<RowDefinition MinHeight="20" MaxHeight="20"/>	<!-- 1. "Показать" чекбоксы-->
+				<RowDefinition Height="*" />					<!-- 2. DataGrid счетов-->
+				<RowDefinition MinHeight="50" MaxHeight="50"/>	<!-- 3. Сводные данные-->
+			</Grid.RowDefinitions>
+			<TextBlock Text="Сундучки"
+					   Grid.Row="0" 
+					   VerticalAlignment="Center"
+					   Margin="40,0,0,0"
+					   FontFamily="Lucida Sans Unicode"
+					   FontSize="12"
+					   FontWeight="Heavy"
+					   Foreground="Maroon" Grid.ColumnSpan="2"
+					   />
+			<!-- Чекбоксы - Текущие, вклады, кредиты, закрытые -->
+			<DockPanel x:Name="AccountsCheckBoxes"
+					   Grid.Row="1" 
+					   VerticalAlignment="Bottom"
+					   Margin="0,0,0,3" 
+					   >
+				<CheckBox x:Name="CurrentAccountsCB" 
+						  Content="Текущие"
+						  IsChecked="True"
+						  VerticalAlignment="Center"
+						  Margin="40,0,0,0"
+						  FontSize="12" 
+						  Click="CurrentAccountsCB_Click"
+						  />
+				<CheckBox x:Name="DepositsCB" 
+						  Content="Вклады"
+						  IsChecked="True"
+						  VerticalAlignment="Center"
+						  Margin="40,0,10,0"
+						  FontSize="12" 
+						  Click="DepositsCB_Click"
+						  />
+				<CheckBox x:Name="CreditsCB" 
+						  Content="Кредиты"
+						  IsChecked="True"
+						  VerticalAlignment="Center"
+						  Margin="40,0,10,0"
+						  FontSize="12" 
+						  Click="CreditsCB_Click"
+						  />
+				<CheckBox x:Name="ClosedAccountsCB" 
+						  Content="Закрытые"
+						  VerticalAlignment="Center"
+						  Margin="40,0,10,0"
+						  FontSize="12" 
+						  Click="ClosedAccountsCB_Click" 
+						  />
+			</DockPanel>
+			<DataGrid x:Name="AccountsDataGrid"
+					  Grid.Row="2"
+					  IsReadOnly="True" 
+					  AutoGenerateColumns="False"
+					  CanUserResizeColumns="True"
+					  GridLinesVisibility="None"
+					  RowBackground="LightGray" 
+					  AlternatingRowBackground="White" 
+					  >
+				<DataGrid.CellStyle>
+					<Style>
+						<!-- Это надо, чтобы выделялась вся строка, а не только значения в клеточках-->
+						<Setter Property="FrameworkElement.HorizontalAlignment" Value="Stretch"/>
+						<!-- Это выравнивание содержание клеточек дата гриды по центру-->
+						<Setter Property="TextBlock.TextAlignment" Value="Center"/>
+					</Style>
+				</DataGrid.CellStyle>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="№"	Binding="{Binding ID}"/>
+					<DataGridTextColumn x:Name="ClientTypeColumn" 
+										Header="Клиент"	
+										Binding="{Binding ClientType}"
+										Visibility="Collapsed"
+										/>
+					<DataGridTextColumn x:Name="ClientNameColumn" 
+										Header="ФИО" 
+										Binding="{Binding ClientName}"
+										CellStyle="{x:Null}"
+										/>
+					<DataGridTextColumn Header="№ счета" Binding="{Binding AccountNumber}"/>
+					<DataGridTextColumn x:Name="AccountTypeColumn"
+										Header="Тип"
+										Binding="{Binding AccType}"
+										Visibility="Collapsed"
+										/>
+					<DataGridTextColumn x:Name="CurrAccountColumn" 
+										Header="Текущий" 
+										Binding="{Binding CurrentAmount}"
+										/>
+					<DataGridTextColumn x:Name="DepositColumn" 
+										Header="Вклад"	 
+										Binding="{Binding DepositAmount}"
+										/>
+					<DataGridTextColumn x:Name="CreditColumn" 
+										Header="Долг"	 
+										Binding="{Binding DebtAmount}"
+										/>
+					<DataGridTextColumn Header=" %  " Binding="{Binding Interest}"/>
+					<DataGridTextColumn Header="Открыт" 
+										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Opened}"
+										/>
+					<DataGridTextColumn x:Name="ClosedDateColumn" 
+										Header="Закрыт" 
+										Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Closed}"
+										Visibility="Collapsed"
+										/>
+				</DataGrid.Columns>
+			</DataGrid>
+		<StackPanel x:Name="AccountsTotalsBar"
+					Orientation="Horizontal"
+					Grid.Row="4" Grid.Column="1"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Left"
+					>
+			<TextBlock Text="Всего: " 
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						/>
+			<TextBlock Text="Тек. счетов:"
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						Margin="10, 0"
+						/>
+			<TextBlock x:Name="CurrentAccountsTotalNumTB" 
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkBlue"
+						/>
+			<TextBlock Text="Вкладов"
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						Margin="10, 0"
+						/>
+			<TextBlock x:Name="DepositsTotalNumTB" 
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkBlue"
+						/>
+			<TextBlock Text="Кредитов"
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						Margin="10, 0"
+						/>
+			<TextBlock x:Name="CreditsTotalNumTB" 
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkBlue"
+						/>
+			<TextBlock Text="Закрытых счетов"
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						Margin="10, 0"
+						/>
+			<TextBlock x:Name="ClosedAccountsTotalNumTB" 
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkBlue"
+						Margin="10, 0, 0, 0"
+						/>
+		</StackPanel>
     </Grid>
 </UserControl>

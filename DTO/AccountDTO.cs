@@ -26,7 +26,6 @@ namespace GoodBankNS.DTO
 		public int				DepositAmount	{ get; }
 		public int				DebtAmount		{ get; }
 		public int				Interest		{ get; }
-		public string			AccStatus		{ get; }
 		public DateTime			Opened			{ get; }
 		public DateTime?		Closed			{ get; }
 
@@ -35,7 +34,6 @@ namespace GoodBankNS.DTO
 			ID				= acc.ID;    // Account ID
 			AccountNumber	= acc.AccountNumber;
 			Interest		= acc.Interest;
-			AccStatus		= (acc.AccountStatus == AccountStatus.Opened) ? "Open" : "Closed";
 			Opened			= acc.Opened;
 			Closed			= acc.Closed;
 
