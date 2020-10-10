@@ -43,8 +43,8 @@ namespace GoodBankNS.DTO
 		public string		LastName				{ get; set; }
 		public string		MainName				{ get; set; }
 		public string		DirectorName			{ get; }
-		public string		PassportOrTIN			{ get; set; }
 		public DateTime		CreationDate			{ get; set; }
+		public string		PassportOrTIN			{ get; set; }
 		public string		Telephone				{ get; set; }
 		public string		Email					{ get; set; }
 		public string		Address					{ get; set; }

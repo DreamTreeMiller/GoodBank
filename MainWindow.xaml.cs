@@ -47,45 +47,41 @@ namespace GoodBankNS
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-			ClientsViewNameTags cvnt = new ClientsViewNameTags();
-			cvnt.CreationDateCBTag		= "Дата рождения";    
-			cvnt.PassportOrTIN_CB_Tag	= "Паспорт";		  
-			cvnt.ClientTypeColumn		= false;			  
-			cvnt.MainNameTag			= "ФИО";              
-			cvnt.ClientNameTag			= "ВИП клиентов:   "; 
-
-			DepartmentWindow vipClientsWin = new DepartmentWindow(BA, cvnt);
+			DepartmentWindow vipClientsWin = new DepartmentWindow(WindowID.DepartmentVIP, BA);
 			vipClientsWin.ShowDialog();
 		}
 
 		private void SimpleClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			DepartmentWindow simpleClientsWin = new DepartmentWindow(WindowID.DepartmentSIM, BA);
+			simpleClientsWin.ShowDialog();
 		}
 
 		private void OrgClientsDeptButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			DepartmentWindow orgClientsWin = new DepartmentWindow(WindowID.DepartmentORG, BA);
+			orgClientsWin.ShowDialog();
 		}
 
 		private void BankManagerButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			DepartmentWindow allClientsWin = new DepartmentWindow(WindowID.DepartmentALL, BA);
+			allClientsWin.ShowDialog();
 		}
 
 		private void SearchButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			MessageBox.Show("Функция поиска в разработке");
 		}
 
 		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			MessageBox.Show("Прокрутить время на месяц вперёд");
 		}
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)
 		{
-			GoodBank = Generate.Bank(20, 100, 40);
+			Generate.Bank(BA, 20, 100, 40);
 			MessageBox.Show("Клиенты и счета созданы!");
 		}
 	}

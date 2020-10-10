@@ -10,6 +10,7 @@ namespace GoodBankNS.ClientClasses
 	{
 		VIP,
 		Simple,
-		Organization
+		Organization,
+		All
 	}
 }

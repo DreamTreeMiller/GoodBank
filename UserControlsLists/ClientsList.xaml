@@ -26,10 +26,16 @@
 				   VerticalAlignment="Bottom"
 				   Margin="0,0,0,3" 
 				   >
+			<CheckBox x:Name="DirectorCheckBox"
+					  Content="Директор"
+					  Click="DirectorCheckBox_Click"
+					  />
 			<CheckBox x:Name="CreationDateCheckBox" 
+					  Content="Дата рождения"
 					  Click="CreationDateCheckBox_Click"
 					  />
-			<CheckBox x:Name="PassportOrTINCheckBox" 
+			<CheckBox x:Name="PassportOrTINCheckBox"
+					  Content="Паспорт"
 					  Click="PassportOrTINCheckBox_Click" 
 					  />
 			<CheckBox x:Name="TelCheckBox" 
@@ -78,13 +84,20 @@
 				</DataGrid.CellStyle>
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="№" Binding="{Binding ID}"/>
-					<DataGridTextColumn x:Name="ClientTypeColumn" Header="Тип" 
+					<DataGridTextColumn x:Name="ClientTypeColumn" 
+										Header="Тип" 
 										Binding="{Binding ClientTypeTag}"
-										Visibility="Collapsed"
 										/>
 					<DataGridTextColumn x:Name="MainNameColumn"
+										Header="ФИО"
 										Binding="{Binding MainName}" 
 										CellStyle="{x:Null}"
+										/>
+					<DataGridTextColumn x:Name="DirectorColumn"
+										Header="Директор"
+										Binding="{Binding DirectorName}" 
+										CellStyle="{x:Null}"
+										Visibility="Collapsed"
 										/>
 					<DataGridTextColumn x:Name="CreationDateColumn"
 										Header="Дата рождения" 
@@ -126,12 +139,17 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Left"
 					>
-			<TextBlock x:Name="ClientsTotalNumberTitle"
+			<TextBlock Text="Всего"
 					   FontSize="14"
 					   FontWeight="Bold"
 					   Foreground="DarkSlateGray"
 					   />
-			<TextBlock Text="   "/>
+			<TextBlock x:Name="ClientsTotalNumberTitle"
+					   Margin="10,0"
+					   FontSize="14"
+					   FontWeight="Bold"
+					   Foreground="DarkSlateGray"
+					   />
 			<TextBlock x:Name="ClientsTotalNumberValue" 
 						FontSize="14"
 						FontWeight="Bold"

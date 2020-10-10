@@ -17,6 +17,13 @@ namespace GoodBankNS.BankInside
 		public ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType)
 		{
 			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			if(clientType == ClientType.All)
+			{
+				for (int i = 0; i < accounts.Count; i++)
+					accList.Add(new AccountDTO(accounts[i], GetClientByID(accounts[i].ClientID)));
+				return accList;
+			}
+
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientType == clientType)
 					accList.Add(new AccountDTO(accounts[i], GetClientByID(accounts[i].ClientID)));

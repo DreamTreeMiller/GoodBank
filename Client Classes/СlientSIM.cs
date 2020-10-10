@@ -46,7 +46,11 @@ namespace GoodBankNS.ClientClasses
 		public СlientSIM(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
-
+			FirstName		= newClient.FirstName;
+			MiddleName		= newClient.MiddleName;
+			LastName		= newClient.LastName;
+			PasspostNumber	= newClient.PassportOrTIN;
+			BirthDate		= newClient.CreationDate;
 		}
 
 		#endregion

@@ -58,7 +58,12 @@ namespace GoodBankNS.ClientClasses
 		public СlientORG(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
-
+			OrgName				= newClient.MainName;
+			this.TIN			= newClient.PassportOrTIN;
+			RegistrationDate	= newClient.CreationDate;
+			DirectorFirstName	= newClient.FirstName;
+			DirectorMiddleName	= newClient.MiddleName;
+			DirectorLastName	= newClient.LastName;
 		}
 
 		#endregion

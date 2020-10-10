@@ -28,16 +28,22 @@ namespace GoodBankNS.UI_clients
 	public partial class DepartmentWindow : Window
 	{
 		private BankActions BA;
+		private WindowID wid;
+
+		private WindowNameTags deptwinnametags;
 		private ClientsList clientsListView;
 		private ClientsViewNameTags clntag;
+
+		private ClientType ClientTypeForAccountsList;
 		private AccountsList accountsListView;
 		private AccountsViewNameTags alntag;
-		public DepartmentWindow(BankActions ba, ClientsViewNameTags clntag)
+		public DepartmentWindow(WindowID wid, BankActions ba)
 		{
 			InitializeComponent();
-			InitializeView(ba, clntag);
-			ShowVIPClients();
-			ShowVIPAccounts();
+			InitializeView(wid, ba);
+			ShowClients();
+			SetClientTypeForAccountsList();
+			ShowAccounts();
 		}
 
 		#region Инициализация обработчиков кнопок, вида, списков
@@ -46,38 +52,85 @@ namespace GoodBankNS.UI_clients
 		/// Привязываем 
 		/// </summary>
 		/// <param name="ui"></param>
-		private void InitializeView(BankActions ba, ClientsViewNameTags clntag)
+		private void InitializeView(WindowID wid, BankActions ba)
 		{
+			// Прикручиваем банк с обработчиками всех действий над счетами
 			BA = ba;
-			this.clntag = clntag;
-			MainTitle.Text = "ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ";
+			this.wid = wid;
+
+			// Вставляем нужные надписи в окошко департаментов
+						 deptwinnametags = new WindowNameTags(wid);
+								   Title = deptwinnametags.SystemWindowTitle;
+						  MainTitle.Text = deptwinnametags.WindowHeader;
+			WinMenu_SelectClient.Content = deptwinnametags.SelectClientTag;
+			   WinMenu_AddClient.Content = deptwinnametags.AddClientTag;
+
+			// Создаем область для списка клиентов. Вставляем нужные надписи
+			clntag			= new ClientsViewNameTags(wid);
 			clientsListView = new ClientsList(clntag);
 			ClientsList.Content = clientsListView;
 
+			// Создаем область для списка счетов. Вставляем нужные надписи
 			accountsListView = new AccountsList();
 			AccountsList.Content = accountsListView;
 		}
-		private void ShowVIPClients()
+		private void ShowClients()
 		{
-			var vipClients = BA.Clients.GetClientsList<IClientVIP>();
-			clientsListView.ClientsDataGrid.ItemsSource = vipClients;
-			clientsListView.ClientsTotalNumberValue.Text = $"{vipClients.Count}";
+			ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
+
+			switch (wid)
+			{
+				case WindowID.DepartmentVIP:
+					clientsList = BA.Clients.GetClientsList<IClientVIP>();
+					break;
+				case WindowID.DepartmentSIM:
+					clientsList = BA.Clients.GetClientsList<IClientSimple>();
+					break;
+				case WindowID.DepartmentORG:
+					clientsList = BA.Clients.GetClientsList<IClientOrg>();
+					break;
+				case WindowID.DepartmentALL:
+					clientsList = BA.Clients.GetClientsList<IClient>();
+					break;
+			}
+			clientsListView.ClientsDataGrid.ItemsSource = clientsList;
+			clientsListView.ClientsTotalNumberValue.Text = $"{clientsList.Count}";
 		}
 
-		private void ShowVIPAccounts()
+		private void SetClientTypeForAccountsList()
 		{
-			accountsListView.AccountsDataGrid.ItemsSource = BA.Accounts.GetAccountsList(ClientType.VIP);
+			switch (wid)
+			{
+				case WindowID.DepartmentVIP:
+					ClientTypeForAccountsList = ClientType.VIP;
+					return;
+				case WindowID.DepartmentSIM:
+					ClientTypeForAccountsList = ClientType.Simple;
+					return;
+				case WindowID.DepartmentORG:
+					ClientTypeForAccountsList = ClientType.Organization;
+					return;
+				case WindowID.DepartmentALL:
+					ClientTypeForAccountsList = ClientType.All;
+					return;
+			}
+		}
+
+		private void ShowAccounts()
+		{
+			accountsListView.AccountsDataGrid.ItemsSource = 
+				BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
 		}
 
 		#endregion
 
-		private void VIPWinMenu_SelectClient_Click(object sender, RoutedEventArgs e)
+		private void WinMenu_SelectClient_Click(object sender, RoutedEventArgs e)
 		{
 			ClientWindow clientWindow = new ClientWindow();
 			clientWindow.ShowDialog();
 		}
 
-		private void VIPWinMenu_AddClient_Click(object sender, RoutedEventArgs e)
+		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)
 		{
 			AddClientWindow addVIPclientWin = new AddClientWindow();
 			bool? result = addVIPclientWin.ShowDialog();
@@ -85,15 +138,15 @@ namespace GoodBankNS.UI_clients
 			if (result != true) return;
 			IClientDTO newClient = addVIPclientWin.newClientData;
 			BA.Clients.AddClient(newClient);
-			ShowVIPClients();
+			ShowClients();
 		}
 
-		private void VIPWinMenu_SelectAccount_Click(object sender, RoutedEventArgs e)
+		private void WinMenu_SelectAccount_Click(object sender, RoutedEventArgs e)
 		{
 
 		}
 
-		private void VIPWinMenu_Search_Click(object sender, RoutedEventArgs e)
+		private void WinMenu_Search_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

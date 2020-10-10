@@ -35,19 +35,19 @@ namespace GoodBankNS.UserControlsLists
 			// Названия чекбоксов
 			CreationDateCheckBox.Content  = tags.CreationDateCBTag;
 			PassportOrTINCheckBox.Content = tags.PassportOrTIN_CB_Tag;
+			DirectorCheckBox.Visibility   = tags.ShowDirectorCB;
 
 			// Таблица 
 			// Показывать колонку типa (физик / юрик) или нет
-			if (tags.ClientTypeColumn)
-				ClientTypeColumn.Visibility = Visibility.Visible;
-			else
-				ClientTypeColumn.Visibility = Visibility.Collapsed;
+			ClientTypeColumn.Visibility = tags.ShowClientTypeColumn;
 
 			// ФИО или Название организации
-			MainNameColumn.Header		  = tags.MainNameTag;    
+				 MainNameColumn.Header = tags.MainNameTag;    
+			 CreationDateColumn.Header = tags.CreationDateCBTag;
+			PassportOrTINColumn.Header = tags.PassportOrTIN_CB_Tag;
 
 			// Сводка: ВИП клиентов, физиков, юриков
-			ClientsTotalNumberTitle.Text  = tags.ClientNameTag;  
+			ClientsTotalNumberTitle.Text  = tags.TotalNameTag;  
 		}
 
 		#region CheckBoxes handlers
@@ -58,6 +58,14 @@ namespace GoodBankNS.UserControlsLists
 				CreationDateColumn.Visibility = Visibility.Visible;
 			else
 				CreationDateColumn.Visibility = Visibility.Collapsed;
+		}
+
+		private void DirectorCheckBox_Click(object sender, RoutedEventArgs e)
+		{
+			if (DirectorCheckBox.IsChecked == true)
+				DirectorColumn.Visibility = Visibility.Visible;
+			else
+				DirectorColumn.Visibility = Visibility.Collapsed;
 		}
 
 		private void PassportOrTINCheckBox_Click(object sender, RoutedEventArgs e)

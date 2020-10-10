@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:GoodBankNS.UI_clients"
         mc:Ignorable="d"
         Title="Богатые клиенты" 
-		Height="700" Width="700"
-		MinHeight="450" MinWidth="600"
+		Height="700" Width="750"
+		MinHeight="470" MinWidth="600"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
@@ -40,20 +40,20 @@
 				   FontSize="16" 
 				   />
 		<!-- Менюшка - показать клиента, добавить клиента, показать счет, поиск -->
-		<UniformGrid x:Name="VIPWinMenuBar" 
+		<UniformGrid x:Name="WinMenuBar" 
 					 Grid.Row="1" Grid.Column="1"
 					 Rows="1" Columns="4"
 					 Height="30"
 					 VerticalAlignment="Center"
 					 HorizontalAlignment="Stretch" 
 					 >
-			<Button x:Name="VIPWinMenu_SelectClient"
+			<Button x:Name="WinMenu_SelectClient"
 					Content="Показать персону"
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
 					BorderThickness="0" 
-					Click="VIPWinMenu_SelectClient_Click"
+					Click="WinMenu_SelectClient_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -80,13 +80,13 @@
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<Button x:Name="VIPWinMenu_AddClient"
+			<Button x:Name="WinMenu_AddClient"
 					Content="Добавить персону"
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
 					BorderThickness="0" 
-					Click="VIPWinMenu_AddClient_Click"
+					Click="WinMenu_AddClient_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -113,13 +113,13 @@
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<Button x:Name="VIPWinMenu_SelectAccount"
+			<Button x:Name="WinMenu_SelectAccount"
 					Content="Открыть сундучок"
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
 					BorderThickness="0" 
-					Click="VIPWinMenu_SelectAccount_Click"
+					Click="WinMenu_SelectAccount_Click"
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -146,12 +146,13 @@
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<Button x:Name="VIPWinMenu_Search" 
+			<Button x:Name="WinMenu_Search" 
 					Content="Поиск"
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0" Click="VIPWinMenu_Search_Click"
+					BorderThickness="0" 
+					Click="WinMenu_Search_Click"
 					>
 				<!-- Примочка для изменения цвета кнопки при наведении-->
 				<Button.Style>

@@ -79,7 +79,13 @@
     <Compile Include="Account Classes\AccountCredit.cs" />
     <Compile Include="Account Classes\AccountCurrent.cs" />
     <Compile Include="Account Classes\AccountDeposit.cs" />
-    <Compile Include="Generate\Generate.cs" />
+    <Compile Include="Imitation\Generate.cs" />
+    <Compile Include="Imitation\Names-FemaleFirst.cs" />
+    <Compile Include="Imitation\Names-FemaleLast.cs" />
+    <Compile Include="Imitation\Names-FemaleMiddle.cs" />
+    <Compile Include="Imitation\Names-MaleFirst.cs" />
+    <Compile Include="Imitation\Names-MaleLast.cs" />
+    <Compile Include="Imitation\Names-MaleMiddle.cs" />
     <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
     <Compile Include="Interfaces_Actions\ITransactions.cs" />
     <Compile Include="BankInside\GoodBank.cs" />
@@ -118,7 +124,7 @@
     <Compile Include="UserControlsLists\AccountsList.xaml.cs">
       <DependentUpon>AccountsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControlsLists\ListsNameTags.cs" />
+    <Compile Include="UserControlsLists\NameTags.cs" />
     <Compile Include="UserControlsLists\ClientsList.xaml.cs">
       <DependentUpon>ClientsList.xaml</DependentUpon>
     </Compile>
