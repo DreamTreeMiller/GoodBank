@@ -1,4 +1,5 @@
 ﻿using GoodBankNS.DTO;
+using GoodBankNS.UserControlsLists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +22,16 @@ namespace GoodBankNS.UI_one_client_account
 	public partial class AddClientWindow : Window
 	{
 		public ClientDTO newClientData = new ClientDTO();
-		public AddClientWindow()
+		public AddClientWindow(AddEditClientNameTags nameTags)
 		{
 			InitializeComponent();
-			InitializeTextFields();
+			InitializeTextFields(nameTags);
 		}
 
-		private void InitializeTextFields()
+		private void InitializeTextFields(AddEditClientNameTags nameTags)
 		{
-			Title		= "Добавить важную персону";
-			Header.Text = "ДАННЫЕ ВАЖНОЙ ПЕРСОНЫ";
+			Title		= nameTags.SystemWindowTitle;
+			Header.Text = nameTags.WindowHeader;
 			newClientData.CreationDate	= DateTime.Now;
 			DataContext					= newClientData;
 		}

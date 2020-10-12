@@ -17,9 +17,13 @@ namespace GoodBankNS.UserControlsLists
 		DepartmentSIM,
 		DepartmentORG,
 		DepartmentALL,
-		ClientVIP,
-		ClientSIM,
-		ClientORG,
+		AddClientVIP,
+		AddClientSIM,
+		AddClientORG,
+		AddClientALL,
+		EditClientVIP,
+		EditClientSIM,
+		EditClientORG,
 		Account
 	}
 
@@ -32,7 +36,7 @@ namespace GoodBankNS.UserControlsLists
 
 		public WindowNameTags(WindowID wid)
 		{
-			switch(wid)
+			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
 					SystemWindowTitle = "Очень важные персоны";
@@ -61,6 +65,7 @@ namespace GoodBankNS.UserControlsLists
 			}
 		}
 	}
+
 	/// <summary>
 	/// Структура для передачи текста полей списка клиентов в зависимости от окна и типа клиентов
 	/// </summary>
@@ -69,21 +74,21 @@ namespace GoodBankNS.UserControlsLists
 		public string CreationDateCBTag;        // Дата рождения или дата регистрации
 		public string PassportOrTIN_CB_Tag;     // Номер паспорта или ИНН
 		public Visibility ShowDirectorCB;       // Показывать checkbox директор
-		public Visibility   ShowClientTypeColumn;     // Показывать колонку тип - физик или юрик
+		public Visibility ShowClientTypeColumn;     // Показывать колонку тип - физик или юрик
 		public string MainNameTag;              // ФИО или Название организации
 		public string TotalNameTag;             // Сводка: ВИП клиентов, физиков, юриков
 
 		public ClientsViewNameTags(WindowID wid)
 		{
-			switch(wid)
+			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
-					CreationDateCBTag	 = "Дата рождения";
+					CreationDateCBTag = "Дата рождения";
 					PassportOrTIN_CB_Tag = "Паспорт";
 					ShowClientTypeColumn = Visibility.Collapsed;
-					ShowDirectorCB	     = Visibility.Collapsed;
-					MainNameTag			 = "ФИО";
-					TotalNameTag		 = "ВИП клиентов:";
+					ShowDirectorCB = Visibility.Collapsed;
+					MainNameTag = "ФИО";
+					TotalNameTag = "ВИП клиентов:";
 					break;
 				case WindowID.DepartmentSIM:
 					CreationDateCBTag = "Дата рождения";
@@ -108,6 +113,43 @@ namespace GoodBankNS.UserControlsLists
 					ShowDirectorCB = Visibility.Visible;
 					MainNameTag = "ФИО / Название";
 					TotalNameTag = "клиентов:";
+					break;
+			}
+		}
+	}
+
+	public class AddEditClientNameTags
+	{
+		public string SystemWindowTitle;
+		public string WindowHeader;
+		public Visibility ClientTypeComboBox = Visibility.Collapsed;
+		public Visibility OrganizationVisibility = Visibility.Collapsed;
+		public Visibility PersonVisibility = Visibility.Visible;
+
+		public AddEditClientNameTags(WindowID wid)
+		{
+			switch(wid)
+			{
+				case WindowID.DepartmentVIP:
+					SystemWindowTitle		= "Добавить ВИП";
+					WindowHeader			= "ВНЕСТИ ДАННЫЕ ОЧЕНЬ ВАЖНОЙ ПЕРСОНЫ";
+					break;
+				case WindowID.DepartmentSIM:
+					SystemWindowTitle		= "Добавить физика";
+					WindowHeader			= "ВНЕСТИ ДАННЫЕ ФИЗИКА";
+					break;
+				case WindowID.DepartmentORG:
+					SystemWindowTitle		= "Добавить юрика";
+					WindowHeader			= "ВНЕСТИ ДАННЫЕ ЮРИКА";
+					OrganizationVisibility	= Visibility.Visible;
+					PersonVisibility		= Visibility.Collapsed;
+					break;
+				case WindowID.DepartmentALL:
+					SystemWindowTitle		= "Добавить клиента";
+					WindowHeader			= "ВНЕСТИ ДАННЫЕ КЛИЕНТА";
+					OrganizationVisibility	= Visibility.Collapsed;
+					PersonVisibility		= Visibility.Visible;
+					ClientTypeComboBox		= Visibility.Visible;
 					break;
 			}
 		}

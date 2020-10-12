@@ -37,6 +37,7 @@ namespace GoodBankNS.UI_clients
 		private ClientType ClientTypeForAccountsList;
 		private AccountsList accountsListView;
 		private AccountsViewNameTags alntag;
+
 		public DepartmentWindow(WindowID wid, BankActions ba)
 		{
 			InitializeComponent();
@@ -66,14 +67,15 @@ namespace GoodBankNS.UI_clients
 			   WinMenu_AddClient.Content = deptwinnametags.AddClientTag;
 
 			// Создаем область для списка клиентов. Вставляем нужные надписи
-			clntag			= new ClientsViewNameTags(wid);
-			clientsListView = new ClientsList(clntag);
+			clntag				= new ClientsViewNameTags(wid);
+			clientsListView		= new ClientsList(clntag);
 			ClientsList.Content = clientsListView;
 
 			// Создаем область для списка счетов. Вставляем нужные надписи
-			accountsListView = new AccountsList();
+			accountsListView	= new AccountsList();
 			AccountsList.Content = accountsListView;
 		}
+
 		private void ShowClients()
 		{
 			ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
@@ -126,13 +128,20 @@ namespace GoodBankNS.UI_clients
 
 		private void WinMenu_SelectClient_Click(object sender, RoutedEventArgs e)
 		{
-			ClientWindow clientWindow = new ClientWindow();
+			var client = clientsListView.ClientsDataGrid.SelectedItem as ClientDTO;
+			if (client == null)
+			{
+				MessageBox.Show("Выберите клиента для показа");
+				return;
+			}
+			ClientWindow clientWindow = new ClientWindow(client);
 			clientWindow.ShowDialog();
 		}
 
 		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)
 		{
-			AddClientWindow addVIPclientWin = new AddClientWindow();
+			AddEditClientNameTags nameTags  = new AddEditClientNameTags(wid);
+			AddClientWindow addVIPclientWin = new AddClientWindow(nameTags);
 			bool? result = addVIPclientWin.ShowDialog();
 			
 			if (result != true) return;

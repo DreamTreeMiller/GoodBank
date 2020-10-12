@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodBankNS.UI_one_client_account"
         mc:Ignorable="d"
-        Title="ВИП" 
-		Height="450" Width="800"
-		MinHeight="470" MinWidth="600"
+        Title="{Binding}" 
+		Height="550" Width="800"
+		MinHeight="550" MinWidth="600"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
@@ -39,11 +39,11 @@
 		<Grid.RowDefinitions>
 			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна ВИП клиенты-->
 			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. "Персональные данные"-->
-			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - все поля перс. данных-->
+			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - данные человека или организации-->
+															<!-- 2. Вложенная табличка - тел, имейл, адрес-->
 			<RowDefinition MinHeight="15" MaxHeight="15"/>	<!-- 3. Пустое место-->
 			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 4. Меню "Открыть" 4"Закрыть" -->
 			<RowDefinition Height="*"    MinHeight="180"/>	<!-- 5. Дата грид счетов-->
-			<RowDefinition MinHeight="50" MaxHeight="50"/>	<!-- 9. Пустое место-->
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition MinWidth="20" MaxWidth="20"/>	<!-- Отступ слева-->
@@ -51,7 +51,6 @@
 			<ColumnDefinition MinWidth="20" MaxWidth="20"/> <!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
 		<TextBlock x:Name="MainTitle" 
-				   Text="ОЧЕНЬ ВАЖНАЯ ПЕРСОНА"
 				   Grid.Row="0" Grid.Column="1"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center"
@@ -108,94 +107,168 @@
 			</Button>
 		</StackPanel>
 		<!--Поля данных о клиенте -->
-		<Grid x:Name="ClientInfo" 
+		<Grid x:Name="ClientInfo"
 			  Grid.Row="2" Grid.Column="1"
-			  Margin="0,5"
 			  >
 			<Grid.RowDefinitions>
-				<RowDefinition Height="30"/>
-				<RowDefinition Height="30"/>
-				<RowDefinition Height="30"/>
-				<RowDefinition Height="30"/>
+				<RowDefinition Height="Auto"/>		<!-- 0. Вложенная табличка - данные человека или организации-->
+				<RowDefinition Height="Auto"/>		<!-- 1. Вложенная табличка - тел, имейл, адрес-->
 			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="2*"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="2*"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock x:Name="ClientWindow_ClientNameTitle" 
-					   Grid.Row="0" Grid.Column="0"
-					   Text="Фамилия:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientNameValue" 
-					   Grid.Row="0" Grid.Column="1"
-					   Text="Пупкин"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_Client2ndNameTitle" 
-					   Grid.Row="1" Grid.Column="0"
-					   Text="Имя, отчество:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_Client2ndNameValue" 
-					   Grid.Row="1" Grid.Column="1"
-					   Text="Василий Ануфриевич"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientDateTitle" 
-					   Grid.Row="0" Grid.Column="2"
-					   Text="Дата рождения:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientDateValue" 
-					   Grid.Row="0" Grid.Column="3"
-					   Text="01.01.1999"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientNumTitle" 
-					   Grid.Row="1" Grid.Column="2"
-					   Text="№ паспорта:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientNumValue" 
-					   Grid.Row="1" Grid.Column="3"
-					   Text="1234 567-890"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientTelTitle" 
-					   Grid.Row="2" Grid.Column="0"
-					   Text="Телефон:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientTelValue" 
-					   Grid.Row="2" Grid.Column="1"
-					   Text="+1 234 567-8901"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientEmailTitle" 
-					   Grid.Row="2" Grid.Column="2"
-					   Text="Email:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientEmailValue" 
-					   Grid.Row="2" Grid.Column="3"
-					   Text="pupkin@mail.com"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientAddressTitle" 
-					   Grid.Row="3" Grid.Column="0"
-					   Text="Адрес:"
-					   Style="{StaticResource PersonalInfoFieldNameStyle}"
-					   />
-			<TextBlock x:Name="ClientWindow_ClientAddressValue" 
-					   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
-					   Text="23 - 87, Fifth Avenue, New York, New York, 10001, United States"
-					   Style="{StaticResource PersonalInfoValueFieldStyle}"
-					   />
+			<!-- Поля для ВИП или физика -->
+			<Grid x:Name="PersonalInfo" 
+				  Grid.Row="0" 
+				  Margin="0,5,0,0"
+				  Visibility="Visible"
+				  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="Фамилия:" 
+						   Grid.Row="0" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding LastName}" 
+						   Grid.Row="0" Grid.Column="1"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="Имя, отчество:" 
+						   Grid.Row="1" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<StackPanel Orientation="Horizontal" 
+							Grid.Row="1" Grid.Column="1"
+							>
+					<TextBlock Text="{Binding FirstName}"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="{Binding MiddleName}"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+				</StackPanel>
+				<TextBlock Text="Дата рождения:"
+						   Grid.Row="0" Grid.Column="2"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
+						   Grid.Row="0" Grid.Column="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="№ паспорта:" 
+						   Grid.Row="1" Grid.Column="2"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding PassportOrTIN}" 
+						   Grid.Row="1" Grid.Column="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+			</Grid>
+			<!-- Поля для юрика -->
+			<Grid x:Name="OrganizationInfo"
+				  Grid.Row="0" 
+				  Margin="0,5,0,0"
+				  Visibility="Collapsed"
+				  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="Название:" 
+						   Grid.Row="0" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding MainName}" 
+						   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="ФИО директора:" 
+						   Grid.Row="1" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<StackPanel Orientation="Horizontal" 
+							Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+							>
+					<TextBlock Text="{Binding LastName}" 
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="{Binding FirstName}"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="{Binding MiddleName}"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+				</StackPanel>
+				<TextBlock Text="Дата регистрации:"
+						   Grid.Row="2" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
+						   Grid.Row="2" Grid.Column="1"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="ИНН:" 
+						   Grid.Row="2" Grid.Column="2"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding PassportOrTIN}" 
+						   Grid.Row="2" Grid.Column="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+			</Grid>
+			<Grid x:Name="TelEmailAddress"
+				  Grid.Row="1"
+				  Margin="0,0,5,0"
+				  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="Телефон:" 
+						   Grid.Row="0" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding Telephone}" 
+						   Grid.Row="0" Grid.Column="1"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="Email:" 
+						   Grid.Row="0" Grid.Column="2"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding Email}"
+						   Grid.Row="0" Grid.Column="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+				<TextBlock Text="Адрес:" 
+						   Grid.Row="1" Grid.Column="0"
+						   Style="{StaticResource PersonalInfoFieldNameStyle}"
+						   />
+				<TextBlock Text="{Binding Address}"
+						   Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+						   Style="{StaticResource PersonalInfoValueFieldStyle}"
+						   />
+			</Grid>
 		</Grid>
-		<!--надпись: Счета - меню: Открыть новый, Закрыть -->
+		<!--надпись: Счета    Меню: Открыть новый, Закрыть -->
 		<StackPanel Grid.Row="4" Grid.Column="1" 
 					Orientation="Horizontal"
 					VerticalAlignment="Stretch"

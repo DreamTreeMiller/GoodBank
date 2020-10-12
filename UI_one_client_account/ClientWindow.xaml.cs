@@ -1,4 +1,6 @@
-﻿using GoodBankNS.UserControlsLists;
+﻿using GoodBankNS.DTO;
+using GoodBankNS.UserControlsLists;
+using GoodBankNS.ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,16 +25,40 @@ namespace GoodBankNS.UI_one_client_account
 		private AccountsList		 accountsListView;
 		private AccountsViewNameTags alntag;
 
-		public ClientWindow()
+		public ClientWindow(ClientDTO client)
 		{
 			InitializeComponent();
-			InitializeAccountsView();
+			InitializeAccountsView(client);
 		}
 
-		private void InitializeAccountsView()
+		private void InitializeAccountsView(ClientDTO client)
 		{
+			OrganizationInfo.Visibility = Visibility.Collapsed;
+			PersonalInfo.Visibility = Visibility.Visible;
+
+			switch (client.ClientType)
+			{
+				case ClientType.VIP:
+					Title			= "ВИП";
+					MainTitle.Text	= "ОЧЕНЬ ВАЖНАЯ ПЕРСОНА";
+					break;
+				case ClientType.Simple:
+					Title			= "Физик";
+					MainTitle.Text	= "ФИЗИК";
+					break;
+				case ClientType.Organization:
+					Title						= "Юрик";
+					MainTitle.Text				= "ЮРИК";
+					OrganizationInfo.Visibility = Visibility.Visible;
+					PersonalInfo.Visibility		= Visibility.Collapsed;
+					break;
+			}
+
+			ClientInfo.DataContext = client;
 			accountsListView = new AccountsList();
 			AccountsList.Content = accountsListView;
+
+			// Убираем словов "сундучки"
 			accountsListView.WordAccountsTag.Visibility = Visibility.Collapsed;
 		}
 

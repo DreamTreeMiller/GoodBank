@@ -110,15 +110,18 @@ namespace GoodBankNS.DTO
 
 			if (c is IClientOrg)
 			{
-				ClientType	  = ClientType.Organization;
-				MainName	  = (c as IClientOrg).OrgName;
-				DirectorName  = 
+				ClientType		= ClientType.Organization;
+				MainName		= (c as IClientOrg).OrgName;
+				FirstName		= (c as IClientOrg).DirectorFirstName;
+				MiddleName		= (c as IClientOrg).DirectorMiddleName;
+				LastName		= (c as IClientOrg).DirectorLastName;
+				DirectorName	= 
 					(c as IClientOrg).DirectorLastName + " " +
 					(c as IClientOrg).DirectorFirstName +
 					(String.IsNullOrEmpty((c as IClientOrg).DirectorMiddleName) ? "" : " ") +
 					(c as IClientOrg).DirectorMiddleName;
-				PassportOrTIN = (c as IClientOrg).TIN;
-				CreationDate  = (c as IClientOrg).RegistrationDate;
+				PassportOrTIN	= (c as IClientOrg).TIN;
+				CreationDate	= (c as IClientOrg).RegistrationDate;
 			}
 		}
 
