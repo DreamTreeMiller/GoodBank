@@ -81,7 +81,7 @@ namespace GoodBankNS
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)
 		{
-			Generate.Bank(BA, 20, 100, 40);
+			Generate.Bank(BA, 1_000_000, 100, 40);
 			MessageBox.Show("Клиенты и счета созданы!");
 		}
 	}

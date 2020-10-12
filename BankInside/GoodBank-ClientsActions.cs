@@ -10,20 +10,23 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
-		public void AddClient(IClientDTO client)
+		public IClientDTO AddClient(IClientDTO client)
 		{
+			Client newClient = null;
 			switch (client.ClientType)
 			{
 				case ClientType.VIP:
-					clients.Add(new ClientVIP(client));
+					newClient = new ClientVIP(client);
 					break;
 				case ClientType.Simple:
-					clients.Add(new СlientSIM(client));
+					newClient = new СlientSIM(client);
 					break;
 				case ClientType.Organization:
-					clients.Add(new СlientORG(client));
+					newClient = new СlientORG(client);
 					break;
 			}
+			clients.Add(newClient);
+			return new ClientDTO(newClient);
 		}
 
 		public ObservableCollection<ClientDTO> GetClientsList<TClient>()

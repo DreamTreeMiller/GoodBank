@@ -24,6 +24,8 @@ namespace GoodBankNS.UI_one_client_account
 	{
 		private AccountsList		 accountsListView;
 		private AccountsViewNameTags alntag;
+		private WindowID			 wid = WindowID.EditClientVIP;
+		private ClientDTO			 client = new ClientDTO();
 
 		public ClientWindow(ClientDTO client)
 		{
@@ -34,9 +36,10 @@ namespace GoodBankNS.UI_one_client_account
 		private void InitializeAccountsView(ClientDTO client)
 		{
 			OrganizationInfo.Visibility = Visibility.Collapsed;
-			PersonalInfo.Visibility = Visibility.Visible;
+			PersonalInfo.Visibility		= Visibility.Visible;
+			this.client					= client;
 
-			switch (client.ClientType)
+			switch (this.client.ClientType)
 			{
 				case ClientType.VIP:
 					Title			= "ВИП";
@@ -45,12 +48,14 @@ namespace GoodBankNS.UI_one_client_account
 				case ClientType.Simple:
 					Title			= "Физик";
 					MainTitle.Text	= "ФИЗИК";
+					wid				= WindowID.EditClientSIM;
 					break;
 				case ClientType.Organization:
 					Title						= "Юрик";
 					MainTitle.Text				= "ЮРИК";
 					OrganizationInfo.Visibility = Visibility.Visible;
 					PersonalInfo.Visibility		= Visibility.Collapsed;
+					wid							= WindowID.EditClientORG;
 					break;
 			}
 
@@ -64,7 +69,9 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void ClientWindow_EditClient_Click(object sender, RoutedEventArgs e)
 		{
-
+			var tags				= new AddEditClientNameTags(wid);
+			var editClientWindow	= new AddEditClientWindow(tags, client);
+			editClientWindow.ShowDialog();
 		}
 	}
 }

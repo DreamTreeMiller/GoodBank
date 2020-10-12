@@ -27,23 +27,24 @@ namespace GoodBankNS.UI_clients
 	/// </summary>
 	public partial class DepartmentWindow : Window
 	{
-		private BankActions BA;
-		private WindowID wid;
+		private BankActions			BA;
+		private WindowID			wid;
 
-		private WindowNameTags deptwinnametags;
-		private ClientsList clientsListView;
-		private ClientsViewNameTags clntag;
+		private WindowNameTags		deptwinnametags;
+		private ClientsList			clientsListView;
+		private ClientsViewNameTags	clntag;
+		private WindowID			addClientWID;
+		ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
 
-		private ClientType ClientTypeForAccountsList;
-		private AccountsList accountsListView;
-		private AccountsViewNameTags alntag;
+		private ClientType				ClientTypeForAccountsList;
+		private AccountsList			accountsListView;
+		private AccountsViewNameTags	alntag;
 
 		public DepartmentWindow(WindowID wid, BankActions ba)
 		{
 			InitializeComponent();
 			InitializeView(wid, ba);
-			ShowClients();
-			SetClientTypeForAccountsList();
+			InitializeClientsAndWindowTypes();
 			ShowAccounts();
 		}
 
@@ -76,46 +77,33 @@ namespace GoodBankNS.UI_clients
 			AccountsList.Content = accountsListView;
 		}
 
-		private void ShowClients()
+		private void InitializeClientsAndWindowTypes()
 		{
-			ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
-
 			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
 					clientsList = BA.Clients.GetClientsList<IClientVIP>();
+					ClientTypeForAccountsList	= ClientType.VIP;
+					addClientWID				= WindowID.AddClientVIP;
 					break;
 				case WindowID.DepartmentSIM:
 					clientsList = BA.Clients.GetClientsList<IClientSimple>();
+					ClientTypeForAccountsList	= ClientType.Simple;
+					addClientWID				= WindowID.AddClientSIM;
 					break;
 				case WindowID.DepartmentORG:
 					clientsList = BA.Clients.GetClientsList<IClientOrg>();
+					ClientTypeForAccountsList	= ClientType.Organization;
+					addClientWID				= WindowID.AddClientORG;
 					break;
 				case WindowID.DepartmentALL:
 					clientsList = BA.Clients.GetClientsList<IClient>();
+					ClientTypeForAccountsList	= ClientType.All;
+					addClientWID				= WindowID.AddClientALL;
 					break;
 			}
 			clientsListView.ClientsDataGrid.ItemsSource = clientsList;
 			clientsListView.ClientsTotalNumberValue.Text = $"{clientsList.Count}";
-		}
-
-		private void SetClientTypeForAccountsList()
-		{
-			switch (wid)
-			{
-				case WindowID.DepartmentVIP:
-					ClientTypeForAccountsList = ClientType.VIP;
-					return;
-				case WindowID.DepartmentSIM:
-					ClientTypeForAccountsList = ClientType.Simple;
-					return;
-				case WindowID.DepartmentORG:
-					ClientTypeForAccountsList = ClientType.Organization;
-					return;
-				case WindowID.DepartmentALL:
-					ClientTypeForAccountsList = ClientType.All;
-					return;
-			}
 		}
 
 		private void ShowAccounts()
@@ -140,14 +128,29 @@ namespace GoodBankNS.UI_clients
 
 		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)
 		{
-			AddEditClientNameTags nameTags  = new AddEditClientNameTags(wid);
-			AddClientWindow addVIPclientWin = new AddClientWindow(nameTags);
-			bool? result = addVIPclientWin.ShowDialog();
+			AddEditClientNameTags nameTags  = new AddEditClientNameTags(addClientWID);
+			ClientDTO newClient = null;
+			AddEditClientWindow addСlientWin = new AddEditClientWindow(nameTags, newClient);
+			bool? result = addСlientWin.ShowDialog();
 			
 			if (result != true) return;
-			IClientDTO newClient = addVIPclientWin.newClientData;
-			BA.Clients.AddClient(newClient);
-			ShowClients();
+			// Добавляем нового клиента в базу в бэкэнде
+			newClient = addСlientWin.client;
+			IClientDTO addedClient = BA.Clients.AddClient(newClient);
+
+			// Добавляем нового клиента в список на экране
+			AddNewClientToDataGrid(addedClient);
+		}
+
+		/// <summary>
+		/// Добавляет только что созданного клиента к списку на экране
+		/// Это делается вместо получения заново всего списка клиентов одного типа
+		/// </summary>
+		/// <param name="addedClient"></param>
+		private void AddNewClientToDataGrid(IClientDTO addedClient)
+		{
+			clientsList.Add(addedClient as ClientDTO);
+			clientsListView.ClientsTotalNumberValue.Text = $"{clientsList.Count}";
 		}
 
 		private void WinMenu_SelectAccount_Click(object sender, RoutedEventArgs e)

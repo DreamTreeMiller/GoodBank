@@ -12,6 +12,6 @@ namespace GoodBankNS.Interfaces_Actions
 	public interface IClientsActions
 	{
 		ObservableCollection<ClientDTO> GetClientsList<TClient>();
-		void AddClient(IClientDTO client);
+		IClientDTO AddClient(IClientDTO client);
 	}
 }

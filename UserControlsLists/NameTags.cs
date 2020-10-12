@@ -120,6 +120,8 @@ namespace GoodBankNS.UserControlsLists
 
 	public class AddEditClientNameTags
 	{
+		public WindowID WID;
+		public ClientType ClientType;
 		public string SystemWindowTitle;
 		public string WindowHeader;
 		public Visibility ClientTypeComboBox = Visibility.Collapsed;
@@ -128,28 +130,50 @@ namespace GoodBankNS.UserControlsLists
 
 		public AddEditClientNameTags(WindowID wid)
 		{
+			WID = wid;
 			switch(wid)
 			{
-				case WindowID.DepartmentVIP:
+				case WindowID.AddClientVIP:
 					SystemWindowTitle		= "Добавить ВИП";
 					WindowHeader			= "ВНЕСТИ ДАННЫЕ ОЧЕНЬ ВАЖНОЙ ПЕРСОНЫ";
+					ClientType				= ClientType.VIP;
 					break;
-				case WindowID.DepartmentSIM:
+				case WindowID.AddClientSIM:
 					SystemWindowTitle		= "Добавить физика";
 					WindowHeader			= "ВНЕСТИ ДАННЫЕ ФИЗИКА";
+					ClientType				= ClientType.Simple;
 					break;
-				case WindowID.DepartmentORG:
+				case WindowID.AddClientORG:
 					SystemWindowTitle		= "Добавить юрика";
 					WindowHeader			= "ВНЕСТИ ДАННЫЕ ЮРИКА";
 					OrganizationVisibility	= Visibility.Visible;
 					PersonVisibility		= Visibility.Collapsed;
+					ClientType				= ClientType.Organization;
 					break;
-				case WindowID.DepartmentALL:
+				case WindowID.AddClientALL:
 					SystemWindowTitle		= "Добавить клиента";
 					WindowHeader			= "ВНЕСТИ ДАННЫЕ КЛИЕНТА";
 					OrganizationVisibility	= Visibility.Collapsed;
 					PersonVisibility		= Visibility.Visible;
 					ClientTypeComboBox		= Visibility.Visible;
+					ClientType				= ClientType.VIP;
+					break;
+				case WindowID.EditClientVIP:
+					SystemWindowTitle		= "Изменить данные ВИП";
+					WindowHeader			= "ИЗМЕНИТЬ ДАННЫЕ ОЧЕНЬ ВАЖНОЙ ПЕРСОНЫ";
+					ClientType				= ClientType.VIP;
+					break;
+				case WindowID.EditClientSIM:
+					SystemWindowTitle		= "Изменить данные физика";
+					WindowHeader			= "ИЗМЕНИТЬ ДАННЫЕ ФИЗИКА";
+					ClientType				= ClientType.Simple;
+					break;
+				case WindowID.EditClientORG:
+					SystemWindowTitle		= "Изменить данные юрика";
+					WindowHeader			= "ИЗМЕНИТЬ ДАННЫЕ ЮРИКА";
+					OrganizationVisibility	= Visibility.Visible;
+					PersonVisibility		= Visibility.Collapsed;
+					ClientType				= ClientType.Organization;
 					break;
 			}
 		}
