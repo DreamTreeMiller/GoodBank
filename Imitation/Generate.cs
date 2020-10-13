@@ -28,93 +28,80 @@ namespace GoodBankNS.Imitation
 
 		private static void GenerateVIPclientsAndAccounts(int num)
 		{
+			string FN, MN, LN;
 			for (int i = 0; i < num; i++)
 			{
-				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client = new ClientDTO();
-				client.ClientType = ClientType.VIP;
 				// Half will be men, half women
 				if ((i & 1) == 0)
-				{	// Male names
-					client.FirstName	= GenMFN();
-					client.MiddleName	= GenMMN();
-					client.LastName		= GenMLN();
+				{   // Male names
+					FN = GenMFN(); MN = GenMMN(); LN = GenMLN();
 				}
 				else
-				{	// Female names
-					client.FirstName	= GenFFN();
-					client.MiddleName	= GenFMN();
-					client.LastName		= GenFLN();
+				{   // Female names
+					FN = GenFFN(); MN = GenFMN(); LN = GenFLN();
 				}
 
-				client.CreationDate	 = GenBirthDate();
-				client.PassportOrTIN = GenPassportNum();
-				client.Telephone	 = GenTel();
-				client.Email		 = GenEmail();
-				client.Address		 = "Тропики, Лазурный берег, Жемчужный дворец, комната 8";
+				// Генерируем контейнер для передачи данных в бекэнд
+				ClientDTO client =
+					new ClientDTO(	ClientType.VIP, FN, MN, LN,
+									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
+									"Тропики, Лазурный берег, Жемчужный дворец, комната 8");
 				BA.Clients.AddClient(client);
 			}
 		}
 
 		private static void GenerateSIMclientsAndAccounts(int num)
 		{
+			string FN, MN, LN;
 			for (int i = 0; i < num; i++)
 			{
-				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client = new ClientDTO();
-				client.ClientType = ClientType.Simple;
 				// Half will be men, half women
 				if ((i & 1) == 0)
 				{   // Male names
-					client.FirstName  = GenMFN();
-					client.MiddleName = GenMMN();
-					client.LastName   = GenMLN();
+					FN = GenMFN(); MN = GenMMN(); LN = GenMLN();
 				}
 				else
 				{   // Female names
-					client.FirstName  = GenFFN();
-					client.MiddleName = GenFMN();
-					client.LastName	  = GenFLN();
+					FN = GenFFN(); MN = GenFMN(); LN  = GenFLN();
 				}
 
-				client.CreationDate	 = GenBirthDate();
-				client.PassportOrTIN = GenPassportNum();
-				client.Telephone	 = GenTel();
-				client.Email		 = GenEmail();
-				client.Address		 = "Мой адрес не дом и не улица. Здесь был Вася.";
+				// Генерируем контейнер для передачи данных в бекэнд
+				ClientDTO client = 
+					new ClientDTO(	ClientType.Simple, FN, MN, LN,
+									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
+									"Мой адрес не дом и не улица. Здесь был Вася.");
 				BA.Clients.AddClient(client);
 			}
 		}
 
 		private static void GenerateORGclientsAndAccounts(int num)
 		{
+			string DFN, DMN, DLN;
 			for (int i = 0; i < num; i++)
 			{
-				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client = new ClientDTO();
-				client.ClientType = ClientType.Organization;
-				// Director - Half will be men, half women
+				// Half will be men, half women
 				if ((i & 1) == 0)
 				{   // Male names
-					client.FirstName  = GenMFN();
-					client.MiddleName = GenMMN();
-					client.LastName   = GenMLN();
+					DFN = GenMFN(); DMN = GenMMN(); DLN = GenMLN();
 				}
 				else
 				{   // Female names
-					client.FirstName  = GenFFN();
-					client.MiddleName = GenFMN();
-					client.LastName   = GenFLN();
+					DFN = GenFFN(); DMN = GenFMN(); DLN = GenFLN();
 				}
 
-				client.MainName		 = GenOrgName();
-				client.CreationDate  = GenRegDate();
-				client.PassportOrTIN = GenTIN();
-				client.Telephone	 = GenTel();
-				client.Email		 = GenEmail();
-				client.Address		 = GenOrgAddress();
+				// Генерируем контейнер для передачи данных в бекэнд
+				ClientDTO client =
+					new ClientDTO(	ClientType.Organization, GenOrgName(), DFN, DMN, DLN,
+									GenRegDate(), GenTIN(), 
+									GenTel(), GenEmail(), GenOrgAddress());
 				BA.Clients.AddClient(client);
 			}
+
+			BA.Clients.AddClient(
+				new ClientDTO(ClientType.Organization, 
+				"Организация с ооооочччченнннь ооооччччееень длиннным названиеммммммммм",
+				GenMFN(), GenMMN(), GenMLN(), GenRegDate(), GenTIN(),
+									GenTel(), GenEmail(), GenOrgAddress()));
 		}
 
 		private static string GenMFN()

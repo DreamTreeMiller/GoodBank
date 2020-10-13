@@ -17,7 +17,7 @@ namespace GoodBankNS.Interfaces_Data
 		string MainName { get; set; }
 		string DirectorName { get; }
 		string PassportOrTIN { get; set; }
-		DateTime CreationDate { get; set; }
+		DateTime? CreationDate { get; set; }
 		string Telephone { get; set; }
 		string Email { get; set; }
 		string Address { get; set; }

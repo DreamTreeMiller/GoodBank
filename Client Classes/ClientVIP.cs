@@ -46,7 +46,7 @@ namespace GoodBankNS.ClientClasses
 			MiddleName		= newClient.MiddleName;
 			LastName		= newClient.LastName;
 			PasspostNumber	= newClient.PassportOrTIN;
-			BirthDate		= newClient.CreationDate;
+			BirthDate		= (DateTime)newClient.CreationDate;
 		}
 
 		#endregion

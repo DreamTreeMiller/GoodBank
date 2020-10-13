@@ -60,7 +60,7 @@ namespace GoodBankNS.ClientClasses
 		{
 			OrgName				= newClient.MainName;
 			this.TIN			= newClient.PassportOrTIN;
-			RegistrationDate	= newClient.CreationDate;
+			RegistrationDate	= (DateTime)newClient.CreationDate;
 			DirectorFirstName	= newClient.FirstName;
 			DirectorMiddleName	= newClient.MiddleName;
 			DirectorLastName	= newClient.LastName;

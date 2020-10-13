@@ -5,152 +5,129 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodBankNS.UI_one_client_account"
         mc:Ignorable="d"
-		Height="370" Width="520"
-		MinHeight="400" MinWidth="520"
+		Height="410" Width="520"
+		MinHeight="410" MinWidth="520"
+		MaxHeight="410" MaxWidth="520"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
 	<Window.Resources>
 		<Style TargetType="TextBlock">
-			<Setter Property="FontWeight" Value="Bold"/>
-			<Setter Property="Foreground" Value="DarkBlue"/>
+			<Setter Property="Width"				Value="120"/>
+			<Setter Property="Margin"				Value="0,0,10,0"/>
+			<Setter Property="VerticalAlignment"	Value="Center"/>
+			<Setter Property="TextAlignment"		Value="Right"/>
+			<Setter Property="FontWeight"			Value="Bold"/>
+			<Setter Property="Foreground"			Value="DarkBlue"/>
+		</Style>
+		<Style x:Key="RequiredField">
+			<Setter Property="TextBlock.Width"				Value="120"/>
+			<Setter Property="TextBlock.Margin"				Value="0,0,10,0"/>
+			<Setter Property="TextBlock.VerticalAlignment"	Value="Center"/>
+			<Setter Property="TextBlock.TextAlignment"		Value="Right" />
+			<Setter Property="TextBlock.FontWeight"			Value="DemiBold"/>
+			<Setter Property="TextBlock.Foreground"			Value="Red"/>
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="Margin"				Value="10,0,0,0"/>
+			<Setter Property="Width"				Value="300"/>
+			<Setter Property="VerticalAlignment"	Value="Center"/>
+			<Setter Property="HorizontalAlignment"	Value="Left"/>
 		</Style>
 	</Window.Resources>
-    <Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="3*" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<TextBlock x:Name="Header"
-				   Grid.Column="0"
-				   Grid.ColumnSpan="4"
-				   Grid.Row="0"
-				   Foreground="Maroon"
-				   FontWeight="Bold" 
-				   FontSize="14"
-				   HorizontalAlignment="Center" 
-				   VerticalAlignment="Center" 
-				   />
-		<TextBlock Text="Имя"
-				   Grid.Column="0" Grid.Row="1"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox   Text="{Binding FirstName}"
-				   Grid.Column="1" Grid.Row="1" 
-				   Margin="10,0,0,0"
-				   Width="300"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Left" 
-				   />
-		<TextBlock Text="Отчество"
-				   Grid.Column="0" Grid.Row="2"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox   Text="{Binding MiddleName}"
-				   Grid.Column="1" Grid.Row="2"  
-				   Margin="10,0,0,0"
-				   Width="300"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Left" 
-				   />
-		<TextBlock Text="Фамилия"
-				   Grid.Column="0" Grid.Row="3"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox   Text="{Binding LastName}"
-				   Grid.Column="1" Grid.Row="3"  
-				   Margin="10,0,0,0"
-				   Width="300"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Left" 
-				   />
-		<TextBlock Text="Дата рождения"
-				   Grid.Column="0" Grid.Row="4"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<DatePicker	SelectedDate="{Binding CreationDate}"
-					Grid.Column="1" Grid.Row="4" 
-					Margin="10,0,0,0"
-					Width="100"
-					VerticalAlignment="Center"
-					HorizontalAlignment="Left" 
-					>
-		</DatePicker>
-		<TextBlock Text="№ паспорта"
-				   Grid.Column="0" Grid.Row="5"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox Text="{Binding PassportOrTIN}"
-				 Grid.Column="1" Grid.Row="5"
-				 Width="200"
-				 Margin="10,0,0,0"
-				 VerticalAlignment="Center"
-				 HorizontalAlignment="Left"
-				 />
-		<TextBlock Text="Телефон"
-				   Grid.Column="0" Grid.Row="6"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox Text="{Binding Telephone}"
-				 Grid.Column="1" Grid.Row="6"
-				 Width="200"
-				 Margin="10,0,0,0"
-				 VerticalAlignment="Center"
-				 HorizontalAlignment="Left"
-				 />
-		<TextBlock Text="Email"
-				   Grid.Column="0" Grid.Row="7"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox Text="{Binding Email}"
-				 Grid.Column="1" Grid.Row="7"
-				 Width="350"
-				 Margin="10,0,0,0"
-				 VerticalAlignment="Center"
-				 HorizontalAlignment="Left"
-				 />
-		<TextBlock Text="Адрес"
-				   Grid.Column="0" Grid.Row="8"
-				   Margin="0,0,10,0"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Right"
-				   />
-		<TextBox Text="{Binding Address}"
-				 Grid.Column="1" Grid.Row="8"
-				 Width="350"
-				 Margin="10,0,0,0"
-				 VerticalAlignment="Center"
-				 HorizontalAlignment="Left"
-				 />
+    <StackPanel>
+		<StackPanel Height="50" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock x:Name="Header"
+					   Text="Header"
+					   Foreground="Maroon"
+					   FontWeight="Bold" 
+					   FontSize="14"
+					   Width="520"
+					   TextAlignment="Center" 
+					   />
+		</StackPanel>
+		<Grid x:Name="AdditionalGrid"
+			  Visibility="Collapsed">
+		</Grid>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Имя"
+					   Style="{StaticResource ResourceKey=RequiredField}"
+					   />
+			<TextBox   x:Name="FirstNameEntryBox" 
+					   Text="{Binding FirstName}"
+					   />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Отчество"/>
+			<TextBox   Text="{Binding MiddleName}"/>
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Фамилия"
+					   Style="{StaticResource ResourceKey=RequiredField}"
+					   />
+			<TextBox   x:Name="LastNameEntryBox" 
+					   Text="{Binding LastName}"
+					   />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock x:Name="CreationDateLabel"
+					   Text="Дата рождения"
+					   Style="{StaticResource ResourceKey=RequiredField}"
+					   />
+			<DatePicker	x:Name="CreationDateEntryBox" 
+						SelectedDate="{Binding CreationDate}"
+						Grid.Row="5" Grid.Column="1" 
+						Margin="10,0,0,0"
+						MaxWidth="100"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Left" 
+						/>
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock x:Name="PassportOrTINLabel"
+					   Text="№ паспорта"
+					   Style="{StaticResource ResourceKey=RequiredField}"
+					   />
+			<TextBox x:Name="PassportOrTINEntryBox" 
+					 Text="{Binding PassportOrTIN}"
+					 Width="200"
+					 />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Телефон"
+					   />
+			<TextBox Text="{Binding Telephone}"
+					 Width="200"
+					 />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Email"/>
+			<TextBox Text="{Binding Email}"
+					 Width="350"
+					 />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Адрес"/>
+			<TextBox Text="{Binding Address}"
+					 Grid.Column="1" Grid.Row="8"
+					 Width="350"
+					 Margin="10,0,0,0"
+					 VerticalAlignment="Center"
+					 HorizontalAlignment="Left"
+					 />
+		</StackPanel>
+		<StackPanel Height="30" Orientation="Horizontal" VerticalAlignment="Center">
+			<TextBlock Text="Красным отмечены поля, обязательные для заполнения"
+					   FontWeight="Normal"
+					   FontStyle="Italic"
+					   Foreground="Red"
+					   Width="520"
+					   TextAlignment="Center"
+					   />
+		</StackPanel>
 		<!-- Кнопки Ок и Отмена -->
 		<UniformGrid Grid.Column="0" Grid.ColumnSpan="2"
-					 Grid.Row="9"
+					 Grid.Row="11"
 					 Columns="2" Rows="1"
 					 Margin="0,10,0,0"
 					 VerticalAlignment="Center"
@@ -228,5 +205,5 @@
 				</Button.Style>
 			</Button>
 		</UniformGrid>
-	</Grid>
+	</StackPanel>
 </Window>
