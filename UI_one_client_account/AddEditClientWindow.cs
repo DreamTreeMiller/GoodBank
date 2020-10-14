@@ -21,7 +21,7 @@ namespace GoodBankNS.UI_one_client_account
 {
 	public partial class AddEditClientWindow : Window
 	{
-		public ClientDTO client = null;
+		public ClientDTO tmpClient = null;
 		public AddEditClientWindow(AddEditClientNameTags nameTags, ClientDTO client)
 		{
 			InitializeComponent();
@@ -33,22 +33,46 @@ namespace GoodBankNS.UI_one_client_account
 			Title		= nameTags.SystemWindowTitle;
 			Header.Text = nameTags.WindowHeader;
 
+			// Выбираем, что отображать
+			switch(nameTags.WID)
+			{
+				case WindowID.AddClientALL:
+					SelectClientTypeLine.Visibility = Visibility.Visible;
+					Height = MinHeight = MaxHeight	= 500;
+					break;
+				case WindowID.AddClientVIP:
+				case WindowID.AddClientSIM:
+				case WindowID.EditClientVIP:
+				case WindowID.EditClientSIM:
+					PersonsNameGrid.Visibility		= Visibility.Visible;
+					OrganizationNameGrid.Visibility = Visibility.Collapsed;
+					Height = MinHeight = MaxHeight	= 410;
+					break;
+				case WindowID.AddClientORG:
+				case WindowID.EditClientORG:
+					PersonsNameGrid.Visibility		= Visibility.Collapsed;
+					OrganizationNameGrid.Visibility = Visibility.Visible;
+					Height = MinHeight = MaxHeight	= 470;
+					break;
+			}
+
 			// Если окошко вызвали для создания нового клиента
 			// а это происходит тогда, когда клиент на входе равен null
 			// То в болванку ДТО надо поместить тип создаваемого клиента
 			if (client == null)
 			{
-				this.client				 = new ClientDTO();
-				this.client.ClientType	 = nameTags.ClientType;
+				tmpClient = new ClientDTO();
+				tmpClient.ClientType = nameTags.ClientType;
 			}
-			else 
-				this.client				= client;
-			
-			DataContext	= this.client;
+			else
+			{
+				tmpClient = client.Clone();
+			}
+			DataContext	= this.tmpClient;
 		}
 		private void btnOk_AddClient_Click(object sender, RoutedEventArgs e)
 		{
-			if (client.ClientType == ClientType.Organization)
+			if (tmpClient.ClientType == ClientType.Organization)
 			{
 				if (!IsOrgNameEntered())			return;
 				if (!IsTINEntered())				return;
@@ -56,7 +80,8 @@ namespace GoodBankNS.UI_one_client_account
 			}
 			else
 			{
-				if (!IsFirstLastNamesEntered())		return;
+				if (!IsFirstNamesEntered())			return;
+				if (!IsLastNamesEntered())			return;
 				if (!IsPassportNumEntered())		return;
 				if (!IsBirthDateEntered())			return;
 			}
@@ -68,7 +93,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private bool IsOrgNameEntered()
 		{
-			if (String.IsNullOrEmpty(client.MainName))
+			if (String.IsNullOrEmpty(tmpClient.MainName))
 			{
 				MessageBox.Show("Введите название организации");
 				return false;
@@ -78,14 +103,14 @@ namespace GoodBankNS.UI_one_client_account
 
 		private bool IsTINEntered()
 		{
-			if (String.IsNullOrEmpty(client.PassportOrTIN))
+			if (String.IsNullOrEmpty(tmpClient.PassportOrTIN))
 			{
 				MessageBox.Show("Введите ИНН");
 				// код возвращения фокуса в только что покинутое поле
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					PassportOrTINEntryBox.Focus();
-					PassportOrTINEntryBox.SelectionStart = PassportOrTINEntryBox.Text.Length;
+					TINEntryBox.Focus();
+					TINEntryBox.SelectionStart = TINEntryBox.Text.Length;
 				});
 				return false;
 			}
@@ -94,22 +119,22 @@ namespace GoodBankNS.UI_one_client_account
 
 		private bool IsRegistrationDateEntered()
 		{
-			if (client.CreationDate == null)
+			if (tmpClient.CreationDate == null)
 			{
 				MessageBox.Show("Введите дату регистрации организации");
 				// код возвращения фокуса в только что покинутое поле
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					CreationDateEntryBox.Focus();
+					RegistrationDateEntryBox.Focus();
 				});
 				return false;
 			}
 			return true;
 		}
 
-		private bool IsFirstLastNamesEntered()
+		private bool IsFirstNamesEntered()
 		{
-			if (String.IsNullOrEmpty(client.FirstName))
+			if (String.IsNullOrEmpty(tmpClient.FirstName))
 			{
 				MessageBox.Show("Имя клиента не должно быть пустым!\n" +
 								"     Введите имя клиента.");
@@ -121,7 +146,12 @@ namespace GoodBankNS.UI_one_client_account
 				});
 				return false;
 			}
-			if (String.IsNullOrEmpty(client.LastName))
+			return true;
+		}
+		
+		private bool IsLastNamesEntered()
+		{
+				if (String.IsNullOrEmpty(tmpClient.LastName))
 			{
 				MessageBox.Show("Фамилия клиента не должна быть пустой!\n" +
 								"     Введите фамилию клиента.");
@@ -138,14 +168,14 @@ namespace GoodBankNS.UI_one_client_account
 	
 		private bool IsPassportNumEntered()
 		{
-			if (String.IsNullOrEmpty(client.PassportOrTIN))
+			if (String.IsNullOrEmpty(tmpClient.PassportOrTIN))
 			{
 				MessageBox.Show("Введите номер паспорта");
-				// код возвращения фокуса в только что покинутое поле
+				// код возвращения фокуса в поле
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					PassportOrTINEntryBox.Focus();
-					PassportOrTINEntryBox.SelectionStart = PassportOrTINEntryBox.Text.Length;
+					PassportNumEntryBox.Focus();
+					PassportNumEntryBox.SelectionStart = PassportNumEntryBox.Text.Length;
 				});
 				return false;
 			}
@@ -154,13 +184,13 @@ namespace GoodBankNS.UI_one_client_account
 
 		private bool IsBirthDateEntered()
 		{
-			if (client.CreationDate == null)
+			if (tmpClient.CreationDate == null)
 			{
 				MessageBox.Show("Введите дату рождения клиента");
-				// код возвращения фокуса в только что покинутое поле
+				// код возвращения фокуса в поле
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					CreationDateEntryBox.Focus();
+					BirthDateEntryBox.Focus();
 				});
 				return false;
 			}
@@ -169,8 +199,149 @@ namespace GoodBankNS.UI_one_client_account
 
 		#endregion
 
-		/*
+		#region Валидаторы свойств для окошка ввода данных
 
-		 */
+		private bool IsValidRegistrationDate(DateTime date)
+		{
+				if (date > DateTime.Now)
+				{
+					MessageBox.Show("Дата не может превосходить сегодняшний день");
+					return false;
+				}
+				return true;
+		}
+
+		private bool IsValidBirthDate(DateTime date)
+		{
+
+			if ((DateTime.Now - date).TotalDays / 365.25 < 18)
+			{
+				MessageBox.Show("Только лица, достигшие 18 лет, могут быть клиентами банка.");
+				return false;
+			}
+			if ((DateTime.Now - date).TotalDays / 365.25 > 118)
+			{
+				MessageBox.Show("Сейчас на земле нет людей, которым больше 118 лет.");
+				return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Проверка валидности ИНН
+		/// </summary>
+		/// <param name="tin">ИНН</param>
+		/// <returns></returns>
+		private bool ValidTIN(string tin)
+		{
+			int part;
+			string errorMessage = "		Неверный формат ИНН\n" +
+									"\n" +
+									"	ррННхххххС\n" +
+									"	рр - код региона России от 1 до 85\n" +
+									"	НН - номер от 1 до 99 налоговой в регионе\n" +
+									"	ххххх - код (от 1) организации\n" +
+									"	С - контрольная цифра";
+			tin = tin.Trim();
+			if (tin.Length == 10)
+				if (Int32.TryParse(tin.Substring(0, 2), out part))
+					if (0 < part && part <= 85)
+						if (Int32.TryParse(tin.Substring(2, 2), out part))
+							if (0 < part)
+								if (Int32.TryParse(tin.Substring(4, 6), out part))
+									if (0 < part)
+										return true;
+			MessageBox.Show(errorMessage);
+			return false;
+		}
+
+		/// <summary>
+		/// Проверка валидности номера паспорта
+		/// </summary>
+		/// <param name="pNum">Номер паспорта в формате СССС ХХХХХХ</param>
+		/// <returns></returns>
+		private bool ValidPassportNum(ref string pNum)
+		{
+			int series, number;
+			string errorMessage =   "          Неверный формат номера паспорта!\n" +
+									"           Используйте формат CCCC ХХХХХХ\n" +
+									"    CCCC   - 4 цифры серии, первая не может быть 0\n" +
+									"    ХХХХХХ - 6 цифр номера, первая не может быть 0\n" +
+									"Количество пробелов до, между и после групп цифр может быть любым";
+			pNum = pNum.Replace(" ", "");
+			if (pNum.Length == 10)
+				if (Int32.TryParse(pNum.Substring(0, 4), out series))
+					if (0 < series)
+						if (Int32.TryParse(pNum.Substring(4), out number))
+							if (0 < number && number < 1_000_000)
+							{
+								pNum = $"{series:0000} {number:000000}";
+								return true;
+							}
+			MessageBox.Show(errorMessage);
+			return false;
+		}
+
+		#endregion
+
+
+		private void BirthDateEntryBox_SelectedDateChanged(object sender, RoutedEventArgs e)
+		{
+			if (tmpClient.ClientType == ClientType.Organization) return;
+			var date = BirthDateEntryBox.SelectedDate;
+			if (date == null) return;
+			if (!IsValidBirthDate((DateTime)date))
+			{
+				BirthDateEntryBox.SelectedDate = null;
+				// код возвращения фокуса в поле
+				Dispatcher.BeginInvoke((ThreadStart)delegate
+				{
+					BirthDateEntryBox.Focus();
+				});
+			}
+		}
+
+		private void PassportNumEntryBox_LostFocus(object sender, RoutedEventArgs e)
+		{
+			var passnum = PassportNumEntryBox.Text;
+			if (String.IsNullOrEmpty(passnum)) return;
+			if (!ValidPassportNum(ref passnum))
+				// код возвращения фокуса в поле
+				Dispatcher.BeginInvoke((ThreadStart)delegate
+				{
+					PassportNumEntryBox.Focus();
+					PassportNumEntryBox.SelectionStart = PassportNumEntryBox.Text.Length;
+				});
+		}
+
+		private void RegistrationDateEntryBox_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (tmpClient.ClientType != ClientType.Organization) return;
+			var date = RegistrationDateEntryBox.SelectedDate;
+			if (date == null) return;
+			if (!IsValidRegistrationDate((DateTime)date))
+			{
+				RegistrationDateEntryBox.SelectedDate = null;
+				// код возвращения фокуса в поле
+				Dispatcher.BeginInvoke((ThreadStart)delegate
+				{
+					RegistrationDateEntryBox.Focus();
+				});
+			}
+		}
+
+		private void TINEntryBox_LostFocus(object sender, RoutedEventArgs e)
+		{
+			var tin = TINEntryBox.Text;
+			if (String.IsNullOrEmpty(tin)) return;
+			if (!ValidTIN(tin))
+				// код возвращения фокуса в поле
+				Dispatcher.BeginInvoke((ThreadStart)delegate
+				{
+					TINEntryBox.Focus();
+					TINEntryBox.SelectionStart = TINEntryBox.Text.Length;
+				});
+		}
+
 	}
 }

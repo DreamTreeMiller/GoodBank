@@ -49,6 +49,18 @@ namespace GoodBankNS.ClientClasses
 			BirthDate		= (DateTime)newClient.CreationDate;
 		}
 
+		public override void UpdateMyself(IClientDTO updatedClient)
+		{
+			FirstName = updatedClient.FirstName;
+			MiddleName = updatedClient.MiddleName;
+			LastName = updatedClient.LastName;
+			PasspostNumber = updatedClient.PassportOrTIN;
+			BirthDate = (DateTime)updatedClient.CreationDate;
+			Telephone = updatedClient.Telephone;
+			Email = updatedClient.Email;
+			Address = updatedClient.Address;
+		}
+
 		#endregion
 	}
 }

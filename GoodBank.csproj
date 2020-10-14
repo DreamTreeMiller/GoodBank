@@ -106,9 +106,6 @@
     <Compile Include="Interfaces_Data\TransactionDTO.cs" />
     <Compile Include="Interfaces_Data\IClientVIP.cs" />
     <Compile Include="Transaction Class\Transaction.cs" />
-    <Compile Include="UI_clients\ALLclientsWindow.xaml.cs">
-      <DependentUpon>ALLclientsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI_clients\DepartmentWindow.cs">
       <DependentUpon>DepartmentWindow.xaml</DependentUpon>
     </Compile>
@@ -140,10 +137,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI_clients\ALLclientsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UI_clients\DepartmentWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

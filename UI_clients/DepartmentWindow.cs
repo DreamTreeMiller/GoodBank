@@ -122,7 +122,7 @@ namespace GoodBankNS.UI_clients
 				MessageBox.Show("Выберите клиента для показа");
 				return;
 			}
-			ClientWindow clientWindow = new ClientWindow(client);
+			ClientWindow clientWindow = new ClientWindow(BA, client);
 			clientWindow.ShowDialog();
 		}
 
@@ -135,7 +135,7 @@ namespace GoodBankNS.UI_clients
 			
 			if (result != true) return;
 			// Добавляем нового клиента в базу в бэкэнде
-			newClient = addСlientWin.client;
+			newClient = addСlientWin.tmpClient;
 			IClientDTO addedClient = BA.Clients.AddClient(newClient);
 
 			// Добавляем нового клиента в список на экране

@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GoodBankNS.Binding_UI_CondeBehind;
 
 namespace GoodBankNS.UI_one_client_account
 {
@@ -22,19 +23,21 @@ namespace GoodBankNS.UI_one_client_account
 	/// </summary>
 	public partial class ClientWindow : Window
 	{
+		private BankActions BA;
 		private AccountsList		 accountsListView;
 		private AccountsViewNameTags alntag;
 		private WindowID			 wid = WindowID.EditClientVIP;
 		private ClientDTO			 client = new ClientDTO();
 
-		public ClientWindow(ClientDTO client)
+		public ClientWindow(BankActions ba, ClientDTO client)
 		{
 			InitializeComponent();
-			InitializeAccountsView(client);
+			InitializeAccountsView(ba, client);
 		}
 
-		private void InitializeAccountsView(ClientDTO client)
+		private void InitializeAccountsView(BankActions ba, ClientDTO client)
 		{
+			BA = ba;
 			OrganizationInfo.Visibility = Visibility.Collapsed;
 			PersonalInfo.Visibility		= Visibility.Visible;
 			this.client					= client;
@@ -71,7 +74,10 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			var tags				= new AddEditClientNameTags(wid);
 			var editClientWindow	= new AddEditClientWindow(tags, client);
-			editClientWindow.ShowDialog();
+			var result = editClientWindow.ShowDialog();
+			if (result != true) return;
+			this.client.UpdateMyself(editClientWindow.tmpClient);
+			BA.Clients.UpdateClient(editClientWindow.tmpClient);
 		}
 	}
 }

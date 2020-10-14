@@ -43,7 +43,6 @@ namespace GoodBankNS.DTO
 			get => _firstName; 
 			set
 			{
-				if (!IsFirstNameCorrect(value)) return;
 				_firstName = value;
 				NotifyPropertyChanged();
 				NotifyMainNameOrDirName();
@@ -66,7 +65,6 @@ namespace GoodBankNS.DTO
 			get => _lastName;
 			set
 			{
-				if (!IsLastNameCorrect(value)) return;
 				_lastName = value;
 				NotifyPropertyChanged();
 				NotifyMainNameOrDirName();
@@ -99,9 +97,9 @@ namespace GoodBankNS.DTO
 			get
 			{
 				if (ClientType != ClientType.Organization) return "";
-				return	LastName + " " + FirstName +
-						(String.IsNullOrEmpty(MiddleName) ? "" : " ") +
-						MiddleName;
+				return	_lastName + " " + _firstName +
+						(String.IsNullOrEmpty(_middleName) ? "" : " ") +
+						_middleName;
 			}
 		}
 
@@ -110,7 +108,6 @@ namespace GoodBankNS.DTO
 			get => _creationDate; 
 			set
 			{
-				if (!DateInTheRange(value)) return;
 				_creationDate = value;
 				NotifyPropertyChanged();
 			}
@@ -121,14 +118,6 @@ namespace GoodBankNS.DTO
 			get => _passportOrTIN; 
 			set
 			{
-				if (ClientType == ClientType.Organization)
-				{
-					if (!ValidTIN(value)) return;
-				}
-				else
-				{
-					if (!ValidPassportNum(ref value)) return;
-				}
 				_passportOrTIN = value;
 				NotifyPropertyChanged();
 			}
@@ -276,103 +265,28 @@ namespace GoodBankNS.DTO
 			}
 		}
 
-		#endregion
-
-		#region Валидаторы свойств для окошка ввода данных
-
-		private bool IsFirstNameCorrect(string fn)
-		{
-			if (!String.IsNullOrEmpty(fn)) return true;
-			MessageBox.Show("Имя не может быть пустым");
-			return false;
-		}
-
-		private bool IsLastNameCorrect(string ln)
-		{
-			if (!String.IsNullOrEmpty(ln)) return true;
-			MessageBox.Show("Фамилия не может быть пустой");
-			return false;
-		}
-
-		private bool DateInTheRange(DateTime? date)
-		{
-			if (ClientType == ClientType.Organization)
-			{
-				if (date > DateTime.Now)
-				{
-					MessageBox.Show("Дата не может превосходить сегодняшний день");
-					return false;
-				}
-				return true;
-			}
-			if ((DateTime.Now - (DateTime)date).TotalDays / 365.25 < 18)
-			{
-				MessageBox.Show("Только лица, достигшие 18 лет, могут быть клиентами банка.");
-				return false;
-			}
-			if ((DateTime.Now - (DateTime)date).TotalDays / 365.25 > 118)
-			{
-				MessageBox.Show("Сейчас на земле нет людей, которым больше 118 лет.");
-				return false;
-			}
-			return true;
-		}
-
 		/// <summary>
-		/// Проверка валидности ИНН
+		/// Конструктор для клонирования объекта
 		/// </summary>
-		/// <param name="tin">ИНН</param>
-		/// <returns></returns>
-		private bool ValidTIN(string tin)
+		/// <param name="c"></param>
+		public ClientDTO(ClientDTO c)
 		{
-			int part;
-			string errorMessage = "		Неверный формат ИНН\n" +
-									"\n" +
-									"	ррННхххххС\n" +
-									"	рр - код региона России от 1 до 85\n" +
-									"	НН - номер от 1 до 99 налоговой в регионе\n" +
-									"	ххххх - код (от 1) организации\n" +
-									"	С - контрольная цифра";
-			tin = tin.Trim();
-			if (tin.Length == 10)
-				if (Int32.TryParse(tin.Substring(0, 2), out part))
-					if (0 < part && part <= 85)
-						if (Int32.TryParse(tin.Substring(2, 2), out part))
-							if (0 < part)
-								if (Int32.TryParse(tin.Substring(4, 6), out part))
-									if (0 < part)
-										return true;
-			MessageBox.Show(errorMessage);
-			return false;
+			this.ID = c.ID;
+			this.ClientType = c.ClientType;
+			_firstName = c._firstName;
+			_middleName = c._middleName;
+			_lastName = c._lastName;
+			_orgName = c._orgName;
+			_creationDate = c._creationDate;
+			_passportOrTIN = c._passportOrTIN;
+			_telephone = c._telephone;
+			_email = c._email;
+			_address = c._address;
+			this.NumberOfCurrentAccounts = c.NumberOfCurrentAccounts;
+			this.NumberOfDeposits = c.NumberOfDeposits;
+			this.NumberOfCredits = c.NumberOfCredits;
+			this.NumberOfClosedAccounts = c.NumberOfClosedAccounts;
 		}
-
-		/// <summary>
-		/// Проверка валидности номера паспорта
-		/// </summary>
-		/// <param name="pNum">Номер паспорта в формате СССС ХХХХХХ</param>
-		/// <returns></returns>
-		private bool ValidPassportNum(ref string pNum)
-		{
-			int series, number;
-			string errorMessage = "          Неверный формат номера паспорта!\n" +
-									"           Используйте формат CCCC ХХХХХХ\n" +
-									"    CCCC   - 4 цифры серии, первая не может быть 0\n" +
-									"    ХХХХХХ - 6 цифр номера, первая не может быть 0\n" +
-									"Количество пробелов до, между и после групп цифр может быть любым";
-			pNum = pNum.Replace(" ", "");
-			if (pNum.Length == 10)
-				if (Int32.TryParse(pNum.Substring(0, 4), out series))
-					if (0 < series)
-						if (Int32.TryParse(pNum.Substring(4), out number))
-							if (0 < number && number < 1_000_000)
-							{
-								pNum = $"{series:0000} {number:000000}";
-								return true;
-							}
-			MessageBox.Show(errorMessage);
-			return false;
-		}
-
 		#endregion
 
 		#region Обработчики изменения свойств
@@ -397,5 +311,23 @@ namespace GoodBankNS.DTO
 
 		#endregion
 
+		public ClientDTO Clone()
+		{
+			return new ClientDTO(this);
+		}
+
+		public void UpdateMyself(ClientDTO c)
+		{
+			FirstName = c.FirstName;
+			MiddleName = c.MiddleName;
+			LastName = c.LastName;
+			if (ClientType == ClientType.Organization)
+				MainName = c.MainName;
+			CreationDate = c.CreationDate;
+			PassportOrTIN = c.PassportOrTIN;
+			Telephone = c.Telephone;
+			Email = c.Email;
+			Address = c.Address;
+		}
 	}
 }

@@ -76,5 +76,7 @@ namespace GoodBankNS.ClientClasses
 		}
 
 		#endregion
+
+		public abstract void UpdateMyself(IClientDTO updatedClient);
 	}
 }

@@ -36,5 +36,11 @@ namespace GoodBankNS.BankInside
 				if (c is TClient) clientsList.Add(new ClientDTO(c));
 			return clientsList;
 		}
+
+		public void UpdateClient(IClientDTO updatedClient)
+		{
+			int ci = clients.FindIndex(c => c.ID == updatedClient.ID);
+			clients[ci].UpdateMyself(updatedClient);
+		}
 	}
 }

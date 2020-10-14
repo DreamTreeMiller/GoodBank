@@ -77,7 +77,7 @@ namespace GoodBankNS.Imitation
 		private static void GenerateORGclientsAndAccounts(int num)
 		{
 			string DFN, DMN, DLN;
-			for (int i = 0; i < num; i++)
+			for (int i = 0; i < num-1; i++)
 			{
 				// Half will be men, half women
 				if ((i & 1) == 0)

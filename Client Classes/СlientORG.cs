@@ -67,5 +67,17 @@ namespace GoodBankNS.ClientClasses
 		}
 
 		#endregion
+		public override void UpdateMyself(IClientDTO updatedClient)
+		{
+			OrgName = updatedClient.MainName;
+			DirectorFirstName = updatedClient.FirstName;
+			DirectorMiddleName = updatedClient.MiddleName;
+			DirectorLastName = updatedClient.LastName;
+			TIN = updatedClient.PassportOrTIN;
+			RegistrationDate = (DateTime)updatedClient.CreationDate;
+			Telephone = updatedClient.Telephone;
+			Email = updatedClient.Email;
+			Address = updatedClient.Address;
+		}
 	}
 }
