@@ -76,6 +76,10 @@ namespace GoodBankNS.UI_one_client_account
 			var editClientWindow	= new AddEditClientWindow(tags, client);
 			var result = editClientWindow.ShowDialog();
 			if (result != true) return;
+
+			// Обновляем визуально редактируемый элемент
+			// Обновляем базу клиентов.
+			// Эти два действия должны всегда быть вместе!
 			this.client.UpdateMyself(editClientWindow.tmpClient);
 			BA.Clients.UpdateClient(editClientWindow.tmpClient);
 		}

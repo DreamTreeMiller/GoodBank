@@ -27,13 +27,13 @@ namespace GoodBankNS.UI_clients
 	/// </summary>
 	public partial class DepartmentWindow : Window
 	{
-		private BankActions			BA;
-		private WindowID			wid;
+		private BankActions				BA;
+		private WindowID				wid;
 
-		private WindowNameTags		deptwinnametags;
-		private ClientsList			clientsListView;
-		private ClientsViewNameTags	clntag;
-		private WindowID			addClientWID;
+		private WindowNameTags			deptwinnametags;
+		private ClientsList				clientsListView;
+		private ClientsViewNameTags		clntag;
+		private WindowID				addClientWID;
 		ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
 
 		private ClientType				ClientTypeForAccountsList;
@@ -50,10 +50,6 @@ namespace GoodBankNS.UI_clients
 
 		#region Инициализация обработчиков кнопок, вида, списков
 
-		/// <summary>
-		/// Привязываем 
-		/// </summary>
-		/// <param name="ui"></param>
 		private void InitializeView(WindowID wid, BankActions ba)
 		{
 			// Прикручиваем банк с обработчиками всех действий над счетами
@@ -103,7 +99,7 @@ namespace GoodBankNS.UI_clients
 					break;
 			}
 			clientsListView.ClientsDataGrid.ItemsSource = clientsList;
-			clientsListView.ClientsTotalNumberValue.Text = $"{clientsList.Count}";
+			clientsListView.ClientsTotalNumberValue.Text = $"{clientsList.Count:N0}";
 		}
 
 		private void ShowAccounts()

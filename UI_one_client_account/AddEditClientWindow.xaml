@@ -60,7 +60,19 @@
 					>
 			<TextBlock Text="Тип клиента" Width="120"/>
 			<ComboBox x:Name="SelectTypeEntryBox"
-					  Margin="10,0,0,0"/>
+					  SelectedIndex="1"
+					  Margin="10,0,0,0" SelectionChanged="SelectTypeEntryBox_SelectionChanged"
+					  >
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding clientTypeStr}" 
+								   Margin="0,3,0,0"
+								   Foreground="Black" 
+								   FontWeight="Normal"
+								   />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 		</StackPanel>
 		<!-- Блок для ввода ФИО ВИП или физика-->
 		<StackPanel x:Name="PersonsNameGrid"

@@ -156,7 +156,7 @@ namespace GoodBankNS.UserControlsLists
 					OrganizationVisibility	= Visibility.Collapsed;
 					PersonVisibility		= Visibility.Visible;
 					ClientTypeComboBox		= Visibility.Visible;
-					ClientType				= ClientType.VIP;
+					ClientType				= ClientType.Simple;
 					break;
 				case WindowID.EditClientVIP:
 					SystemWindowTitle		= "Изменить данные ВИП";

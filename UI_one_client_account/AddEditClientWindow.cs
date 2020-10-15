@@ -19,9 +19,27 @@ using System.Threading;
 
 namespace GoodBankNS.UI_one_client_account
 {
+	public class ClientTypeTuple
+	{
+		public string clientTypeStr  { get; }
+		public ClientType clientType { get; }
+		public ClientTypeTuple(string s, ClientType t)
+		{
+			clientTypeStr	= s;
+			clientType		= t;
+		}
+	}
 	public partial class AddEditClientWindow : Window
 	{
 		public ClientDTO tmpClient = null;
+
+		public readonly List<ClientTypeTuple> clientTypesDDlist = 
+			new List<ClientTypeTuple>()
+			{
+				new ClientTypeTuple("ВИП клиент", ClientType.VIP),
+				new ClientTypeTuple("Физик",	  ClientType.Simple),
+				new ClientTypeTuple("Юрик",		  ClientType.Organization)
+			};
 		public AddEditClientWindow(AddEditClientNameTags nameTags, ClientDTO client)
 		{
 			InitializeComponent();
@@ -37,10 +55,12 @@ namespace GoodBankNS.UI_one_client_account
 			switch(nameTags.WID)
 			{
 				case WindowID.AddClientALL:
+					Height = MinHeight = MaxHeight	= 470;
 					SelectClientTypeLine.Visibility = Visibility.Visible;
-					Height = MinHeight = MaxHeight	= 500;
+					SelectTypeEntryBox.ItemsSource = clientTypesDDlist;
+					//SelectTypeEntryBox.SelectedIndex = 1;
 					break;
-				case WindowID.AddClientVIP:
+				//case WindowID.AddClientVIP:
 				case WindowID.AddClientSIM:
 				case WindowID.EditClientVIP:
 				case WindowID.EditClientSIM:
@@ -85,7 +105,6 @@ namespace GoodBankNS.UI_one_client_account
 				if (!IsPassportNumEntered())		return;
 				if (!IsBirthDateEntered())			return;
 			}
-			
 			DialogResult = true;
 		}
 
@@ -343,5 +362,28 @@ namespace GoodBankNS.UI_one_client_account
 				});
 		}
 
+		private void SelectTypeEntryBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (tmpClient == null) return;
+			tmpClient.UpdateMyself(new ClientDTO());
+			switch ((SelectTypeEntryBox.SelectedItem as ClientTypeTuple).clientType)
+			{
+				case ClientType.VIP:
+					tmpClient.ClientType			= ClientType.VIP;
+					PersonsNameGrid.Visibility		= Visibility.Visible;
+					OrganizationNameGrid.Visibility = Visibility.Collapsed;
+					break;
+				case ClientType.Simple:
+					tmpClient.ClientType			= ClientType.Simple;
+					PersonsNameGrid.Visibility      = Visibility.Visible;
+					OrganizationNameGrid.Visibility = Visibility.Collapsed;
+					break;
+				case ClientType.Organization:
+					tmpClient.ClientType			= ClientType.Organization;
+					PersonsNameGrid.Visibility		= Visibility.Collapsed;
+					OrganizationNameGrid.Visibility = Visibility.Visible;
+					break;
+			}
+		}
 	}
 }

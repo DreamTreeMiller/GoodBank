@@ -271,21 +271,21 @@ namespace GoodBankNS.DTO
 		/// <param name="c"></param>
 		public ClientDTO(ClientDTO c)
 		{
-			this.ID = c.ID;
-			this.ClientType = c.ClientType;
-			_firstName = c._firstName;
-			_middleName = c._middleName;
-			_lastName = c._lastName;
-			_orgName = c._orgName;
-			_creationDate = c._creationDate;
-			_passportOrTIN = c._passportOrTIN;
-			_telephone = c._telephone;
-			_email = c._email;
-			_address = c._address;
-			this.NumberOfCurrentAccounts = c.NumberOfCurrentAccounts;
-			this.NumberOfDeposits = c.NumberOfDeposits;
-			this.NumberOfCredits = c.NumberOfCredits;
-			this.NumberOfClosedAccounts = c.NumberOfClosedAccounts;
+			ID						= c.ID;
+			ClientType				= c.ClientType;
+			_firstName				= c._firstName;
+			_middleName				= c._middleName;
+			_lastName				= c._lastName;
+			_orgName				= c._orgName;
+			_creationDate			= c._creationDate;
+			_passportOrTIN			= c._passportOrTIN;
+			_telephone				= c._telephone;
+			_email					= c._email;
+			_address				= c._address;
+			NumberOfCurrentAccounts	= c.NumberOfCurrentAccounts;
+			NumberOfDeposits		= c.NumberOfDeposits;
+			NumberOfCredits			= c.NumberOfCredits;
+			NumberOfClosedAccounts	= c.NumberOfClosedAccounts;
 		}
 		#endregion
 
@@ -316,18 +316,23 @@ namespace GoodBankNS.DTO
 			return new ClientDTO(this);
 		}
 
+		/// <summary>
+		/// Метод для обновления экземпляра, чтобы сработал вызов NotifyPropertyChanged
+		/// и обновился вывод в нужных местах.
+		/// </summary>
+		/// <param name="c"></param>
 		public void UpdateMyself(ClientDTO c)
 		{
-			FirstName = c.FirstName;
-			MiddleName = c.MiddleName;
-			LastName = c.LastName;
 			if (ClientType == ClientType.Organization)
-				MainName = c.MainName;
-			CreationDate = c.CreationDate;
-			PassportOrTIN = c.PassportOrTIN;
-			Telephone = c.Telephone;
-			Email = c.Email;
-			Address = c.Address;
+				MainName	= c.MainName;
+			FirstName		= c.FirstName;
+			MiddleName		= c.MiddleName;
+			LastName		= c.LastName;
+			CreationDate	= c.CreationDate;
+			PassportOrTIN	= c.PassportOrTIN;
+			Telephone		= c.Telephone;
+			Email			= c.Email;
+			Address			= c.Address;
 		}
 	}
 }

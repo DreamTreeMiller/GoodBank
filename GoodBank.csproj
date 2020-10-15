@@ -80,6 +80,9 @@
     <Compile Include="Account Classes\AccountCurrent.cs" />
     <Compile Include="Account Classes\AccountDeposit.cs" />
     <Compile Include="Imitation\Generate.cs" />
+    <Compile Include="Imitation\GenerateWindow.xaml.cs">
+      <DependentUpon>GenerateWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Imitation\Names-FemaleFirst.cs" />
     <Compile Include="Imitation\Names-FemaleLast.cs" />
     <Compile Include="Imitation\Names-FemaleMiddle.cs" />
@@ -125,6 +128,10 @@
     <Compile Include="UserControlsLists\ClientsList.xaml.cs">
       <DependentUpon>ClientsList.xaml</DependentUpon>
     </Compile>
+    <Page Include="Imitation\GenerateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
