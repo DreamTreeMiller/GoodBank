@@ -101,6 +101,7 @@
     <Compile Include="Interfaces_Actions\IClientsActions.cs" />
     <Compile Include="Client Classes\Client.cs" />
     <Compile Include="Interfaces_Data\IAccount.cs" />
+    <Compile Include="Interfaces_Data\IAccountDTO.cs" />
     <Compile Include="Interfaces_Data\IClient.cs" />
     <Compile Include="Interfaces_Data\IClientDTO.cs" />
     <Compile Include="Interfaces_Data\IGoodBank.cs" />

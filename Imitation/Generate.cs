@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using GoodBankNS.DTO;
 using GoodBankNS.Binding_UI_CondeBehind;
+using GoodBankNS.AccountClasses;
+using GoodBankNS.BankInside;
 
 namespace GoodBankNS.Imitation
 {
@@ -25,6 +27,7 @@ namespace GoodBankNS.Imitation
 			GenerateORGclientsAndAccounts(org);
 		}
 
+		#region Создание клиентов
 
 		private static void GenerateVIPclientsAndAccounts(int num)
 		{
@@ -47,6 +50,7 @@ namespace GoodBankNS.Imitation
 									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
 									"Тропики, Лазурный берег, Жемчужный дворец, комната 8");
 				BA.Clients.AddClient(client);
+				GenerateAccountsForClient(client);
 			}
 		}
 
@@ -71,6 +75,7 @@ namespace GoodBankNS.Imitation
 									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
 									"Мой адрес не дом и не улица. Здесь был Вася.");
 				BA.Clients.AddClient(client);
+				GenerateAccountsForClient(client);
 			}
 		}
 
@@ -95,6 +100,7 @@ namespace GoodBankNS.Imitation
 									GenRegDate(), GenTIN(), 
 									GenTel(), GenEmail(), GenOrgAddress());
 				BA.Clients.AddClient(client);
+				GenerateAccountsForClient(client);
 			}
 
 			BA.Clients.AddClient(
@@ -103,6 +109,48 @@ namespace GoodBankNS.Imitation
 				GenMFN(), GenMMN(), GenMLN(), GenRegDate(), GenTIN(),
 									GenTel(), GenEmail(), GenOrgAddress()));
 		}
+
+		#endregion
+
+		#region Генерация счетов
+
+		private static void GenerateAccountsForClient(IClientDTO client)
+		{
+			GenerateCurrentAccounts(client, r.Next(0, 6));
+			GenerateDeposits(client, r.Next(0, 6));
+			GenerateCredits(client, r.Next(0, 6)); 
+		}
+
+		private static void GenerateCurrentAccounts(IClientDTO c, int num) 
+		{
+			for (int i = 0; i < num; i++)
+				BA.Accounts.AddAccount(
+					new AccountDTO(c.ClientType, c.ID, AccountType.Current,
+					r.Next(0,100) * 1000, 0, 0, 0,
+					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, null));
+		}
+		private static void GenerateDeposits(IClientDTO c, int num) { }
+		private static void GenerateCredits(IClientDTO c, int num) { }
+		private static bool TrueFalse()
+		{
+			return r.Next(0, 2) == 0 ? false : true;
+		}
+
+		/// <summary>
+		/// Сгенерировать дату открытия счета. 
+		/// Она должна быть после рождения клиента и даты создания банка
+		/// </summary>
+		/// <returns></returns>
+		private static DateTime GenAccOpeningDate(IClientDTO c)
+		{
+			if ((DateTime)c.CreationDate < GoodBank.BankFoundationDay)
+				return GenDate(GoodBank.BankFoundationDay, DateTime.Now);
+			return GenDate((DateTime)c.CreationDate, DateTime.Now);
+		}
+
+		#endregion
+
+		#region Генерация полей клиента
 
 		private static string GenMFN()
 		{
@@ -210,5 +258,6 @@ namespace GoodBankNS.Imitation
 			return $"Город_{r.Next(0, 100)}, ул. Улица_{r.Next(0, 100)}, {r.Next(0, 100)} офс. {r.Next(0, 1000)}";
 		}
 
+		#endregion
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
 using GoodBankNS.Interfaces_Actions;
 using GoodBankNS.Interfaces_Data;
 using System;
@@ -15,35 +16,139 @@ namespace GoodBankNS.DTO
 	/// Не меняется в процессе, поэтому все поля заполняются на этапе создания
 	/// через конструктор
 	/// </summary>
-	public class AccountDTO
+	public class AccountDTO : IAccountDTO
 	{
-		public string			ClientType		{ get; }
-		public string			ClientName		{ get; }
-		public string			AccType			{ get; }
-		public uint				ID				{ get; }
-		public string			AccountNumber	{ get; }
-		public int				CurrentAmount	{ get; }
-		public int				DepositAmount	{ get; }
-		public int				DebtAmount		{ get; }
-		public int				Interest		{ get; }
-		public DateTime			Opened			{ get; }
-		public DateTime?		Closed			{ get; }
+		public ClientType	ClientType		{ get; set; }
+		public string		ClientTypeTag
+		{ 
+			get
+			{
+				string ct = "";
+				switch(ClientType)
+				{
+					case ClientType.VIP:
+						ct = "ВИП";
+						break;
+					case ClientType.Simple:
+						ct = "Физик";
+						break;
+					case ClientType.Organization:
+						ct = "Юрик";
+						break;
+				}
+				return ct;
+			}
+		}
+		public uint			ClientID		{ get; set; }
+		public string		ClientName		{ get; set; }
+		public AccountType	AccType			{ get; set; }
+		public string		AccTypeTag							// only {get; }
+		{ 
+			get
+			{
+				string att = "";
+				switch (AccType)
+				{
+					case AccountType.Current:
+						att = "текущий";
+						break;
+					case AccountType.Deposit:
+						att = "вклад";
+						break;
+					case AccountType.Credit:
+						att = "кредит";
+						break;
+				}
+				return att;
+			}
+		}
+		public uint			ID				{ get; }
+		public string		AccountNumber	{ get; set; }
+		public int			CurrentAmount	{ get; set; }
+		public int			DepositAmount	{ get; set; }
+		public int			DebtAmount		{ get; set; }
+		public int			Interest		{ get; set; }
 
-		public AccountDTO(IAccount acc, IClient c)
+		/// <summary>
+		/// С капитализацией или без
+		/// </summary>
+		public bool			Compounding	{ get; set; } = true;
+
+		/// <summary>
+		/// ID счета, куда перечислять проценты.
+		/// При капитализации, совпадает с ИД счета депозита
+		/// </summary>
+		public uint			CompoundAccID	{ get; set; }
+
+		public DateTime		Opened			{ get; set; }
+		public DateTime?	Closed			{ get; set; }
+
+		/// <summary>
+		/// Пополняемый счет или нет
+		/// </summary>
+		public bool			Topupable		{ get; set; }
+
+		/// <summary>
+		/// С правом частичного снятия или нет
+		/// </summary>
+		public bool		WithdrawalAllowed	{ get; set; }
+
+		/// <summary>
+		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
+		/// </summary>
+		public RecalcPeriod	RecalcPeriod	{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита
+		/// null - бессрочный вклад
+		/// </summary>
+		public DateTime?	EndDate			{ get; set; }
+
+		/// <summary>
+		/// Конструктор для создания счета и записи счета в базу
+		/// Данные получены от ручного ввода
+		/// 14 полей!!! ужас!!!
+		/// </summary>
+		public AccountDTO(ClientType ct, uint clientID, AccountType accType, 
+						  int currAm, int depAm, int debtAm, int interest, 
+						  bool compounding, uint compAccID, DateTime opened, 
+						  bool topup, bool withdraw, RecalcPeriod recalc, DateTime? endDate)
+
 		{
-			ID				= acc.ID;    // Account ID
+			ClientType			= ct;
+			ClientID			= clientID;
+			AccType				= accType;
+			CurrentAmount		= currAm;
+			DepositAmount		= depAm;
+			DebtAmount			= debtAm;
+			Interest			= interest;
+			Compounding			= compounding;
+			CompoundAccID		= compAccID;
+			Opened				= opened;
+			Topupable			= topup;
+			WithdrawalAllowed	= withdraw;
+			RecalcPeriod		= recalc;
+			EndDate				= endDate;
+		}
+
+	/// <summary>
+	/// Конструктор для формирования ДТО для ПОКАЗА счетов
+	/// </summary>
+	/// <param name="c">Клиент</param>
+	/// <param name="acc">Счет</param>
+	public AccountDTO(IClient c, IAccount acc)
+		{
+			ID				= acc.ID;				// Account ID
 			AccountNumber	= acc.AccountNumber;
 			Interest		= acc.Interest;
+			Compounding		= acc.Compounding;
+			CompoundAccID	= acc.CompoundAccID;
 			Opened			= acc.Opened;
 			Closed			= acc.Closed;
 
-			// Обнуляем, чтобы не ругался компилятор
-			ClientType	  = ClientName	  = AccType	   = "";
-			CurrentAmount = DepositAmount = DebtAmount = 0;
-
 			if (c is IClientVIP)
 			{
-				ClientType = "VIP";
+				ClientType = ClientType.VIP;
 				ClientName =
 					(c as IClientVIP).LastName +
 					(c as IClientVIP).FirstName +
@@ -53,7 +158,7 @@ namespace GoodBankNS.DTO
 
 			if (c is IClientSimple)
 			{
-				ClientType = "обычный";
+				ClientType = ClientType.Simple;
 				ClientName =
 					(c as IClientSimple).LastName +
 					(c as IClientSimple).FirstName +
@@ -63,22 +168,19 @@ namespace GoodBankNS.DTO
 
 			if (c is IClientOrg)
 			{
-				ClientType = "ОРГ";
+				ClientType = ClientType.Organization;
 				ClientName = (c as IClientOrg).OrgName;
 			}
 
-			switch (acc.AccountType)
+			switch (acc.AccType)
 			{
 				case AccountType.Current:
-					AccType = "текущий";
 					CurrentAmount = acc.Balance;
 					break;
 				case AccountType.Deposit:
-					AccType = "вклад";
 					DepositAmount = acc.Balance;
 					break;
 				case AccountType.Credit:
-					AccType = "кредит";
 					DebtAmount = acc.Balance;
 					break;
 			}

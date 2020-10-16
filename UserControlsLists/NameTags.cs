@@ -74,7 +74,7 @@ namespace GoodBankNS.UserControlsLists
 		public string CreationDateCBTag;        // Дата рождения или дата регистрации
 		public string PassportOrTIN_CB_Tag;     // Номер паспорта или ИНН
 		public Visibility ShowDirectorCB;       // Показывать checkbox директор
-		public Visibility ShowClientTypeColumn;     // Показывать колонку тип - физик или юрик
+		public Visibility ShowClientTypeColumn; // Показывать колонку тип - физик или юрик
 		public string MainNameTag;              // ФИО или Название организации
 		public string TotalNameTag;             // Сводка: ВИП клиентов, физиков, юриков
 
@@ -83,36 +83,36 @@ namespace GoodBankNS.UserControlsLists
 			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
-					CreationDateCBTag = "Дата рождения";
+					CreationDateCBTag	 = "Дата рождения";
 					PassportOrTIN_CB_Tag = "Паспорт";
 					ShowClientTypeColumn = Visibility.Collapsed;
-					ShowDirectorCB = Visibility.Collapsed;
-					MainNameTag = "ФИО";
-					TotalNameTag = "ВИП клиентов:";
+					ShowDirectorCB		 = Visibility.Collapsed;
+					MainNameTag			 = "ФИО";
+					TotalNameTag		 = "ВИП клиентов:";
 					break;
 				case WindowID.DepartmentSIM:
-					CreationDateCBTag = "Дата рождения";
+					CreationDateCBTag	 = "Дата рождения";
 					PassportOrTIN_CB_Tag = "Паспорт";
 					ShowClientTypeColumn = Visibility.Collapsed;
-					ShowDirectorCB = Visibility.Collapsed;
-					MainNameTag = "ФИО";
-					TotalNameTag = "физиков:";
+					ShowDirectorCB		 = Visibility.Collapsed;
+					MainNameTag			 = "ФИО";
+					TotalNameTag		 = "физиков:";
 					break;
 				case WindowID.DepartmentORG:
-					CreationDateCBTag = "Дата регистрации";
+					CreationDateCBTag	 = "Дата регистрации";
 					PassportOrTIN_CB_Tag = "ИНН";
 					ShowClientTypeColumn = Visibility.Collapsed;
-					ShowDirectorCB = Visibility.Visible;
-					MainNameTag = "Название";
-					TotalNameTag = "юриков:";
+					ShowDirectorCB		 = Visibility.Visible;
+					MainNameTag			 = "Название";
+					TotalNameTag		 = "юриков:";
 					break;
 				case WindowID.DepartmentALL:
-					CreationDateCBTag = "Дата рожд./рег.";
+					CreationDateCBTag	 = "Дата рожд./рег.";
 					PassportOrTIN_CB_Tag = "Паспорт/ИНН";
 					ShowClientTypeColumn = Visibility.Visible;
-					ShowDirectorCB = Visibility.Visible;
-					MainNameTag = "ФИО / Название";
-					TotalNameTag = "клиентов:";
+					ShowDirectorCB		 = Visibility.Visible;
+					MainNameTag			 = "ФИО / Название";
+					TotalNameTag		 = "клиентов:";
 					break;
 			}
 		}

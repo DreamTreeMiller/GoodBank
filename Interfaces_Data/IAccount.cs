@@ -15,31 +15,31 @@ namespace GoodBankNS.Interfaces_Data
 		/// Это избыточное поле, но благодаря ему делается всего один проход по базе 
 		/// при показе счетов одного типа клиентов
 		/// </summary>
-		ClientType ClientType { get; set; }
+		ClientType		ClientType		{ get; set; }
 
 		/// <summary>
 		/// ID владельца счета. 
 		/// Это избыточное поле, но так быстрее найти данные владельца 
 		/// при показе счетов одного типа клиентов
 		/// </summary>
-		uint ClientID { get; set; }
+		uint			ClientID		{ get; set; }
 
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
 		/// </summary>
-		AccountType AccountType { get; }
+		AccountType		AccType			{ get; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
 		/// </summary>
-		uint ID { get; }
+		uint			ID				{ get; }
 
 		/// <summary>
 		/// Уникальный номер счёта. 
 		/// Числовая часть совпадает с ID. 
 		/// Есть префикс, указывающий тип счета
 		/// </summary>
-		string AccountNumber { get; set; }
+		string			AccountNumber	{ get; set; }
 
 		/// <summary>
 		/// Баланс счёта. Для разных типов разный
@@ -47,26 +47,37 @@ namespace GoodBankNS.Interfaces_Data
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		int Balance { get; set; }
+		int				Balance			{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		int Interest { get; set; }
+		int				Interest		{ get; set; }
+
+		/// <summary>
+		/// С капитализацией или без
+		/// </summary>
+		bool			Compounding		{ get; set; }
+
+		/// <summary>
+		/// ID счета, куда перечислять проценты.
+		/// При капитализации, совпадает с ИД счета депозита
+		/// </summary>
+		uint			CompoundAccID	{ get; set; }
 
 		/// <summary>
 		/// Открытый или закрытый счет
 		/// </summary>
-		AccountStatus AccountStatus { get; set; }
+		AccountStatus	AccountStatus	{ get; set; }
 
 		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
-		DateTime Opened { get; set; }
+		DateTime		Opened			{ get; set; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
 		/// </summary>
-		DateTime? Closed { get; set; }
+		DateTime?		Closed			{ get; set; }
 	}
 }

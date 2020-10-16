@@ -48,8 +48,6 @@ namespace GoodBankNS.AccountClasses
 
 		/// <summary>
 		/// ID владельца счета. 
-		/// Это избыточное поле, но так быстрее найти данные владельца 
-		/// при показе счетов одного типа клиентов
 		/// </summary>
 		public uint				ClientID		{ get; set; }
 
@@ -57,7 +55,7 @@ namespace GoodBankNS.AccountClasses
 		/// Тип счета текущий, вклад или кредит
 		/// Дублирование, т.к. тип счета определяется его классом
 		/// </summary>
-		public abstract AccountType		AccountType		{ get; }
+		public abstract AccountType		AccType		{ get; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
@@ -85,6 +83,17 @@ namespace GoodBankNS.AccountClasses
 		public int				Interest		{ get; set; }
 
 		/// <summary>
+		/// С капитализацией или без
+		/// </summary>
+		public bool				Compounding		{ get; set; }
+
+		/// <summary>
+		/// ID счета, куда перечислять проценты.
+		/// При капитализации, совпадает с ИД счета депозита
+		/// </summary>
+		public uint				CompoundAccID	{ get; set; }
+
+		/// <summary>
 		/// Открытый или закрытый счет
 		/// </summary>
 		public AccountStatus	AccountStatus	{ get; set; }
@@ -100,18 +109,56 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		public DateTime?		Closed			{ get; set; } = null;
 
+		/// <summary>
+		/// Пополняемый счет или нет
+		/// </summary>
+		public bool				Topupable		{ get; set; }
+
+		/// <summary>
+		/// С правом частичного снятия или нет
+		/// </summary>
+		public bool			WithdrawalAllowed	{ get; set; }
+
+		/// <summary>
+		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
+		/// </summary>
+		public RecalcPeriod		RecalcPeriod	{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита
+		/// null - бессрочный вклад
+		/// </summary>
+		public DateTime?		EndDate			{ get; set; }
+
 		#endregion
 
 		#region Конструктор
 
-		public Account()
+		/// <summary>
+		/// Создание счета
+		/// </summary>
+		/// <param name="clientID"></param>
+		/// <param name="clientType"></param>
+		/// <param name="compounding"></param>
+		/// <param name="compAccID"></param>
+		/// <param name="interest"></param>
+		public Account( uint clientID, ClientType clientType, bool compounding, uint compAccID, int interest,
+						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
 		{
-			ID			  = NextID();
-			AccountNumber = $"{ID:000000000000}";
-			Balance		  = 0;
-			Interest	  = 0;
-			AccountStatus = AccountStatus.Opened;
-			Opened		  = DateTime.Now;
+			ClientID			= clientID;
+			ClientType			= clientType;
+			ID					= NextID();
+			AccountNumber		= $"{ID:000000000000}";
+			Compounding			= compounding;
+			CompoundAccID		= compAccID;
+			Balance				= 0;
+			Interest			= interest;
+			AccountStatus		= AccountStatus.Opened;
+			Opened				= DateTime.Now;
+			Topupable			= topup;
+			WithdrawalAllowed	= withdrawal;
+			RecalcPeriod		= recalc;
+			EndDate				= endDate;
 		}
 
 		#endregion

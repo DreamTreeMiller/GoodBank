@@ -23,10 +23,10 @@ namespace GoodBankNS.UI_one_client_account
 	/// </summary>
 	public partial class ClientWindow : Window
 	{
-		private BankActions BA;
+		private BankActions			 BA;
 		private AccountsList		 accountsListView;
 		private AccountsViewNameTags alntag;
-		private WindowID			 wid = WindowID.EditClientVIP;
+		private WindowID			 wid	= WindowID.EditClientVIP;
 		private ClientDTO			 client = new ClientDTO();
 
 		public ClientWindow(BankActions ba, ClientDTO client)
@@ -45,13 +45,13 @@ namespace GoodBankNS.UI_one_client_account
 			switch (this.client.ClientType)
 			{
 				case ClientType.VIP:
-					Title			= "ВИП";
-					MainTitle.Text	= "ОЧЕНЬ ВАЖНАЯ ПЕРСОНА";
+					Title						= "ВИП";
+					MainTitle.Text				= "ОЧЕНЬ ВАЖНАЯ ПЕРСОНА";
 					break;
 				case ClientType.Simple:
-					Title			= "Физик";
-					MainTitle.Text	= "ФИЗИК";
-					wid				= WindowID.EditClientSIM;
+					Title						= "Физик";
+					MainTitle.Text				= "ФИЗИК";
+					wid							= WindowID.EditClientSIM;
 					break;
 				case ClientType.Organization:
 					Title						= "Юрик";
@@ -62,9 +62,9 @@ namespace GoodBankNS.UI_one_client_account
 					break;
 			}
 
-			ClientInfo.DataContext = client;
-			accountsListView = new AccountsList();
-			AccountsList.Content = accountsListView;
+			ClientInfo.DataContext	= client;
+			accountsListView		= new AccountsList();
+			AccountsList.Content	= accountsListView;
 
 			// Убираем словов "сундучки"
 			accountsListView.WordAccountsTag.Visibility = Visibility.Collapsed;

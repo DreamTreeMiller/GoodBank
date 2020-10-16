@@ -10,6 +10,16 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
+		/// <summary>
+		/// Находит клиента с указанным ID
+		/// </summary>
+		/// <param name="id">ID клиента</param>
+		/// <returns></returns>
+		public IClient GetClientByID(uint id)
+		{
+			return clients.Find(c => c.ID == id);
+		}
+
 		public IClientDTO AddClient(IClientDTO client)
 		{
 			Client newClient = null;

@@ -21,28 +21,6 @@ namespace GoodBankNS.ClientClasses
 
 		#region Конструктор
 
-		/// <summary>
-		/// Конструктор созадет клиента
-		/// </summary>
-		/// <param name="fn">Имя</param>
-		/// <param name="mn">Отчество</param>
-		/// <param name="ln">Фамилия</param>
-		/// <param name="passNum">Номер паспорта</param>
-		/// <param name="bd">Дата рождения</param>
-		/// <param name="tel">Телефон</param>
-		/// <param name="email">Электронная почта</param>
-		/// <param name="address">Адрес</param>
-		public СlientSIM(string fn,  string mn,    string ln, string passNum, DateTime bd,
-						 string tel, string email, string address)
-			: base(tel, email, address)
-		{
-			FirstName		= fn;
-			MiddleName		= mn;
-			LastName		= ln;
-			PasspostNumber  = passNum;
-			BirthDate		= bd;
-		}
-
 		public СlientSIM(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
@@ -56,14 +34,14 @@ namespace GoodBankNS.ClientClasses
 		#endregion
 		public override void UpdateMyself(IClientDTO updatedClient)
 		{
-			FirstName = updatedClient.FirstName;
-			MiddleName = updatedClient.MiddleName;
-			LastName = updatedClient.LastName;
-			PasspostNumber = updatedClient.PassportOrTIN;
-			BirthDate = (DateTime)updatedClient.CreationDate;
-			Telephone = updatedClient.Telephone;
-			Email = updatedClient.Email;
-			Address = updatedClient.Address;
+			FirstName		= updatedClient.FirstName;
+			MiddleName		= updatedClient.MiddleName;
+			LastName		= updatedClient.LastName;
+			PasspostNumber	= updatedClient.PassportOrTIN;
+			BirthDate		= (DateTime)updatedClient.CreationDate;
+			Telephone		= updatedClient.Telephone;
+			Email			= updatedClient.Email;
+			Address			= updatedClient.Address;
 		}
 	}
 }

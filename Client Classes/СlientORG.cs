@@ -30,31 +30,6 @@ namespace GoodBankNS.ClientClasses
 
 		#region Конструктор
 
-		/// <summary>
-		/// Конструктор создает организацию.
-		/// </summary>
-		/// <param name="orgName">Название организации</param>
-		/// <param name="TIN">ИНН</param>
-		/// <param name="regDate">Дата регистрации</param>
-		/// <param name="dfn">Имя директора</param>
-		/// <param name="dmn">Отчетство директора</param>
-		/// <param name="dln">Фамилия директора</param>
-		/// <param name="tel">Телефон организации</param>
-		/// <param name="email">Эл. почта организации</param>
-		/// <param name="address">Адрес организации</param>
-		public СlientORG(string orgName, string TIN, DateTime regDate,
-						 string dfn, string dmn,   string dln,
-						 string tel, string email, string address)
-			: base(tel, email, address)
-		{
-			OrgName				= orgName;
-			this.TIN			= TIN;
-			RegistrationDate	= regDate;
-			DirectorFirstName	= dfn;
-			DirectorMiddleName	= dmn;
-			DirectorLastName	= dln;
-		}
-
 		public СlientORG(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
@@ -69,15 +44,15 @@ namespace GoodBankNS.ClientClasses
 		#endregion
 		public override void UpdateMyself(IClientDTO updatedClient)
 		{
-			OrgName = updatedClient.MainName;
-			DirectorFirstName = updatedClient.FirstName;
-			DirectorMiddleName = updatedClient.MiddleName;
-			DirectorLastName = updatedClient.LastName;
-			TIN = updatedClient.PassportOrTIN;
-			RegistrationDate = (DateTime)updatedClient.CreationDate;
-			Telephone = updatedClient.Telephone;
-			Email = updatedClient.Email;
-			Address = updatedClient.Address;
+			OrgName				= updatedClient.MainName;
+			DirectorFirstName	= updatedClient.FirstName;
+			DirectorMiddleName	= updatedClient.MiddleName;
+			DirectorLastName	= updatedClient.LastName;
+			TIN					= updatedClient.PassportOrTIN;
+			RegistrationDate	= (DateTime)updatedClient.CreationDate;
+			Telephone			= updatedClient.Telephone;
+			Email				= updatedClient.Email;
+			Address				= updatedClient.Address;
 		}
 	}
 }

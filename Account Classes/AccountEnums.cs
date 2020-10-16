@@ -26,4 +26,13 @@ namespace GoodBankNS.AccountClasses
 		DepositFromAccount,
 		TransferToAccount
 	}
+
+	public enum RecalcPeriod
+	{
+		NoRecalc,
+		Dayly,
+		Monthly,
+		Annually,
+		OnceInTheEnd
+	}
 }
