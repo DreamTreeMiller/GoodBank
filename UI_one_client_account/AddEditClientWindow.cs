@@ -31,7 +31,7 @@ namespace GoodBankNS.UI_one_client_account
 	}
 	public partial class AddEditClientWindow : Window
 	{
-		public ClientDTO tmpClient = null;
+		public IClientDTO tmpClient = null;
 
 		public readonly List<ClientTypeTuple> clientTypesDDlist = 
 			new List<ClientTypeTuple>()
@@ -40,13 +40,13 @@ namespace GoodBankNS.UI_one_client_account
 				new ClientTypeTuple("Физик",	  ClientType.Simple),
 				new ClientTypeTuple("Юрик",		  ClientType.Organization)
 			};
-		public AddEditClientWindow(AddEditClientNameTags nameTags, ClientDTO client)
+		public AddEditClientWindow(AddEditClientNameTags nameTags, IClientDTO client)
 		{
 			InitializeComponent();
 			InitializeTextFields(nameTags, client);
 		}
 
-		private void InitializeTextFields(AddEditClientNameTags nameTags, ClientDTO client)
+		private void InitializeTextFields(AddEditClientNameTags nameTags, IClientDTO client)
 		{
 			Title		= nameTags.SystemWindowTitle;
 			Header.Text = nameTags.WindowHeader;
@@ -86,7 +86,7 @@ namespace GoodBankNS.UI_one_client_account
 			}
 			else
 			{
-				tmpClient = client.Clone();
+				tmpClient = (client as ClientDTO).Clone();
 			}
 			DataContext	= this.tmpClient;
 		}
@@ -365,7 +365,7 @@ namespace GoodBankNS.UI_one_client_account
 		private void SelectTypeEntryBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (tmpClient == null) return;
-			tmpClient.UpdateMyself(new ClientDTO());
+			(tmpClient as ClientDTO).UpdateMyself(new ClientDTO());
 			switch ((SelectTypeEntryBox.SelectedItem as ClientTypeTuple).clientType)
 			{
 				case ClientType.VIP:

@@ -45,11 +45,12 @@ namespace GoodBankNS.Imitation
 				}
 
 				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client =
+				IClientDTO client =
 					new ClientDTO(	ClientType.VIP, FN, MN, LN,
 									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
 									"Тропики, Лазурный берег, Жемчужный дворец, комната 8");
-				BA.Clients.AddClient(client);
+				// Присваивание client необходимо, т.к. AddClient генерирует уникальный ID
+				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
 			}
 		}
@@ -70,11 +71,12 @@ namespace GoodBankNS.Imitation
 				}
 
 				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client = 
+				IClientDTO client = 
 					new ClientDTO(	ClientType.Simple, FN, MN, LN,
 									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
 									"Мой адрес не дом и не улица. Здесь был Вася.");
-				BA.Clients.AddClient(client);
+				// Присваивание client необходимо, т.к. AddClient генерирует уникальный ID
+				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
 			}
 		}
@@ -95,11 +97,12 @@ namespace GoodBankNS.Imitation
 				}
 
 				// Генерируем контейнер для передачи данных в бекэнд
-				ClientDTO client =
+				IClientDTO client =
 					new ClientDTO(	ClientType.Organization, GenOrgName(), DFN, DMN, DLN,
 									GenRegDate(), GenTIN(), 
 									GenTel(), GenEmail(), GenOrgAddress());
-				BA.Clients.AddClient(client);
+				// Присваивание client необходимо, т.к. AddClient генерирует уникальный ID
+				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
 			}
 
@@ -124,13 +127,57 @@ namespace GoodBankNS.Imitation
 		private static void GenerateCurrentAccounts(IClientDTO c, int num) 
 		{
 			for (int i = 0; i < num; i++)
-				BA.Accounts.AddAccount(
-					new AccountDTO(c.ClientType, c.ID, AccountType.Current,
-					r.Next(0,100) * 1000, 0, 0, 0,
+				BA.Accounts.GenerateAccount(
+					 new AccountDTO(c.ClientType, c.ID, AccountType.Current,
+									r.Next(0,100) * 1000, 0, 0,				// сумма на текущем счеты
+									0,										// процент по вкладу
 					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, null));
 		}
-		private static void GenerateDeposits(IClientDTO c, int num) { }
-		private static void GenerateCredits(IClientDTO c, int num) { }
+
+		private static void GenerateDeposits(IClientDTO c, int num) 
+		{
+			for (int i = 0; i < num; i++)
+			{
+				DateTime openingDate = GenAccOpeningDate(c);
+				DateTime? endDate	 = GenDepositCreditEndDate(openingDate, r.Next(1, 61));
+
+				BA.Accounts.GenerateAccount(
+					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
+									0, r.Next(100, 300) * 10000, 0,	// сумма на счету. У ВИП > 1 mln
+									r.Next(1, 13),					// процент
+									TrueFalse(),					// капитализация
+									0,								// У нас ещё нет счета для перечисления ...
+									openingDate,
+									TrueFalse(),					// Можем поплнять или нет
+									TrueFalse(),					// Можем частично снимать или нет
+									RecalcPeriod.Monthly,			// Периодичность пересчета
+									endDate));						// Срок окончания вклада
+			}
+		}
+
+		private static void GenerateCredits(IClientDTO c, int num)
+		{
+			for (int i = 0; i < num; i++)
+			{
+				DateTime openingDate = GenAccOpeningDate(c);
+				int duration = r.Next(1, 361);
+				DateTime? endDate = GenDepositCreditEndDate(openingDate, duration);
+				int amount = duration * 30_000;
+
+				BA.Accounts.GenerateAccount(
+					 new AccountDTO(c.ClientType, c.ID, AccountType.Credit,
+									0, 0, -amount,			// долг
+									r.Next(1, 16),			// процент
+									true,					// капитализация
+									0,						// на собственный
+									openingDate,
+									true,					// Можем поплнять или нет
+									false,					// Можем частично снимать или нет
+									RecalcPeriod.Monthly,	// Периодичность пересчета
+									endDate));				// Срок погашения кредита
+			}
+		}
+
 		private static bool TrueFalse()
 		{
 			return r.Next(0, 2) == 0 ? false : true;
@@ -146,6 +193,11 @@ namespace GoodBankNS.Imitation
 			if ((DateTime)c.CreationDate < GoodBank.BankFoundationDay)
 				return GenDate(GoodBank.BankFoundationDay, DateTime.Now);
 			return GenDate((DateTime)c.CreationDate, DateTime.Now);
+		}
+
+		private static DateTime GenDepositCreditEndDate(DateTime sd, int totalMonths)
+		{
+			return sd.AddMonths(totalMonths);
 		}
 
 		#endregion

@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using GoodBankNS.Binding_UI_CondeBehind;
+using GoodBankNS.Interfaces_Data;
 
 namespace GoodBankNS.UI_one_client_account
 {
@@ -27,15 +28,15 @@ namespace GoodBankNS.UI_one_client_account
 		private AccountsList		 accountsListView;
 		private AccountsViewNameTags alntag;
 		private WindowID			 wid	= WindowID.EditClientVIP;
-		private ClientDTO			 client = new ClientDTO();
+		private IClientDTO			 client = new ClientDTO();
 
-		public ClientWindow(BankActions ba, ClientDTO client)
+		public ClientWindow(BankActions ba, IClientDTO client)
 		{
 			InitializeComponent();
 			InitializeAccountsView(ba, client);
 		}
 
-		private void InitializeAccountsView(BankActions ba, ClientDTO client)
+		private void InitializeAccountsView(BankActions ba, IClientDTO client)
 		{
 			BA = ba;
 			OrganizationInfo.Visibility = Visibility.Collapsed;
@@ -80,7 +81,7 @@ namespace GoodBankNS.UI_one_client_account
 			// Обновляем визуально редактируемый элемент
 			// Обновляем базу клиентов.
 			// Эти два действия должны всегда быть вместе!
-			this.client.UpdateMyself(editClientWindow.tmpClient);
+			(this.client as ClientDTO).UpdateMyself(editClientWindow.tmpClient as ClientDTO);
 			BA.Clients.UpdateClient(editClientWindow.tmpClient);
 		}
 	}

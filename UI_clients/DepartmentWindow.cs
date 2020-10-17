@@ -6,6 +6,8 @@ using GoodBankNS.UI_one_client_account;
 using GoodBankNS.UserControlsLists;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Data;
+using System.Windows.Controls;
 
 namespace GoodBankNS.UI_clients
 {
@@ -91,8 +93,9 @@ namespace GoodBankNS.UI_clients
 
 		private void ShowAccounts()
 		{
-			accountsListView.AccountsDataGrid.ItemsSource = 
-				BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
+			var accountsList = BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
+			accountsListView.AccountsDataGrid.ItemsSource = accountsList;
+			accountsListView.AccountsTotalNumberValue.Text = $"{accountsList.Count:N0}";
 		}
 
 		#endregion
@@ -112,7 +115,7 @@ namespace GoodBankNS.UI_clients
 		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)
 		{
 			AddEditClientNameTags nameTags  = new AddEditClientNameTags(addClientWID);
-			ClientDTO newClient = null;
+			IClientDTO newClient = null;
 			AddEditClientWindow addСlientWin = new AddEditClientWindow(nameTags, newClient);
 			bool? result = addСlientWin.ShowDialog();
 			
@@ -138,6 +141,15 @@ namespace GoodBankNS.UI_clients
 
 		private void WinMenu_SelectAccount_Click(object sender, RoutedEventArgs e)
 		{
+			var account = accountsListView.AccountsDataGrid.SelectedItem as AccountDTO;
+			if (account == null)
+			{
+				MessageBox.Show("Выберите счет для показа");
+				return;
+			}
+			IClient client = BA.Clients.GetClientByID(account.ClientID);
+			ClientWindow clientWindow = new ClientWindow(BA, new ClientDTO(client));
+			clientWindow.ShowDialog();
 
 		}
 
@@ -147,4 +159,6 @@ namespace GoodBankNS.UI_clients
 		}
 
 	}
+
+
 }

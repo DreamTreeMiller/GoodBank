@@ -138,6 +138,8 @@ namespace GoodBankNS.DTO
 	/// <param name="acc">Счет</param>
 	public AccountDTO(IClient c, IAccount acc)
 		{
+			ClientID		= c.ID;
+			AccType			= acc.AccType;
 			ID				= acc.ID;				// Account ID
 			AccountNumber	= acc.AccountNumber;
 			Interest		= acc.Interest;
@@ -150,7 +152,7 @@ namespace GoodBankNS.DTO
 			{
 				ClientType = ClientType.VIP;
 				ClientName =
-					(c as IClientVIP).LastName +
+					(c as IClientVIP).LastName + " " +
 					(c as IClientVIP).FirstName +
 					(String.IsNullOrEmpty((c as IClientVIP).MiddleName) ? "" : " ") +
 					(c as IClientVIP).MiddleName;
@@ -160,7 +162,7 @@ namespace GoodBankNS.DTO
 			{
 				ClientType = ClientType.Simple;
 				ClientName =
-					(c as IClientSimple).LastName +
+					(c as IClientSimple).LastName + " " +
 					(c as IClientSimple).FirstName +
 					(String.IsNullOrEmpty((c as IClientSimple).MiddleName) ? "" : " ") +
 					(c as IClientSimple).MiddleName;

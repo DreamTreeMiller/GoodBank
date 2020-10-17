@@ -161,6 +161,34 @@ namespace GoodBankNS.AccountClasses
 			EndDate				= endDate;
 		}
 
+		/// <summary>
+		/// Конструктор для генератора случайных счетов. Добавляется дата
+		/// </summary>
+		/// <param name="clientID"></param>
+		/// <param name="clientType"></param>
+		/// <param name="compounding"></param>
+		/// <param name="compAccID"></param>
+		/// <param name="interest"></param>
+		public Account(uint clientID, ClientType clientType, bool compounding, uint compAccID, int interest,
+						DateTime opened,
+						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
+		{
+			ClientID			= clientID;
+			ClientType			= clientType;
+			ID					= NextID();
+			AccountNumber		= $"{ID:000000000000}";
+			Compounding			= compounding;
+			CompoundAccID		= compAccID;
+			Balance				= 0;
+			Interest			= interest;
+			AccountStatus		= AccountStatus.Opened;
+			Opened				= opened;
+			Topupable			= topup;
+			WithdrawalAllowed	= withdrawal;
+			RecalcPeriod		= recalc;
+			EndDate				= endDate;
+		}
+
 		#endregion
 	}
 }

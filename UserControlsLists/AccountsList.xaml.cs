@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data;
+using GoodBankNS.AccountClasses;
+using System.Globalization;
+using GoodBankNS.DTO;
 
 namespace GoodBankNS.UserControlsLists
 {
@@ -25,11 +29,7 @@ namespace GoodBankNS.UserControlsLists
 			InitializeComponent();
 			AccountsDataGrid.Items.Clear(); // Почему-то вставляется пустой элемент после инициализации
 											// надо удалить, чтобы корректно всё работало
-			InitializeTagsAndColumns();
 		}
-
-		private void InitializeTagsAndColumns()
-		{ }
 
 		#region Accounts DataGrid CheckBoxes handlers
 
@@ -112,4 +112,5 @@ namespace GoodBankNS.UserControlsLists
 		#endregion
 
 	}
+
 }

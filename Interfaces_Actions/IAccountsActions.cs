@@ -22,6 +22,8 @@ namespace GoodBankNS.Interfaces_Actions
 		/// </returns>
 		ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType);
 
-		IAccountDTO AddAccount(IAccountDTO acc);
+		IAccountDTO AddAccount(IAccountDTO acc); 
+
+		IAccountDTO GenerateAccount(IAccountDTO acc);
 	}
 }

@@ -67,7 +67,7 @@
 				  GridLinesVisibility="None"
 				  RowBackground="LightGray" 
 				  AlternatingRowBackground="White" 
-				  VerticalAlignment="Stretch"
+				  VerticalAlignment="Stretch" 
 				  >
 			<DataGrid.CellStyle>
 				<Style>
@@ -124,11 +124,18 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Left"
 					>
-			<TextBlock Text="Всего: " 
+			<TextBlock Text="Всего счетов: " 
 						FontSize="14"
 						FontWeight="Bold"
 						Foreground="DarkSlateGray"
 						/>
+			<TextBlock x:Name="AccountsTotalNumberValue"
+					   Margin="10,0,0,0"
+					   FontSize="14"
+					   FontWeight="Bold"
+					   Foreground="DarkBlue"
+					   />
+			<!-- 
 			<TextBlock Text="Тек. счетов:"
 						FontSize="14"
 						FontWeight="Bold"
@@ -174,6 +181,7 @@
 						Foreground="DarkBlue"
 						Margin="10, 0, 0, 0"
 						/>
+			-->
 		</StackPanel>
 	</Grid>
 </UserControl>

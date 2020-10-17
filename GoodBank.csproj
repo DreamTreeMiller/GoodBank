@@ -125,6 +125,7 @@
     <Compile Include="UserControlsLists\AccountsList.xaml.cs">
       <DependentUpon>AccountsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControlsLists\HideRowConverter.cs" />
     <Compile Include="UserControlsLists\NameTags.cs" />
     <Compile Include="UserControlsLists\ClientsList.xaml.cs">
       <DependentUpon>ClientsList.xaml</DependentUpon>
