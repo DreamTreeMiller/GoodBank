@@ -1,30 +1,35 @@
 ﻿using GoodBankNS.AccountClasses;
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace GoodBankNS.UserControlsLists
 {
-	[ValueConversion(typeof(AccountType), typeof(bool))]
-	public class HideRowConverter : IValueConverter
+	[ValueConversion(typeof(Object[]), typeof(Visibility))]
+	public class HideRowConverter : IMultiValueConverter
 	{
 		public static HideRowConverter Instance = new HideRowConverter();
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if ((AccountType)value == AccountType.Current /*&& CurrentAccountsCB.IsChecked == false*/)
+			if (value != null) /*== AccountType.Current && CurrentAccountsCB.IsChecked == false*/
 			{
-				return true;
+				if((AccountType)value[0] == AccountType.Current &&
+					(bool)value[1] == true)
+					return Visibility.Visible;
+				else
+					return Visibility.Collapsed;
 			}
 			else
 			{
-				return false;
+				return Visibility.Visible;
 			}
 
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotImplementedException();
 		}

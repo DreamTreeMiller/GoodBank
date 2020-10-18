@@ -77,6 +77,25 @@
 					<Setter Property="TextBlock.TextAlignment" Value="Center"/>
 				</Style>
 			</DataGrid.CellStyle>
+			<DataGrid.RowStyle>
+				<Style TargetType="{x:Type DataGridRow}">
+					<Style.Triggers>
+						<DataTrigger>
+ 							<Setter Property="Visibility">
+								<Setter.Value>
+									<MultiBinding Converter="{x:Static local:HideRowConverter.Instance}" Mode="OneWay">
+										<Binding ElementName="CurrentAccountsCB" Path="IsChecked"/>
+										<Binding ElementName="CurrentAccountsCB" Path="IsChecked"/>
+										<Binding ElementName="DepositsCB"		 Path="IsChecked"/>
+										<Binding ElementName="CreditsCB"		 Path="IsChecked"/>
+										<Binding ElementName="ClosedAccountsCB"	 Path="IsChecked"/>
+									</MultiBinding>
+								</Setter.Value>
+							</Setter>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</DataGrid.RowStyle>			
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="№"	Binding="{Binding ID}"/>
 				<DataGridTextColumn x:Name="ClientTypeColumn" 
