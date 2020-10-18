@@ -20,7 +20,11 @@ namespace GoodBankNS.Interfaces_Actions
 		/// <returns>
 		/// Коллекцию счетов, принадлежащих клиентам данного типа
 		/// </returns>
-		ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType);
+		(ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+			GetAccountsList(ClientType clientType);
+
+		(ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+			GetClientAccounts(uint ID);
 
 		IAccountDTO AddAccount(IAccountDTO acc); 
 

@@ -309,7 +309,7 @@
 				</Button.Style>
 				<Button.ToolTip>
 					<ToolTip>
-						Открыть карточку работы с клиентом
+						Открыть новый счет
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
@@ -342,7 +342,7 @@
 				</Button.Style>
 				<Button.ToolTip>
 					<ToolTip>
-						Внести данные новго клиента
+						Закрыть счет
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>

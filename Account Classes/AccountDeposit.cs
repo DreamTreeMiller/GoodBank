@@ -10,7 +10,7 @@ namespace GoodBankNS.AccountClasses
 	public class AccountDeposit : Account
 	{
 		public override AccountType AccType { get => AccountType.Deposit; }
-		public override int Balance { get; set; }
+		public override double Balance { get; set; }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных

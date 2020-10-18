@@ -10,7 +10,8 @@ namespace GoodBankNS.AccountClasses
 	{
 		Current,
 		Deposit,
-		Credit
+		Credit,
+		Total
 	}
 
 	public enum AccountStatus

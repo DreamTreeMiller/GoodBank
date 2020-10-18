@@ -75,12 +75,12 @@ namespace GoodBankNS.AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract int		Balance			{ get; set; }
+		public abstract double		Balance			{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		public int				Interest		{ get; set; }
+		public double Interest		{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без
@@ -142,7 +142,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account( uint clientID, ClientType clientType, bool compounding, uint compAccID, int interest,
+		public Account( uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
 						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
 		{
 			ClientID			= clientID;
@@ -169,7 +169,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account(uint clientID, ClientType clientType, bool compounding, uint compAccID, int interest,
+		public Account(uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
 						DateTime opened,
 						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
 		{

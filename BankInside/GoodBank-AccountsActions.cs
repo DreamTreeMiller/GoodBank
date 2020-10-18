@@ -63,20 +63,86 @@ namespace GoodBankNS.BankInside
 			return new AccountDTO(client, newAcc);
 		}
 
-		public ObservableCollection<AccountDTO> GetAccountsList(ClientType clientType)
+		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+			GetAccountsList(ClientType clientType)
 		{
 			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
-			if(clientType == ClientType.All)
+			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
+			IAccount acc;
+			AccountDTO totalRecord;
+			if (clientType == ClientType.All)
 			{
 				for (int i = 0; i < accounts.Count; i++)
-					accList.Add(new AccountDTO(GetClientByID(accounts[i].ClientID), accounts[i]));
-				return accList;
+				{
+					acc = accounts[i];
+					switch(acc.AccType)
+					{
+						case AccountType.Current:
+							totalCurr += acc.Balance;
+							break;
+						case AccountType.Deposit:
+							totalDeposit += acc.Balance;
+							break;
+						case AccountType.Credit:
+							totalCredit += acc.Balance;
+							break;
+					}
+					accList.Add(new AccountDTO(GetClientByID(accounts[i].ClientID), acc));
+				}
+				return (accList, totalCurr, totalDeposit, totalCredit);
 			}
 
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientType == clientType)
-					accList.Add(new AccountDTO(GetClientByID(accounts[i].ClientID), accounts[i]));
-			return accList;
+				{
+					acc = accounts[i];
+					switch (acc.AccType)
+					{
+						case AccountType.Current:
+							totalCurr += acc.Balance;
+							break;
+						case AccountType.Deposit:
+							totalDeposit += acc.Balance;
+							break;
+						case AccountType.Credit:
+							totalCredit += acc.Balance;
+							break;
+					}
+					accList.Add(new AccountDTO(GetClientByID(accounts[i].ClientID), acc));
+				}
+			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
+
+		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+			GetClientAccounts(uint clientID)
+		{
+			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			var client = GetClientByID(clientID);
+			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
+			IAccount acc;
+			AccountDTO totalRecord;
+
+			for (int i = 0; i < accounts.Count; i++)
+				if (accounts[i].ClientID == clientID)
+				{
+					acc = accounts[i];
+					switch (acc.AccType)
+					{
+						case AccountType.Current:
+							totalCurr += acc.Balance;
+							break;
+						case AccountType.Deposit:
+							totalDeposit += acc.Balance;
+							break;
+						case AccountType.Credit:
+							totalCredit += acc.Balance;
+							break;
+					}
+					accList.Add(new AccountDTO(client, acc));
+				}
+			return (accList, totalCurr, totalDeposit, totalCredit);
+
+		}
+
 	}
 }

@@ -16,10 +16,10 @@ namespace GoodBankNS.Interfaces_Data
 		AccountType	AccType			{ get; set; }
 		uint		ID				{ get; }
 		string		AccountNumber	{ get; set; }
-		int			CurrentAmount	{ get; set; }
-		int			DepositAmount	{ get; set; }
-		int			DebtAmount		{ get; set; }
-		int			Interest		{ get; set; }
+		double		CurrentAmount	{ get; set; }
+		double		DepositAmount	{ get; set; }
+		double		DebtAmount		{ get; set; }
+		double		Interest		{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без

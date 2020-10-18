@@ -34,6 +34,7 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			InitializeComponent();
 			InitializeAccountsView(ba, client);
+			ShowAccounts();
 		}
 
 		private void InitializeAccountsView(BankActions ba, IClientDTO client)
@@ -71,6 +72,15 @@ namespace GoodBankNS.UI_one_client_account
 			accountsListView.WordAccountsTag.Visibility = Visibility.Collapsed;
 		}
 
+		private void ShowAccounts()
+		{
+			var accountsList = BA.Accounts.GetClientAccounts(client.ID);
+			accountsListView.AccountsDataGrid.ItemsSource = accountsList.accList;
+			accountsListView.AccountsTotalNumberValue.Text = $"{accountsList.accList.Count:N0}";
+			accountsListView.CurrentTotalAmount.Text = $"{accountsList.totalCurr:N2}";
+			accountsListView.DepositsTotalAmount.Text = $"{accountsList.totalDeposit:N2}";
+			accountsListView.CreditsTotalAmount.Text = $"{accountsList.totalCredit:N2}";
+		}
 		private void ClientWindow_EditClient_Click(object sender, RoutedEventArgs e)
 		{
 			var tags				= new AddEditClientNameTags(wid);

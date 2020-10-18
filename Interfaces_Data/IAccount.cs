@@ -47,12 +47,12 @@ namespace GoodBankNS.Interfaces_Data
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		int				Balance			{ get; set; }
+		double			 Balance			{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		int				Interest		{ get; set; }
+		double			 Interest		{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без

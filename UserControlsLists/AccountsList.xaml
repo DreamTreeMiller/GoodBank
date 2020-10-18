@@ -69,6 +69,9 @@
 				  AlternatingRowBackground="White" 
 				  VerticalAlignment="Stretch" 
 				  >
+			<DataGrid.Resources>
+				 <local:HideRowConverter x:Key="HideRowConverter"/>
+			</DataGrid.Resources>
 			<DataGrid.CellStyle>
 				<Style>
 					<!-- Это надо, чтобы выделялась вся строка, а не только значения в клеточках-->
@@ -79,21 +82,17 @@
 			</DataGrid.CellStyle>
 			<DataGrid.RowStyle>
 				<Style TargetType="{x:Type DataGridRow}">
-					<Style.Triggers>
-						<DataTrigger>
- 							<Setter Property="Visibility">
-								<Setter.Value>
-									<MultiBinding Converter="{x:Static local:HideRowConverter.Instance}" Mode="OneWay">
-										<Binding ElementName="CurrentAccountsCB" Path="IsChecked"/>
-										<Binding ElementName="CurrentAccountsCB" Path="IsChecked"/>
-										<Binding ElementName="DepositsCB"		 Path="IsChecked"/>
-										<Binding ElementName="CreditsCB"		 Path="IsChecked"/>
-										<Binding ElementName="ClosedAccountsCB"	 Path="IsChecked"/>
-									</MultiBinding>
-								</Setter.Value>
-							</Setter>
-						</DataTrigger>
-					</Style.Triggers>
+ 					<Setter Property="Visibility">
+						<Setter.Value>
+							<MultiBinding Converter="{StaticResource HideRowConverter}" Mode="OneWay">
+								<Binding />
+								<Binding ElementName="CurrentAccountsCB" Path="IsChecked"/>
+								<Binding ElementName="DepositsCB"		 Path="IsChecked"/>
+								<Binding ElementName="CreditsCB"		 Path="IsChecked"/>
+								<Binding ElementName="ClosedAccountsCB"	 Path="IsChecked"/>
+							</MultiBinding>
+						</Setter.Value>
+					</Setter>
 				</Style>
 			</DataGrid.RowStyle>			
 			<DataGrid.Columns>
@@ -116,17 +115,17 @@
 								/>
 				<DataGridTextColumn x:Name="CurrAccountColumn" 
 								Header="Текущий" 
-								Binding="{Binding CurrentAmount}"
+								Binding="{Binding StringFormat={}{0:N2}, Path=CurrentAmount}"
 								/>
 				<DataGridTextColumn x:Name="DepositColumn" 
 								Header="Вклад"	 
-								Binding="{Binding DepositAmount}"
+								Binding="{Binding StringFormat={}{0:N2}, Path=DepositAmount}"
 								/>
 				<DataGridTextColumn x:Name="CreditColumn" 
 								Header="Долг"	 
-								Binding="{Binding DebtAmount}"
+								Binding="{Binding StringFormat={}{0:N2}, Path=DebtAmount}"
 								/>
-				<DataGridTextColumn Header=" %  " Binding="{Binding Interest}"/>
+				<DataGridTextColumn Header=" %  " Binding="{Binding StringFormat={}{0:N2}, Path=Interest}"/>
 				<DataGridTextColumn Header="Открыт" 
 								Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Opened}"
 								/>
@@ -154,40 +153,37 @@
 					   FontWeight="Bold"
 					   Foreground="DarkBlue"
 					   />
-			<!-- 
-			<TextBlock Text="Тек. счетов:"
+			<TextBlock Text="Текущие:"
 						FontSize="14"
-						FontWeight="Bold"
 						Foreground="DarkSlateGray"
 						Margin="10, 0"
 						/>
-			<TextBlock x:Name="CurrentAccountsTotalNumTB" 
+			<TextBlock x:Name="CurrentTotalAmount" 
 						FontSize="14"
 						FontWeight="Bold"
 						Foreground="DarkBlue"
 						/>
-			<TextBlock Text="Вкладов"
+			<TextBlock Text="Вклады:"
 						FontSize="14"
-						FontWeight="Bold"
 						Foreground="DarkSlateGray"
 						Margin="10, 0"
 						/>
-			<TextBlock x:Name="DepositsTotalNumTB" 
+			<TextBlock x:Name="DepositsTotalAmount" 
 						FontSize="14"
 						FontWeight="Bold"
 						Foreground="DarkBlue"
 						/>
-			<TextBlock Text="Кредитов"
+			<TextBlock Text="Кредиты:"
 						FontSize="14"
-						FontWeight="Bold"
 						Foreground="DarkSlateGray"
 						Margin="10, 0"
 						/>
-			<TextBlock x:Name="CreditsTotalNumTB" 
+			<TextBlock x:Name="CreditsTotalAmount" 
 						FontSize="14"
 						FontWeight="Bold"
-						Foreground="DarkBlue"
+						Foreground="Red"
 						/>
+			<!--
 			<TextBlock Text="Закрытых счетов"
 						FontSize="14"
 						FontWeight="Bold"

@@ -35,6 +35,10 @@ namespace GoodBankNS.DTO
 					case ClientType.Organization:
 						ct = "Юрик";
 						break;
+					case ClientType.All:
+					default:
+						ct = "";
+						break;
 				}
 				return ct;
 			}
@@ -58,16 +62,20 @@ namespace GoodBankNS.DTO
 					case AccountType.Credit:
 						att = "кредит";
 						break;
+					case AccountType.Total:
+					default:
+						att = "";
+						break;
 				}
 				return att;
 			}
 		}
 		public uint			ID				{ get; }
 		public string		AccountNumber	{ get; set; }
-		public int			CurrentAmount	{ get; set; }
-		public int			DepositAmount	{ get; set; }
-		public int			DebtAmount		{ get; set; }
-		public int			Interest		{ get; set; }
+		public double		CurrentAmount	{ get; set; }
+		public double		DepositAmount	{ get; set; }
+		public double		DebtAmount		{ get; set; }
+		public double		Interest		{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без
@@ -109,8 +117,8 @@ namespace GoodBankNS.DTO
 		/// Данные получены от ручного ввода
 		/// 14 полей!!! ужас!!!
 		/// </summary>
-		public AccountDTO(ClientType ct, uint clientID, AccountType accType, 
-						  int currAm, int depAm, int debtAm, int interest, 
+		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
+						  double currAm, double depAm, double debtAm, double interest, 
 						  bool compounding, uint compAccID, DateTime opened, 
 						  bool topup, bool withdraw, RecalcPeriod recalc, DateTime? endDate)
 
@@ -186,6 +194,15 @@ namespace GoodBankNS.DTO
 					DebtAmount = acc.Balance;
 					break;
 			}
+		}
+
+		public AccountDTO(double curr, double deposit, double credit)
+		{
+			ClientName	  = "Всего";
+			AccType		  = AccountType.Total;
+			CurrentAmount = curr;
+			DepositAmount = deposit;
+			DebtAmount	  = credit;
 		}
 	}
 }

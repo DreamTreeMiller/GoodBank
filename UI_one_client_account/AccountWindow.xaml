@@ -37,11 +37,15 @@
 	</Window.Resources>
     <Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна -->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. "Персональные данные"-->
+			<!-- 0. Заголовок окна -->
+			<RowDefinition MinHeight="40" MaxHeight="40"/> 	
+			<!-- Окошко данных о счете-->
+			<RowDefinition Height="Auto"/>					
 			<!-- Окошко данных клиента-->
-			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - данные человека или организации-->
+			<RowDefinition Height="Auto"/>					<!-- Слова: данные клиента-->
+															<!-- 2. Вложенная табличка - данные человека или организации-->
 															<!-- 2. Вложенная табличка - тел, имейл, адрес-->
+			<!-- Окошко истории транзакций-->
 			<!-- Пустое место-->
 			<!--RowDefinition MinHeight="15" MaxHeight="15"/-->	
 			<!-- Меню действий с историей -->
@@ -54,305 +58,284 @@
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition MinWidth="20" MaxWidth="20"/> <!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
+		<!-- Строка заголовка -->
 		<TextBlock x:Name="MainTitle" 
-				   Grid.Row="0" Grid.Column="1"
-				   VerticalAlignment="Center"
-				   HorizontalAlignment="Center"
-				   Foreground="Maroon"
-				   FontWeight="Bold"
-				   FontSize="16" 
-				   />
-		<!--надпись: Данные клиента - кнопка: Редактировать -->
-		<StackPanel Grid.Row="1" Grid.Column="1" 
-					Orientation="Horizontal"
-					VerticalAlignment="Stretch"
-					>
-			<TextBlock x:Name="ClientInfoTitle"
-					   Text="Персональные данные"
-					   Margin="0,0,30,0"
+					   Grid.Row="0" Grid.Column="1"
 					   VerticalAlignment="Center"
-					   FontSize="14"
+					   HorizontalAlignment="Center"
+					   Foreground="Maroon"
 					   FontWeight="Bold"
-					   Foreground="DarkSlateGray"
+					   FontSize="16" 
 					   />
-			<!-- Кнопка редактировать данные-->
-			<Button x:Name="ClientWindow_EditClient"
-					Content="   Редактировать   "
-					Foreground="DarkSlateGray"
-					FontSize="14"
-					FontWeight="Bold"
-					BorderThickness="0" 
-					>
-				<Button.Style>
-					<Style TargetType="{x:Type Button}">
-						<Setter Property="Background" Value="Aquamarine"/>
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type Button}">
-									<Border Background="{TemplateBinding Background}">
-										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-									</Border>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-						<Style.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="Cyan"/>
-							</Trigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>
-				<Button.ToolTip>
-					<ToolTip>
-						Открыть карточку работы с клиентом
-					</ToolTip>
-				</Button.ToolTip>
-			</Button>
-		</StackPanel>
-		<!--Поля данных о клиенте -->
-		<Grid x:Name="ClientInfo"
-			  Grid.Row="2" Grid.Column="1"
-			  >
+		<!-- Окошко данных о счете-->
+		<Grid Grid.Row="1" Grid.Column="1"
+			  Height="50">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>		<!-- 0. Вложенная табличка - данные человека или организации-->
-				<RowDefinition Height="Auto"/>		<!-- 1. Вложенная табличка - тел, имейл, адрес-->
+				
 			</Grid.RowDefinitions>
-			<!-- Поля для ВИП или физика -->
-			<Grid x:Name="PersonalInfo" 
-				  Grid.Row="0" 
-				  Margin="0,5,0,0"
-				  Visibility="Visible"
-				  >
-				<Grid.RowDefinitions>
-					<RowDefinition Height="30"/>
-					<RowDefinition Height="30"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="Фамилия:" 
-						   Grid.Row="0" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding LastName}" 
-						   Grid.Row="0" Grid.Column="1"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="Имя, отчество:" 
-						   Grid.Row="1" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<StackPanel Orientation="Horizontal" 
-							Grid.Row="1" Grid.Column="1"
-							>
-					<TextBlock Text="{Binding FirstName}"
-							   Style="{StaticResource PersonalInfoValueFieldStyle}"
-							   />
-					<TextBlock Text="{Binding MiddleName}"
-							   Style="{StaticResource PersonalInfoValueFieldStyle}"
-							   />
-				</StackPanel>
-				<TextBlock Text="Дата рождения:"
-						   Grid.Row="0" Grid.Column="2"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
-						   Grid.Row="0" Grid.Column="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="№ паспорта:" 
-						   Grid.Row="1" Grid.Column="2"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding PassportOrTIN}" 
-						   Grid.Row="1" Grid.Column="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-			</Grid>
-			<!-- Поля для юрика -->
-			<Grid x:Name="OrganizationInfo"
-				  Grid.Row="0" 
-				  Margin="0,5,0,0"
-				  Visibility="Collapsed"
-				  >
-				<Grid.RowDefinitions>
-					<RowDefinition Height="30"/>
-					<RowDefinition Height="30"/>
-					<RowDefinition Height="30"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="Название:" 
-						   Grid.Row="0" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding MainName}" 
-						   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="ФИО директора:" 
-						   Grid.Row="1" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<StackPanel Orientation="Horizontal" 
-							Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
-							>
-					<TextBlock Text="{Binding LastName}" 
-							   Style="{StaticResource PersonalInfoValueFieldStyle}"
-							   />
-					<TextBlock Text="{Binding FirstName}"
-							   Style="{StaticResource PersonalInfoValueFieldStyle}"
-							   />
-					<TextBlock Text="{Binding MiddleName}"
-							   Style="{StaticResource PersonalInfoValueFieldStyle}"
-							   />
-				</StackPanel>
-				<TextBlock Text="Дата регистрации:"
-						   Grid.Row="2" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
-						   Grid.Row="2" Grid.Column="1"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="ИНН:" 
-						   Grid.Row="2" Grid.Column="2"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding PassportOrTIN}" 
-						   Grid.Row="2" Grid.Column="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-			</Grid>
-			<Grid x:Name="TelEmailAddress"
-				  Grid.Row="1"
-				  Margin="0,0,5,0"
-				  >
-				<Grid.RowDefinitions>
-					<RowDefinition Height="30"/>
-					<RowDefinition Height="30"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="Телефон:" 
-						   Grid.Row="0" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding Telephone}" 
-						   Grid.Row="0" Grid.Column="1"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="Email:" 
-						   Grid.Row="0" Grid.Column="2"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding Email}"
-						   Grid.Row="0" Grid.Column="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-				<TextBlock Text="Адрес:" 
-						   Grid.Row="1" Grid.Column="0"
-						   Style="{StaticResource PersonalInfoFieldNameStyle}"
-						   />
-				<TextBlock Text="{Binding Address}"
-						   Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
-						   Style="{StaticResource PersonalInfoValueFieldStyle}"
-						   />
-			</Grid>
+			
 		</Grid>
-		<!--надпись: Счета    Меню: Открыть новый, Закрыть. грид счетов
-		<StackPanel Grid.Row="4" Grid.Column="1" 
-					Orientation="Horizontal"
-					VerticalAlignment="Stretch"
-					>
-			<TextBlock Text="Счета"
-					   Margin="0,0,30,0"
-					   VerticalAlignment="Center"
-					   FontSize="14"
-					   FontWeight="Bold"
-					   Foreground="DarkSlateGray"
-					   />
-			<!- Кнопка Открыть новый счет->
-			<Button x:Name="ClientWindow_OpenAccount"
-					Content="   Открыть новый   "
-					Foreground="DarkSlateGray"
-					FontSize="14"
-					FontWeight="Bold"
-					BorderThickness="0" 
-					>
-				<Button.Style>
-					<Style TargetType="{x:Type Button}">
-						<Setter Property="Background" Value="Aquamarine"/>
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type Button}">
-									<Border Background="{TemplateBinding Background}">
-										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-									</Border>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-						<Style.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="Cyan"/>
-							</Trigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>
-				<Button.ToolTip>
-					<ToolTip>
-						Открыть карточку работы с клиентом
-					</ToolTip>
-				</Button.ToolTip>
-			</Button>
-			<!- Кнопка Закрыть счет->
-			<Button x:Name="ClientWindow_CloseAccount"
-					Content="     Закрыть счет     "
-					Foreground="DarkBlue"
-					FontSize="14"
-					FontWeight="Bold"
-					BorderThickness="0" 
-					>
-				<Button.Style>
-					<Style TargetType="{x:Type Button}">
-						<Setter Property="Background" Value="PaleTurquoise"/>
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type Button}">
-									<Border Background="{TemplateBinding Background}">
-										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-									</Border>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-						<Style.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="Cyan"/>
-							</Trigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>
-				<Button.ToolTip>
-					<ToolTip>
-						Внести данные новго клиента
-					</ToolTip>
-				</Button.ToolTip>
-			</Button>
-		</StackPanel>
-		<ContentPresenter x:Name="AccountsList"
-						  Grid.Row="5" Grid.Column="1"
-						  />
-		-->
+		<!-- Окошко данных клиента-->
+		<Grid Grid.Row="2" Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 0. "Данные клиента"-->
+				<RowDefinition Height="Auto"/>					<!-- 1. Вложенная табличка - данные человека или организации-->
+			</Grid.RowDefinitions>
+			<!--надпись: Данные клиента - кнопка: Редактировать -->
+			<TextBlock x:Name="ClientInfoTitle"
+						Grid.Row="0" Grid.Column="0" 
+						Text="Данные клиента"
+						Margin="0,0,30,0"
+						VerticalAlignment="Center"
+						FontSize="14"
+						FontWeight="Bold"
+						Foreground="DarkSlateGray"
+						/>
+			<!--Поля данных о клиенте -->
+			<Grid x:Name="ClientInfo"
+				  Grid.Row="1" Grid.Column="0"
+				  >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>		<!-- 0. Вложенная табличка - данные человека или организации-->
+					<RowDefinition Height="Auto"/>		<!-- 1. Вложенная табличка - тел, имейл, адрес-->
+				</Grid.RowDefinitions>
+				<!-- Поля для ВИП или физика -->
+				<Grid x:Name="PersonalInfo" 
+					  Grid.Row="0" 
+					  Margin="0,5,0,0"
+					  Visibility="Visible"
+					  >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Text="Фамилия:" 
+							   Grid.Row="0" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding LastName}" 
+							   Grid.Row="0" Grid.Column="1"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="Имя, отчество:" 
+							   Grid.Row="1" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<StackPanel Orientation="Horizontal" 
+								Grid.Row="1" Grid.Column="1"
+								>
+						<TextBlock Text="{Binding FirstName}"
+								   Style="{StaticResource PersonalInfoValueFieldStyle}"
+								   />
+						<TextBlock Text="{Binding MiddleName}"
+								   Style="{StaticResource PersonalInfoValueFieldStyle}"
+								   />
+					</StackPanel>
+					<TextBlock Text="Дата рождения:"
+							   Grid.Row="0" Grid.Column="2"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
+							   Grid.Row="0" Grid.Column="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="№ паспорта:" 
+							   Grid.Row="1" Grid.Column="2"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding PassportOrTIN}" 
+							   Grid.Row="1" Grid.Column="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+				</Grid>
+				<!-- Поля для юрика -->
+				<Grid x:Name="OrganizationInfo"
+					  Grid.Row="0" 
+					  Margin="0,5,0,0"
+					  Visibility="Collapsed"
+					  >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Text="Название:" 
+							   Grid.Row="0" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding MainName}" 
+							   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="ФИО директора:" 
+							   Grid.Row="1" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<StackPanel Orientation="Horizontal" 
+								Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+								>
+						<TextBlock Text="{Binding LastName}" 
+								   Style="{StaticResource PersonalInfoValueFieldStyle}"
+								   />
+						<TextBlock Text="{Binding FirstName}"
+								   Style="{StaticResource PersonalInfoValueFieldStyle}"
+								   />
+						<TextBlock Text="{Binding MiddleName}"
+								   Style="{StaticResource PersonalInfoValueFieldStyle}"
+								   />
+					</StackPanel>
+					<TextBlock Text="Дата регистрации:"
+							   Grid.Row="2" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=CreationDate}" 
+							   Grid.Row="2" Grid.Column="1"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="ИНН:" 
+							   Grid.Row="2" Grid.Column="2"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding PassportOrTIN}" 
+							   Grid.Row="2" Grid.Column="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+				</Grid>
+				<Grid x:Name="TelEmailAddress"
+					  Grid.Row="1"
+					  Margin="0,0,5,0"
+					  >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="2*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Text="Телефон:" 
+							   Grid.Row="0" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding Telephone}" 
+							   Grid.Row="0" Grid.Column="1"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="Email:" 
+							   Grid.Row="0" Grid.Column="2"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding Email}"
+							   Grid.Row="0" Grid.Column="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+					<TextBlock Text="Адрес:" 
+							   Grid.Row="1" Grid.Column="0"
+							   Style="{StaticResource PersonalInfoFieldNameStyle}"
+							   />
+					<TextBlock Text="{Binding Address}"
+							   Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+							   Style="{StaticResource PersonalInfoValueFieldStyle}"
+							   />
+				</Grid>
+			</Grid>
+			<!--надпись: Счета    Меню: Открыть новый, Закрыть. грид счетов
+			<StackPanel Grid.Row="4" Grid.Column="1" 
+						Orientation="Horizontal"
+						VerticalAlignment="Stretch"
+						>
+				<TextBlock Text="Счета"
+						   Margin="0,0,30,0"
+						   VerticalAlignment="Center"
+						   FontSize="14"
+						   FontWeight="Bold"
+						   Foreground="DarkSlateGray"
+						   />
+				<!- Кнопка Открыть новый счет->
+				<Button x:Name="ClientWindow_OpenAccount"
+						Content="   Открыть новый   "
+						Foreground="DarkSlateGray"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0" 
+						>
+					<Button.Style>
+						<Style TargetType="{x:Type Button}">
+							<Setter Property="Background" Value="Aquamarine"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type Button}">
+										<Border Background="{TemplateBinding Background}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+							<Style.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Background" Value="Cyan"/>
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</Button.Style>
+					<Button.ToolTip>
+						<ToolTip>
+							Открыть карточку работы с клиентом
+						</ToolTip>
+					</Button.ToolTip>
+				</Button>
+				<!- Кнопка Закрыть счет->
+				<Button x:Name="ClientWindow_CloseAccount"
+						Content="     Закрыть счет     "
+						Foreground="DarkBlue"
+						FontSize="14"
+						FontWeight="Bold"
+						BorderThickness="0" 
+						>
+					<Button.Style>
+						<Style TargetType="{x:Type Button}">
+							<Setter Property="Background" Value="PaleTurquoise"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type Button}">
+										<Border Background="{TemplateBinding Background}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+							<Style.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Background" Value="Cyan"/>
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</Button.Style>
+					<Button.ToolTip>
+						<ToolTip>
+							Внести данные новго клиента
+						</ToolTip>
+					</Button.ToolTip>
+				</Button>
+			</StackPanel>
+			<ContentPresenter x:Name="AccountsList"
+							  Grid.Row="5" Grid.Column="1"
+							  />
+			-->
+		</Grid>
 	</Grid>
 </Window>

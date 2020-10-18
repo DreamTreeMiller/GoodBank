@@ -121,7 +121,7 @@ namespace GoodBankNS.Imitation
 		{
 			GenerateCurrentAccounts(client, r.Next(0, 6));
 			GenerateDeposits(client, r.Next(0, 6));
-			GenerateCredits(client, r.Next(0, 6)); 
+			GenerateCredits(client, r.Next(0, 6));
 		}
 
 		private static void GenerateCurrentAccounts(IClientDTO c, int num) 

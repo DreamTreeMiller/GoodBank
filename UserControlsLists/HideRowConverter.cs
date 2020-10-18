@@ -1,4 +1,5 @@
 ﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.DTO;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -10,22 +11,29 @@ namespace GoodBankNS.UserControlsLists
 	[ValueConversion(typeof(Object[]), typeof(Visibility))]
 	public class HideRowConverter : IMultiValueConverter
 	{
-		public static HideRowConverter Instance = new HideRowConverter();
-
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (value != null) /*== AccountType.Current && CurrentAccountsCB.IsChecked == false*/
+			if (value != null) 
 			{
-				if((AccountType)value[0] == AccountType.Current &&
-					(bool)value[1] == true)
-					return Visibility.Visible;
-				else
-					return Visibility.Collapsed;
+				// AccType == AccountType.Current && CurrentAccountsCB.IsChecked == True
+				if ((value[0] as AccountDTO).EndDate == null &&
+					(value[0] as AccountDTO).AccType == AccountType.Current)
+					return (bool)value[1] ? Visibility.Visible : Visibility.Collapsed;
+
+				// AccType == AccountType.Deposit && DepositCB.IsChecked == True
+				if ((value[0] as AccountDTO).EndDate == null &&
+					(value[0] as AccountDTO).AccType == AccountType.Deposit)
+					return (bool)value[2] ? Visibility.Visible : Visibility.Collapsed;
+
+				// AccType == AccountType.Credit && CreditCB.IsChecked == True
+				if ((value[0] as AccountDTO).EndDate == null &&
+					(value[0] as AccountDTO).AccType == AccountType.Credit)
+					return (bool)value[3] ? Visibility.Visible : Visibility.Collapsed;
+
+				if ((value[0] as AccountDTO).EndDate != null)
+					return (bool)value[4] ? Visibility.Visible : Visibility.Collapsed;
 			}
-			else
-			{
-				return Visibility.Visible;
-			}
+			return Visibility.Visible;
 
 		}
 
