@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Data;
 using System.Windows.Controls;
+using System.Xml;
+using System.Windows.Media;
 
 namespace GoodBankNS.UI_clients
 {
@@ -27,7 +29,6 @@ namespace GoodBankNS.UI_clients
 
 		private ClientType				ClientTypeForAccountsList;
 		private AccountsList			accountsListView;
-		private AccountsViewNameTags	alntag;
 
 		public DepartmentWindow(WindowID wid, BankActions ba)
 		{

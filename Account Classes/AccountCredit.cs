@@ -36,7 +36,7 @@ namespace GoodBankNS.AccountClasses
 				   false, false, RecalcPeriod.Monthly, acc.EndDate)
 		{
 			AccountNumber	= "CRE" + AccountNumber;
-			Balance			= acc.DebtAmount;
+			Balance			= acc.Balance;
 		}
 
 		/// <summary>
@@ -48,10 +48,10 @@ namespace GoodBankNS.AccountClasses
 		public AccountCredit(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
 				   opened,
-				   false, false, RecalcPeriod.Monthly, acc.EndDate)
+				   true, false, RecalcPeriod.Monthly, acc.EndDate)
 		{
 			AccountNumber = "CRE" + AccountNumber;
-			Balance = acc.DebtAmount;
+			Balance = acc.Balance;
 		}
 	}
 }

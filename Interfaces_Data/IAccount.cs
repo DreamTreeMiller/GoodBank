@@ -65,19 +65,33 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		uint			CompoundAccID	{ get; set; }
 
-		/// <summary>
-		/// Открытый или закрытый счет
-		/// </summary>
-		AccountStatus	AccountStatus	{ get; set; }
+		string			CompoundAccNum	{ get; set; }
 
 		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
 		DateTime		Opened			{ get; set; }
 
+		DateTime? EndDate { get; set; }
+
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
 		/// </summary>
 		DateTime?		Closed			{ get; set; }
+
+		/// <summary>
+		/// Пополняемый счет или нет
+		/// </summary>
+		bool			Topupable		{ get; set; }
+
+		/// <summary>
+		/// С правом частичного снятия или нет
+		/// </summary>
+		bool	WithdrawalAllowed		{ get; set; }
+
+		/// <summary>
+		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
+		/// </summary>
+		RecalcPeriod	RecalcPeriod	{ get; set; }
 	}
 }

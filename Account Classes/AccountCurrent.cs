@@ -37,7 +37,7 @@ namespace GoodBankNS.AccountClasses
 				   true, true, RecalcPeriod.NoRecalc, null)
 		{
 			AccountNumber	= "CUR" + AccountNumber;
-			Balance			= acc.CurrentAmount;
+			Balance			= acc.Balance;
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace GoodBankNS.AccountClasses
 				   true, true, RecalcPeriod.NoRecalc, null)
 		{
 			AccountNumber = "CUR" + AccountNumber;
-			Balance = acc.CurrentAmount;
+			Balance = acc.Balance;
 		}
 
 

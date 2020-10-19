@@ -1,4 +1,5 @@
-﻿using GoodBankNS.ClientClasses;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,9 @@ namespace GoodBankNS.UserControlsLists
 		EditClientVIP,
 		EditClientSIM,
 		EditClientORG,
-		Account
+		AccountCurrent,
+		AccountDeposit,
+		AccountCredit
 	}
 
 	public class WindowNameTags
@@ -39,28 +42,28 @@ namespace GoodBankNS.UserControlsLists
 			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
-					SystemWindowTitle = "Очень важные персоны";
-					WindowHeader = "ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ";
-					SelectClientTag = "Показать персону";
-					AddClientTag = "Добавить персону";
+					SystemWindowTitle	= "Очень важные персоны";
+					WindowHeader		= "ОЧЕНЬ ВАЖНЫЕ ПЕРСОНЫ";
+					SelectClientTag		= "Показать персону";
+					AddClientTag		= "Добавить персону";
 					break;
 				case WindowID.DepartmentSIM:
-					SystemWindowTitle = "Физики";
-					WindowHeader = "ФИЗИКИ";
-					SelectClientTag = "Показать физика";
-					AddClientTag = "Добавить физика";
+					SystemWindowTitle	= "Физики";
+					WindowHeader		= "ФИЗИКИ";
+					SelectClientTag		= "Показать физика";
+					AddClientTag		= "Добавить физика";
 					break;
 				case WindowID.DepartmentORG:
-					SystemWindowTitle = "Юрики";
-					WindowHeader = "ЮРИКИ";
-					SelectClientTag = "Показать юрика";
-					AddClientTag = "Добавить юрика";
+					SystemWindowTitle	= "Юрики";
+					WindowHeader		= "ЮРИКИ";
+					SelectClientTag		= "Показать юрика";
+					AddClientTag		= "Добавить юрика";
 					break;
 				case WindowID.DepartmentALL:
-					SystemWindowTitle = "Управляющий банком";
-					WindowHeader = "ВСЕ, ВСЕ, ВСЕ";
-					SelectClientTag = "Показать клиента";
-					AddClientTag = "Добавить клиента";
+					SystemWindowTitle	= "Управляющий банком";
+					WindowHeader		= "ВСЕ, ВСЕ, ВСЕ";
+					SelectClientTag		= "Показать клиента";
+					AddClientTag		= "Добавить клиента";
 					break;
 			}
 		}
@@ -180,10 +183,38 @@ namespace GoodBankNS.UserControlsLists
 	}
 
 	/// <summary>
-	/// Структура для передачи текста названий полей списка счетов в зависимости от окна
+	/// Создает надписи для окна Карточка счета в зависимости от типа счета
 	/// </summary>
-	public class AccountsViewNameTags
+	public class AccountWindowNameTags
 	{
+		public string SystemWindowTitle;        // Системный заголовок окна
+		public string WindowHeader;				// Заголовок по центру окна
+		public Visibility WithdrawCashButtonVisibility	= Visibility.Visible;       
+		public Visibility WireButtonVisibility			= Visibility.Visible;
+		public Visibility DepositPartVisibility			= Visibility.Collapsed;
+
+		public AccountWindowNameTags(AccountType accType)
+		{
+			switch (accType)
+			{
+				case AccountType.Current:
+					SystemWindowTitle = "Карточка счета * Текущий";
+					WindowHeader	  = "ДАННЫЕ ТЕКУЩЕГО СЧЕТА";
+
+					break;
+				case AccountType.Deposit:
+					SystemWindowTitle = "Карточка счета * Вклад";
+					WindowHeader	  = "ДАННЫЕ ВКЛАДА";
+					DepositPartVisibility = Visibility.Visible;
+					break;
+				case AccountType.Credit:
+					SystemWindowTitle = "Карточка счета * Кредит";
+					WindowHeader	  = "ДАННЫЕ КРЕДИТНОГО СЧЕТА";
+					WithdrawCashButtonVisibility = Visibility.Collapsed;
+					WireButtonVisibility		 = Visibility.Collapsed;
+					break;
+			}
+		}
 	}
 
 }

@@ -122,6 +122,7 @@
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_one_client_account\UnlimitedDateConverter.cs" />
     <Compile Include="UserControlsLists\AccountsList.xaml.cs">
       <DependentUpon>AccountsList.xaml</DependentUpon>
     </Compile>

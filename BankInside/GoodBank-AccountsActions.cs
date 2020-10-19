@@ -63,13 +63,19 @@ namespace GoodBankNS.BankInside
 			return new AccountDTO(client, newAcc);
 		}
 
+		/// <summary>
+		/// Формирует список счетов данного типа клиентов.
+		/// </summary>
+		/// <param name="clientType">Тип клиента</param>
+		/// <returns>
+		/// возвращает коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
+		/// </returns>
 		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
 			GetAccountsList(ClientType clientType)
 		{
 			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
 			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
 			IAccount acc;
-			AccountDTO totalRecord;
 			if (clientType == ClientType.All)
 			{
 				for (int i = 0; i < accounts.Count; i++)
@@ -113,6 +119,13 @@ namespace GoodBankNS.BankInside
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
+		/// <summary>
+		/// Формирует список счетов заданного клиентов.
+		/// </summary>
+		/// <param name="clientID">ID клиента</param>
+		/// <returns>
+		/// возвращает коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
+		/// </returns>
 		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
 			GetClientAccounts(uint clientID)
 		{
@@ -120,7 +133,6 @@ namespace GoodBankNS.BankInside
 			var client = GetClientByID(clientID);
 			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
 			IAccount acc;
-			AccountDTO totalRecord;
 
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientID == clientID)

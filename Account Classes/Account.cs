@@ -93,15 +93,18 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		public uint				CompoundAccID	{ get; set; }
 
-		/// <summary>
-		/// Открытый или закрытый счет
-		/// </summary>
-		public AccountStatus	AccountStatus	{ get; set; }
+		public string			CompoundAccNum	{ get; set; }
 
 		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
 		public DateTime			Opened			{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита
+		/// null - бессрочный вклад
+		/// </summary>
+		public DateTime?		EndDate			{ get; set; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -123,12 +126,6 @@ namespace GoodBankNS.AccountClasses
 		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
 		/// </summary>
 		public RecalcPeriod		RecalcPeriod	{ get; set; }
-
-		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
-		/// </summary>
-		public DateTime?		EndDate			{ get; set; }
 
 		#endregion
 
@@ -153,7 +150,6 @@ namespace GoodBankNS.AccountClasses
 			CompoundAccID		= compAccID;
 			Balance				= 0;
 			Interest			= interest;
-			AccountStatus		= AccountStatus.Opened;
 			Opened				= DateTime.Now;
 			Topupable			= topup;
 			WithdrawalAllowed	= withdrawal;
@@ -181,7 +177,6 @@ namespace GoodBankNS.AccountClasses
 			CompoundAccID		= compAccID;
 			Balance				= 0;
 			Interest			= interest;
-			AccountStatus		= AccountStatus.Opened;
 			Opened				= opened;
 			Topupable			= topup;
 			WithdrawalAllowed	= withdrawal;

@@ -18,6 +18,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GoodBankNS.UserControlsLists;
+using System.Globalization;
+using System.Threading;
 
 namespace GoodBankNS
 {

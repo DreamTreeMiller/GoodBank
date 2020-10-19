@@ -37,7 +37,7 @@
 	</Window.Resources>
     <Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна ВИП клиенты-->
+			<RowDefinition MinHeight="40" MaxHeight="40"/> 	<!-- 0. Заголовок окна -->
 			<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 1. "Персональные данные"-->
 			<RowDefinition Height="Auto"/>					<!-- 2. Вложенная табличка - данные человека или организации-->
 															<!-- 2. Вложенная табличка - тел, имейл, адрес-->
@@ -50,6 +50,7 @@
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition MinWidth="20" MaxWidth="20"/> <!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
+		<!-- 0. Заголовок окна -->
 		<TextBlock x:Name="MainTitle" 
 				   Grid.Row="0" Grid.Column="1"
 				   VerticalAlignment="Center"
@@ -268,7 +269,7 @@
 						   />
 			</Grid>
 		</Grid>
-		<!--надпись: Счета    Меню: Открыть новый, Закрыть -->
+		<!--надпись: Счета    Меню: Карточка счета, Открыть новый, Закрыть -->
 		<StackPanel Grid.Row="4" Grid.Column="1" 
 					Orientation="Horizontal"
 					VerticalAlignment="Stretch"
@@ -280,13 +281,13 @@
 					   FontWeight="Bold"
 					   Foreground="DarkSlateGray"
 					   />
-			<!-- Кнопка Открыть новый счет-->
-			<Button x:Name="ClientWindow_OpenAccount"
-					Content="   Открыть новый   "
+			<!-- Кнопка Карточка счета-->
+			<Button x:Name="ClientWindow_AccountDetails"
+					Content="   Карточка счета   "
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"
-					BorderThickness="0" 
+					BorderThickness="0" Click="ClientWindow_AccountDetails_Click" 
 					>
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
@@ -313,9 +314,9 @@
 					</ToolTip>
 				</Button.ToolTip>
 			</Button>
-			<!-- Кнопка Закрыть счет-->
-			<Button x:Name="ClientWindow_CloseAccount"
-					Content="     Закрыть счет     "
+			<!-- Кнопка Открыть новый счет-->
+			<Button x:Name="ClientWindow_OpenAccount"
+					Content="   Открыть новый   "
 					Foreground="DarkBlue"
 					FontSize="14"
 					FontWeight="Bold"
@@ -324,6 +325,39 @@
 				<Button.Style>
 					<Style TargetType="{x:Type Button}">
 						<Setter Property="Background" Value="PaleTurquoise"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="Cyan"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+				<Button.ToolTip>
+					<ToolTip>
+						Открыть новый счет
+					</ToolTip>
+				</Button.ToolTip>
+			</Button>
+			<!-- Кнопка Закрыть счет-->
+			<Button x:Name="ClientWindow_CloseAccount"
+					Content="     Закрыть счет     "
+					Foreground="DarkSlateGray"
+					FontSize="14"
+					FontWeight="Bold"
+					BorderThickness="0" 
+					>
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Background" Value="Aquamarine"/>
 						<Setter Property="Template">
 							<Setter.Value>
 								<ControlTemplate TargetType="{x:Type Button}">

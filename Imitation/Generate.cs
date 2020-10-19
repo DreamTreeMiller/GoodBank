@@ -74,7 +74,7 @@ namespace GoodBankNS.Imitation
 				IClientDTO client = 
 					new ClientDTO(	ClientType.Simple, FN, MN, LN,
 									GenBirthDate(), GenPassportNum(), GenTel(), GenEmail(),
-									"Мой адрес не дом и не улица. Здесь был Вася.");
+									"Мой адрес не дом и не улица. Там жыл Вася.");
 				// Присваивание client необходимо, т.к. AddClient генерирует уникальный ID
 				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
@@ -84,6 +84,7 @@ namespace GoodBankNS.Imitation
 		private static void GenerateORGclientsAndAccounts(int num)
 		{
 			string DFN, DMN, DLN;
+			int regcode;
 			for (int i = 0; i < num-1; i++)
 			{
 				// Half will be men, half women
@@ -99,8 +100,8 @@ namespace GoodBankNS.Imitation
 				// Генерируем контейнер для передачи данных в бекэнд
 				IClientDTO client =
 					new ClientDTO(	ClientType.Organization, GenOrgName(), DFN, DMN, DLN,
-									GenRegDate(), GenTIN(), 
-									GenTel(), GenEmail(), GenOrgAddress());
+									GenRegDate(), GenTIN(out regcode), 
+									GenTel(), GenEmail(), GenOrgAddress(regcode));
 				// Присваивание client необходимо, т.к. AddClient генерирует уникальный ID
 				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
@@ -109,8 +110,8 @@ namespace GoodBankNS.Imitation
 			BA.Clients.AddClient(
 				new ClientDTO(ClientType.Organization, 
 				"Организация с ооооочччченнннь ооооччччееень длиннным названиеммммммммм",
-				GenMFN(), GenMMN(), GenMLN(), GenRegDate(), GenTIN(),
-									GenTel(), GenEmail(), GenOrgAddress()));
+				GenMFN(), GenMMN(), GenMLN(), GenRegDate(), GenTIN(out regcode),
+									GenTel(), GenEmail(), GenOrgAddress(regcode)));
 		}
 
 		#endregion
@@ -129,7 +130,7 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Current,
-									r.Next(0,100) * 1000, 0, 0,				// сумма на текущем счеты
+									r.Next(0,100) * 1000, 					// сумма на текущем счеты
 									0,										// процент по вкладу
 					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, null));
 		}
@@ -143,14 +144,14 @@ namespace GoodBankNS.Imitation
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
-									0, r.Next(100, 300) * 10000, 0,	// сумма на счету. У ВИП > 1 mln
-									r.Next(1, 13),					// процент
+									r.Next(100, 300) * 10000,		// сумма на счету. У ВИП > 1 mln
+									((double)r.Next(1, 13))/100,	// процент
 									TrueFalse(),					// капитализация
 									0,								// У нас ещё нет счета для перечисления ...
 									openingDate,
 									TrueFalse(),					// Можем поплнять или нет
 									TrueFalse(),					// Можем частично снимать или нет
-									RecalcPeriod.Monthly,			// Периодичность пересчета
+									GenDepositRecalc(),			// Периодичность пересчета
 									endDate));						// Срок окончания вклада
 			}
 		}
@@ -166,8 +167,8 @@ namespace GoodBankNS.Imitation
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Credit,
-									0, 0, -amount,			// долг
-									r.Next(1, 16),			// процент
+									-amount,				// долг
+									((double)r.Next(1, 16))/100,			// процент
 									true,					// капитализация
 									0,						// на собственный
 									openingDate,
@@ -244,9 +245,10 @@ namespace GoodBankNS.Imitation
 			return $"{r.Next(1, 10_000):0000} {r.Next(1,1_000_000):000000}"; 
 		}
 
-		private static string GenTIN()
+		private static string GenTIN(out int region)
 		{
-			return $"{r.Next(1,86):00}{r.Next(1,100):00}{r.Next(1,1_000_000):000000}";
+			region = r.Next(1, 86);
+			return $"{region:00}{r.Next(1,100):00}{r.Next(1,1_000_000):000000}";
 		}
 		private static string GenTel()
 		{
@@ -305,9 +307,14 @@ namespace GoodBankNS.Imitation
 			return Guid.NewGuid().ToString().Substring(0, 5);
 		}
 
-		private static string GenOrgAddress()
+		private static string GenOrgAddress(int region)
 		{
-			return $"Город_{r.Next(0, 100)}, ул. Улица_{r.Next(0, 100)}, {r.Next(0, 100)} офс. {r.Next(0, 1000)}";
+			return $"Город_{region}, ул. Улица_{r.Next(0, 100)}, {r.Next(0, 100)} офс. {r.Next(0, 1000)}";
+		}
+
+		private static RecalcPeriod GenDepositRecalc()
+		{
+			return (RecalcPeriod)r.Next(1, 5);
 		}
 
 		#endregion

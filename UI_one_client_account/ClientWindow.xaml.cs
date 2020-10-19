@@ -26,7 +26,6 @@ namespace GoodBankNS.UI_one_client_account
 	{
 		private BankActions			 BA;
 		private AccountsList		 accountsListView;
-		private AccountsViewNameTags alntag;
 		private WindowID			 wid	= WindowID.EditClientVIP;
 		private IClientDTO			 client = new ClientDTO();
 
@@ -69,7 +68,8 @@ namespace GoodBankNS.UI_one_client_account
 			AccountsList.Content	= accountsListView;
 
 			// Убираем словов "сундучки"
-			accountsListView.WordAccountsTag.Visibility = Visibility.Collapsed;
+			accountsListView.WordAccountsTag.Visibility  = Visibility.Collapsed;
+			accountsListView.ClientNameColumn.Visibility = Visibility.Collapsed;
 		}
 
 		private void ShowAccounts()
@@ -93,6 +93,19 @@ namespace GoodBankNS.UI_one_client_account
 			// Эти два действия должны всегда быть вместе!
 			(this.client as ClientDTO).UpdateMyself(editClientWindow.tmpClient as ClientDTO);
 			BA.Clients.UpdateClient(editClientWindow.tmpClient);
+		}
+
+		private void ClientWindow_AccountDetails_Click(object sender, RoutedEventArgs e)
+		{
+			var account = accountsListView.AccountsDataGrid.SelectedItem as AccountDTO;
+			if (account == null)
+			{
+				MessageBox.Show("Выберите счет для показа");
+				return;
+			}
+			IClient client = BA.Clients.GetClientByID(account.ClientID);
+			AccountWindow accountWindow = new AccountWindow(BA, account);
+			accountWindow.ShowDialog();
 		}
 	}
 }

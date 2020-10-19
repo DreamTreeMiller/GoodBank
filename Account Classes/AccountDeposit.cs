@@ -36,7 +36,7 @@ namespace GoodBankNS.AccountClasses
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.EndDate)
 		{
 			AccountNumber	= "DEP" + AccountNumber;
-			Balance			= acc.DepositAmount;
+			Balance			= acc.Balance;
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace GoodBankNS.AccountClasses
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.EndDate)
 		{
 			AccountNumber = "DEP" + AccountNumber;
-			Balance = acc.DepositAmount;
+			Balance = acc.Balance;
 		}
 	}
 }

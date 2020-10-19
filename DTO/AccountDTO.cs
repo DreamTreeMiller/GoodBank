@@ -72,9 +72,23 @@ namespace GoodBankNS.DTO
 		}
 		public uint			ID				{ get; }
 		public string		AccountNumber	{ get; set; }
-		public double		CurrentAmount	{ get; set; }
-		public double		DepositAmount	{ get; set; }
-		public double		DebtAmount		{ get; set; }
+		public double		Balance			{ get; set; }
+
+		public string		CurrentAmount	
+		{
+			get => AccType == AccountType.Current ? $"{Balance:N2}" : "";
+		}
+
+		public string		DepositAmount
+		{
+			get => AccType == AccountType.Deposit ? $"{Balance:N2}" : ""; 
+		}
+
+		public string		DebtAmount
+		{
+			get => AccType == AccountType.Credit ? $"{Balance:N2}" : ""; 
+		}
+
 		public double		Interest		{ get; set; }
 
 		/// <summary>
@@ -87,8 +101,19 @@ namespace GoodBankNS.DTO
 		/// При капитализации, совпадает с ИД счета депозита
 		/// </summary>
 		public uint			CompoundAccID	{ get; set; }
+		public string		CompoundAccNum	{ get; set; } = "Fake-0000-0000-0000";
 
 		public DateTime		Opened			{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита
+		/// null - бессрочный вклад
+		/// </summary>
+		public DateTime?	EndDate			{ get; set; }
+
+		/// <summary>
+		/// Дата фактического закрытия вклада
+		/// </summary>
 		public DateTime?	Closed			{ get; set; }
 
 		/// <summary>
@@ -106,11 +131,6 @@ namespace GoodBankNS.DTO
 		/// </summary>
 		public RecalcPeriod	RecalcPeriod	{ get; set; }
 
-		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
-		/// </summary>
-		public DateTime?	EndDate			{ get; set; }
 
 		/// <summary>
 		/// Конструктор для создания счета и записи счета в базу
@@ -118,7 +138,7 @@ namespace GoodBankNS.DTO
 		/// 14 полей!!! ужас!!!
 		/// </summary>
 		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
-						  double currAm, double depAm, double debtAm, double interest, 
+						  double balance, double interest, 
 						  bool compounding, uint compAccID, DateTime opened, 
 						  bool topup, bool withdraw, RecalcPeriod recalc, DateTime? endDate)
 
@@ -126,9 +146,7 @@ namespace GoodBankNS.DTO
 			ClientType			= ct;
 			ClientID			= clientID;
 			AccType				= accType;
-			CurrentAmount		= currAm;
-			DepositAmount		= depAm;
-			DebtAmount			= debtAm;
+			Balance				= balance;
 			Interest			= interest;
 			Compounding			= compounding;
 			CompoundAccID		= compAccID;
@@ -146,15 +164,21 @@ namespace GoodBankNS.DTO
 	/// <param name="acc">Счет</param>
 	public AccountDTO(IClient c, IAccount acc)
 		{
-			ClientID		= c.ID;
-			AccType			= acc.AccType;
-			ID				= acc.ID;				// Account ID
-			AccountNumber	= acc.AccountNumber;
-			Interest		= acc.Interest;
-			Compounding		= acc.Compounding;
-			CompoundAccID	= acc.CompoundAccID;
-			Opened			= acc.Opened;
-			Closed			= acc.Closed;
+			ClientID			= c.ID;
+			AccType				= acc.AccType;
+			ID					= acc.ID;				// Account ID
+			AccountNumber		= acc.AccountNumber;
+			Balance				= acc.Balance;
+			Interest			= acc.Interest;
+			Compounding			= acc.Compounding;
+			CompoundAccID		= acc.CompoundAccID;
+			Opened				= acc.Opened;
+			EndDate				= acc.EndDate;
+			Closed				= acc.Closed;
+			Topupable			= acc.Topupable;
+			WithdrawalAllowed	= acc.WithdrawalAllowed;
+			RecalcPeriod		= acc.RecalcPeriod;
+
 
 			if (c is IClientVIP)
 			{
@@ -182,27 +206,6 @@ namespace GoodBankNS.DTO
 				ClientName = (c as IClientOrg).OrgName;
 			}
 
-			switch (acc.AccType)
-			{
-				case AccountType.Current:
-					CurrentAmount = acc.Balance;
-					break;
-				case AccountType.Deposit:
-					DepositAmount = acc.Balance;
-					break;
-				case AccountType.Credit:
-					DebtAmount = acc.Balance;
-					break;
-			}
-		}
-
-		public AccountDTO(double curr, double deposit, double credit)
-		{
-			ClientName	  = "Всего";
-			AccType		  = AccountType.Total;
-			CurrentAmount = curr;
-			DepositAmount = deposit;
-			DebtAmount	  = credit;
 		}
 	}
 }

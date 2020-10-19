@@ -70,7 +70,10 @@
 				  VerticalAlignment="Stretch" 
 				  >
 			<DataGrid.Resources>
-				 <local:HideRowConverter x:Key="HideRowConverter"/>
+				<local:HideRowConverter x:Key="HideRowConverter"/>
+				<!-- Это для сохранения цвета выделенной строки после вызова окна счета -->
+				<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" 
+								 Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/> 
 			</DataGrid.Resources>
 			<DataGrid.CellStyle>
 				<Style>
@@ -115,17 +118,17 @@
 								/>
 				<DataGridTextColumn x:Name="CurrAccountColumn" 
 								Header="Текущий" 
-								Binding="{Binding StringFormat={}{0:N2}, Path=CurrentAmount}"
+								Binding="{Binding CurrentAmount}"
 								/>
 				<DataGridTextColumn x:Name="DepositColumn" 
 								Header="Вклад"	 
-								Binding="{Binding StringFormat={}{0:N2}, Path=DepositAmount}"
+								Binding="{Binding DepositAmount}"
 								/>
 				<DataGridTextColumn x:Name="CreditColumn" 
 								Header="Долг"	 
-								Binding="{Binding StringFormat={}{0:N2}, Path=DebtAmount}"
+								Binding="{Binding DebtAmount}"
 								/>
-				<DataGridTextColumn Header=" %  " Binding="{Binding StringFormat={}{0:N2}, Path=Interest}"/>
+				<DataGridTextColumn Header=" %  " Binding="{Binding StringFormat={}{0:P}, Path=Interest}"/>
 				<DataGridTextColumn Header="Открыт" 
 								Binding="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Opened}"
 								/>
@@ -183,20 +186,6 @@
 						FontWeight="Bold"
 						Foreground="Red"
 						/>
-			<!--
-			<TextBlock Text="Закрытых счетов"
-						FontSize="14"
-						FontWeight="Bold"
-						Foreground="DarkSlateGray"
-						Margin="10, 0"
-						/>
-			<TextBlock x:Name="ClosedAccountsTotalNumTB" 
-						FontSize="14"
-						FontWeight="Bold"
-						Foreground="DarkBlue"
-						Margin="10, 0, 0, 0"
-						/>
-			-->
 		</StackPanel>
 	</Grid>
 </UserControl>

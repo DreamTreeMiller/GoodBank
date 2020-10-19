@@ -16,9 +16,10 @@ namespace GoodBankNS.Interfaces_Data
 		AccountType	AccType			{ get; set; }
 		uint		ID				{ get; }
 		string		AccountNumber	{ get; set; }
-		double		CurrentAmount	{ get; set; }
-		double		DepositAmount	{ get; set; }
-		double		DebtAmount		{ get; set; }
+		double		Balance			{ get; set; }
+		string		CurrentAmount	{ get; }
+		string		DepositAmount	{ get; }
+		string		DebtAmount		{ get; }
 		double		Interest		{ get; set; }
 
 		/// <summary>
@@ -32,7 +33,16 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		uint		CompoundAccID	{ get; set; }
 
-		DateTime	Opened				{ get; set; }
+		string		CompoundAccNum	{ get; set; }
+
+		DateTime Opened				{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита
+		/// null - бессрочный вклад
+		/// </summary>
+		DateTime?	EndDate			{ get; set; }
+
 		DateTime?	Closed			{ get; set; }
 
 		/// <summary>
@@ -49,11 +59,5 @@ namespace GoodBankNS.Interfaces_Data
 		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
 		/// </summary>
 		RecalcPeriod RecalcPeriod	{ get; set; }
-
-		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
-		/// </summary>
-		DateTime?	EndDate			{ get; set; }
 	}
 }

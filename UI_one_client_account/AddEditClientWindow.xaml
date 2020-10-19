@@ -61,7 +61,8 @@
 			<TextBlock Text="Тип клиента" Width="120"/>
 			<ComboBox x:Name="SelectTypeEntryBox"
 					  SelectedIndex="1"
-					  Margin="10,0,0,0" SelectionChanged="SelectTypeEntryBox_SelectionChanged"
+					  Margin="10,0,0,0" 
+					  SelectionChanged="SelectTypeEntryBox_SelectionChanged"
 					  >
 				<ComboBox.ItemTemplate>
 					<DataTemplate>

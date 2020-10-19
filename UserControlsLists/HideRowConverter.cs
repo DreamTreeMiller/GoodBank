@@ -16,21 +16,21 @@ namespace GoodBankNS.UserControlsLists
 			if (value != null) 
 			{
 				// AccType == AccountType.Current && CurrentAccountsCB.IsChecked == True
-				if ((value[0] as AccountDTO).EndDate == null &&
+				if ((value[0] as AccountDTO).Closed == null &&
 					(value[0] as AccountDTO).AccType == AccountType.Current)
 					return (bool)value[1] ? Visibility.Visible : Visibility.Collapsed;
 
 				// AccType == AccountType.Deposit && DepositCB.IsChecked == True
-				if ((value[0] as AccountDTO).EndDate == null &&
+				if ((value[0] as AccountDTO).Closed == null &&
 					(value[0] as AccountDTO).AccType == AccountType.Deposit)
 					return (bool)value[2] ? Visibility.Visible : Visibility.Collapsed;
 
 				// AccType == AccountType.Credit && CreditCB.IsChecked == True
-				if ((value[0] as AccountDTO).EndDate == null &&
+				if ((value[0] as AccountDTO).Closed == null &&
 					(value[0] as AccountDTO).AccType == AccountType.Credit)
 					return (bool)value[3] ? Visibility.Visible : Visibility.Collapsed;
 
-				if ((value[0] as AccountDTO).EndDate != null)
+				if ((value[0] as AccountDTO).Closed != null)
 					return (bool)value[4] ? Visibility.Visible : Visibility.Collapsed;
 			}
 			return Visibility.Visible;
