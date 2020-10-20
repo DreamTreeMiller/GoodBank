@@ -16,6 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using GoodBankNS.Binding_UI_CondeBehind;
 using GoodBankNS.Interfaces_Data;
+using GoodBankNS.AccountClasses;
+using GoodBankNS.BankInside;
 
 namespace GoodBankNS.UI_one_client_account
 {
@@ -28,6 +30,8 @@ namespace GoodBankNS.UI_one_client_account
 		private AccountsList		 accountsListView;
 		private WindowID			 wid	= WindowID.EditClientVIP;
 		private IClientDTO			 client = new ClientDTO();
+
+		public bool newAccountAdded = false;
 
 		public ClientWindow(BankActions ba, IClientDTO client)
 		{
@@ -106,6 +110,53 @@ namespace GoodBankNS.UI_one_client_account
 			IClient client = BA.Clients.GetClientByID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
+		}
+
+		private void OpenCurrentAccountButton_Click(object sender, RoutedEventArgs e)
+		{
+			OpenCurrentAccountWindow ocawin = new OpenCurrentAccountWindow();
+			var result = ocawin.ShowDialog();
+			if (result != true) return;
+			IAccountDTO newAcc = new AccountDTO(client.ClientType, client.ID, AccountType.Current,
+				ocawin.startAmount, 0, false, 0, ocawin.Opened, true, true, RecalcPeriod.NoRecalc, null);
+			// Добавляем счет в базу в бэкенд
+			BA.Accounts.AddAccount(newAcc);
+			newAccountAdded = true;
+			ShowAccounts();
+		}
+
+		private void OpenDepositButton_Click(object sender, RoutedEventArgs e)
+		{
+			var accumulationAccounts = BA.Accounts.GetClientAccounts(client.ID, AccountType.Current);
+			var internalAccount = new AccountDTO(client.ClientType, client.ID, AccountType.Current, 0, 0,
+				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, null);
+			internalAccount.AccountNumber = "внутренний счет";
+			accumulationAccounts.Add(internalAccount);
+			OpenDepositWindow odwin = new OpenDepositWindow(accumulationAccounts);
+			var result = odwin.ShowDialog();
+			if (result != true) return;
+			int AccumAccIndx = odwin.AccumulationAccount.SelectedIndex;
+			uint AccumulationAccID = (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).ID;
+			IAccountDTO newAcc = 
+				 new AccountDTO(client.ClientType, client.ID, AccountType.Deposit,
+								odwin.startAmount, 
+								odwin.interest, 
+								(bool)odwin.CompoundingCheckBox.IsChecked,
+								AccumulationAccID, 
+								odwin.Opened, 
+								(bool)odwin.TopUpCheckBox.IsChecked, 
+								(bool)odwin.WithdrawalAllowedCheckBox.IsChecked, 
+								(RecalcPeriod)odwin.Recalculation.SelectedIndex, 
+								odwin.EndDate);
+			// Добавляем счет в базу в бэкенд
+			BA.Accounts.AddAccount(newAcc);
+			newAccountAdded = true;
+			ShowAccounts();
+		}
+
+		private void OpenCreditButton_Click(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Issue a credit");
 		}
 	}
 }

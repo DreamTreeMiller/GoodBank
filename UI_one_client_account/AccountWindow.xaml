@@ -25,7 +25,7 @@
 			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
 		</Style>
-		<!-- Стиль ЗНАЧЕНИЙ полей данных о СЧЕТЕ -->
+		<!-- Стиль ЗНАЧЕНИЙ не числовых полей данных о СЧЕТЕ -->
 		<Style x:Key="AccountInfoValueFieldStyle">
 			<Setter Property="TextBlock.FontSize"			 Value="14"/>
 			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>
@@ -34,7 +34,7 @@
 			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
 		</Style>
-		<!-- Стиль ЗНАЧЕНИЙ полей данных о СЧЕТЕ -->
+		<!-- Стиль ЗНАЧЕНИЙ числовых полей данных о СЧЕТЕ -->
 		<Style x:Key="AccountNumericValueFieldStyle">
 			<Setter Property="TextBlock.FontSize"			 Value="14"/>
 			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>

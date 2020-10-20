@@ -62,8 +62,6 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			switch((RecalcPeriod)value)
 			{
-				case RecalcPeriod.Daily:
-					return "ежедневно";
 				case RecalcPeriod.Monthly:
 					return "ежемесячно";
 				case RecalcPeriod.Annually:

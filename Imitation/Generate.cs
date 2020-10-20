@@ -140,7 +140,7 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				DateTime? endDate	 = GenDepositCreditEndDate(openingDate, r.Next(1, 61));
+				DateTime? endDate	 = GenDepositCreditEndDate(GoodBank.Today, r.Next(1, 61));
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
@@ -161,8 +161,8 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				int duration = r.Next(1, 361);
-				DateTime? endDate = GenDepositCreditEndDate(openingDate, duration);
+				int duration = r.Next(1, 61);
+				DateTime? endDate = GenDepositCreditEndDate(GoodBank.Today, duration);
 				int amount = duration * 30_000;
 
 				BA.Accounts.GenerateAccount(
@@ -314,7 +314,7 @@ namespace GoodBankNS.Imitation
 
 		private static RecalcPeriod GenDepositRecalc()
 		{
-			return (RecalcPeriod)r.Next(1, 5);
+			return (RecalcPeriod)r.Next(0, 4);
 		}
 
 		#endregion

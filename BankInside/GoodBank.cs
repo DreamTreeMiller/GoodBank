@@ -16,6 +16,7 @@ namespace GoodBankNS.BankInside
 		private List<Transaction>	log;
 
 		public static DateTime BankFoundationDay = new DateTime(1992, 1, 1);
+		public static DateTime Today			 = DateTime.Now;
 		public GoodBank()
 		{
 			clients  = new List<Client>();

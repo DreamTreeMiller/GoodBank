@@ -30,11 +30,15 @@ namespace GoodBankNS
 	{
 		private IGoodBank GoodBank;
 		private BankActions BA;
+		public string BankFoundationDay = "Основан " 
+			+ $"{GoodBankNS.BankInside.GoodBank.BankFoundationDay:D}"
+			;
 		public MainWindow()
 		{
 			InitializeComponent();
 			InitializeBank();
 			InitializeUI();
+			
 		}
 
 		private void InitializeBank()
@@ -45,6 +49,7 @@ namespace GoodBankNS
 		private void InitializeUI()
 		{
 			BA = new BankActions(GoodBank);
+			BankFoundationDayMessage.Text = BankFoundationDay;
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)

@@ -20,20 +20,23 @@ namespace GoodBankNS.BankInside
 		public IAccountDTO AddAccount(IAccountDTO acc)
 		{
 			Account newAcc = null;
+			var client = GetClientByID(acc.ClientID);
 			switch(acc.AccType)
 			{
 				case AccountType.Current:
 					newAcc = new AccountCurrent(acc);
+					client.NumberOfCurrentAccounts++;
 					break;
 				case AccountType.Deposit:
 					newAcc = new AccountDeposit(acc);
+					client.NumberOfDeposits++;
 					break;
 				case AccountType.Credit:
 					newAcc = new AccountCredit(acc);
+					client.NumberOfCredits++;
 					break;
 			}
 			accounts.Add(newAcc);
-			var client = GetClientByID(acc.ClientID);
 			return new AccountDTO(client, newAcc);
 		}
 
@@ -46,20 +49,23 @@ namespace GoodBankNS.BankInside
 		public IAccountDTO GenerateAccount(IAccountDTO acc)
 		{
 			Account newAcc = null;
+			var client = GetClientByID(acc.ClientID);
 			switch (acc.AccType)
 			{
 				case AccountType.Current:
 					newAcc = new AccountCurrent(acc, acc.Opened);
+					client.NumberOfCurrentAccounts++;
 					break;
 				case AccountType.Deposit:
 					newAcc = new AccountDeposit(acc, acc.Opened);
+					client.NumberOfDeposits++;
 					break;
 				case AccountType.Credit:
 					newAcc = new AccountCredit(acc, acc.Opened);
+					client.NumberOfCredits++;
 					break;
 			}
 			accounts.Add(newAcc);
-			var client = GetClientByID(acc.ClientID);
 			return new AccountDTO(client, newAcc);
 		}
 
@@ -153,8 +159,21 @@ namespace GoodBankNS.BankInside
 					accList.Add(new AccountDTO(client, acc));
 				}
 			return (accList, totalCurr, totalDeposit, totalCredit);
-
 		}
 
+		public ObservableCollection<AccountDTO> GetClientAccounts(uint clientID, AccountType accType)
+		{
+			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			var client = GetClientByID(clientID);
+
+			for (int i = 0; i < accounts.Count; i++)
+			{
+				var acc = accounts[i];
+				if (acc.ClientID == clientID && acc.AccType == accType)
+					accList.Add(new AccountDTO(client, acc));
+			}
+			return accList;
+
+		}
 	}
 }

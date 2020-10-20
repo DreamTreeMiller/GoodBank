@@ -95,11 +95,11 @@ namespace GoodBankNS.UI_clients
 		private void ShowAccounts()
 		{
 			var accountsList = BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
-			accountsListView.AccountsDataGrid.ItemsSource = accountsList.accList;
-			accountsListView.AccountsTotalNumberValue.Text = $"{accountsList.accList.Count:N0}";
-			accountsListView.CurrentTotalAmount.Text = $"{accountsList.totalCurr:N2}";
-			accountsListView.DepositsTotalAmount.Text = $"{accountsList.totalDeposit:N2}";
-			accountsListView.CreditsTotalAmount.Text = $"{accountsList.totalCredit:N2}";
+			accountsListView.AccountsDataGrid.ItemsSource	= accountsList.accList;
+			accountsListView.AccountsTotalNumberValue.Text	= $"{accountsList.accList.Count:N0}";
+			accountsListView.CurrentTotalAmount.Text		= $"{accountsList.totalCurr:N2}";
+			accountsListView.DepositsTotalAmount.Text		= $"{accountsList.totalDeposit:N2}";
+			accountsListView.CreditsTotalAmount.Text		= $"{accountsList.totalCredit:N2}";
 		}
 
 		#endregion
@@ -114,6 +114,11 @@ namespace GoodBankNS.UI_clients
 			}
 			ClientWindow clientWindow = new ClientWindow(BA, client);
 			clientWindow.ShowDialog();
+			if (clientWindow.newAccountAdded)
+			{
+				InitializeClientsAndWindowTypes();
+				ShowAccounts();
+			}
 		}
 
 		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)

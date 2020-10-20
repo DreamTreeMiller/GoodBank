@@ -30,10 +30,9 @@ namespace GoodBankNS.AccountClasses
 
 	public enum RecalcPeriod
 	{
-		NoRecalc,
-		Daily,
 		Monthly,
 		Annually,
-		AtTheEnd
+		AtTheEnd,
+		NoRecalc
 	}
 }

@@ -122,6 +122,12 @@
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_one_client_account\OpenCurrentAccountWindow.cs">
+      <DependentUpon>OpenCurrentAccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\OpenDepositWindow.xaml.cs">
+      <DependentUpon>OpenDepositWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_one_client_account\UnlimitedDateConverter.cs" />
     <Compile Include="UserControlsLists\AccountsList.xaml.cs">
       <DependentUpon>AccountsList.xaml</DependentUpon>
@@ -160,6 +166,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI_one_client_account\ClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenCurrentAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenDepositWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
