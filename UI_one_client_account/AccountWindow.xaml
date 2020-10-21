@@ -282,7 +282,8 @@
 						Grid.Row="1" Grid.Column="0"
 						Style="{StaticResource AccountInfoFieldNameStyle}"
 						/>
-			<TextBlock Text="{Binding StringFormat={}{0:C2}, Path=Balance, ConverterCulture=ru-Ru}"
+			<TextBlock x:Name="Balance"
+					   Text="{Binding StringFormat={}{0:C2}, Path=Balance, ConverterCulture=ru-Ru}"
 					   Grid.Row="1" Grid.Column="1" 
 					   Style="{StaticResource AccountNumericValueFieldStyle}"
 					   />

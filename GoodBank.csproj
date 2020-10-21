@@ -122,6 +122,12 @@
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_one_client_account\EnterTopUpCashAmountWindow.xaml.cs">
+      <DependentUpon>EnterTopUpCashAmountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\OpenCreditWindow.xaml.cs">
+      <DependentUpon>OpenCreditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_one_client_account\OpenCurrentAccountWindow.cs">
       <DependentUpon>OpenCurrentAccountWindow.xaml</DependentUpon>
     </Compile>
@@ -166,6 +172,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI_one_client_account\ClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\EnterTopUpCashAmountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenCreditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

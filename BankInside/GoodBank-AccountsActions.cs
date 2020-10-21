@@ -11,6 +11,11 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IAccountsActions
 	{
+		public IAccount GetAccountByID(uint id)
+		{
+			return accounts.Find(a => a.ID == id);
+		}
+
 		/// <summary>
 		/// Добавляет счет, данные которого получены от ручного ввода
 		/// Эти данные не содержат ID и номера счета
@@ -174,6 +179,13 @@ namespace GoodBankNS.BankInside
 			}
 			return accList;
 
+		}
+
+		public IAccount TopUp(uint accID, double amount)
+		{
+			var acc = GetAccountByID(accID);
+			acc.TopUp(amount);
+			return acc;
 		}
 	}
 }

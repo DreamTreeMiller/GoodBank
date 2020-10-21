@@ -72,7 +72,9 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		DateTime		Opened			{ get; set; }
 
-		DateTime? EndDate { get; set; }
+		int				Duration		{ get; set; }
+
+		DateTime?		EndDate			{ get; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -93,5 +95,8 @@ namespace GoodBankNS.Interfaces_Data
 		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
 		/// </summary>
 		RecalcPeriod	RecalcPeriod	{ get; set; }
+
+		void TopUp(double amount);
+
 	}
 }

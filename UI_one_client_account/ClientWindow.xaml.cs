@@ -31,7 +31,7 @@ namespace GoodBankNS.UI_one_client_account
 		private WindowID			 wid	= WindowID.EditClientVIP;
 		private IClientDTO			 client = new ClientDTO();
 
-		public bool newAccountAdded = false;
+		public bool needToRefreshAccountsList = false;
 
 		public ClientWindow(BankActions ba, IClientDTO client)
 		{
@@ -110,6 +110,12 @@ namespace GoodBankNS.UI_one_client_account
 			IClient client = BA.Clients.GetClientByID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
+			if (accountWindow.needUpdate)
+			{
+				ShowAccounts();
+				needToRefreshAccountsList = true;
+			}
+
 		}
 
 		private void OpenCurrentAccountButton_Click(object sender, RoutedEventArgs e)
@@ -118,25 +124,38 @@ namespace GoodBankNS.UI_one_client_account
 			var result = ocawin.ShowDialog();
 			if (result != true) return;
 			IAccountDTO newAcc = new AccountDTO(client.ClientType, client.ID, AccountType.Current,
-				ocawin.startAmount, 0, false, 0, ocawin.Opened, true, true, RecalcPeriod.NoRecalc, null);
+				ocawin.startAmount, 0, false, 0, ocawin.Opened, true, true, RecalcPeriod.NoRecalc, 0);
 			// Добавляем счет в базу в бэкенд
 			BA.Accounts.AddAccount(newAcc);
-			newAccountAdded = true;
+			needToRefreshAccountsList = true;
 			ShowAccounts();
 		}
 
 		private void OpenDepositButton_Click(object sender, RoutedEventArgs e)
 		{
+			// Получаем список текущих счетов клиента, 
+			// на которых можно накапливать проценты со вклада,
+			// если выбран режим - без капитализации
+			// Этот список будет выпадающем списком в окошке ввода данных вклада
 			var accumulationAccounts = BA.Accounts.GetClientAccounts(client.ID, AccountType.Current);
+
+			// Клиент может накапливать проценты на отдельном безымянном счете, 
+			// привязанном ко вкладу. Я назвал его "внутренний счет"
+			// создаем и добавляем этот счет в список счетов для накопления процентов
 			var internalAccount = new AccountDTO(client.ClientType, client.ID, AccountType.Current, 0, 0,
-				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, null);
+				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
 			internalAccount.AccountNumber = "внутренний счет";
 			accumulationAccounts.Add(internalAccount);
+
 			OpenDepositWindow odwin = new OpenDepositWindow(accumulationAccounts);
 			var result = odwin.ShowDialog();
 			if (result != true) return;
-			int AccumAccIndx = odwin.AccumulationAccount.SelectedIndex;
-			uint AccumulationAccID = (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).ID;
+
+			// Получаем номер счета в базе счетов, на котором будут накапливаться проценты
+			// Если был выбран "внутренний счет", то его ID == 0
+			int		AccumAccIndx		= odwin.AccumulationAccount.SelectedIndex;
+			uint	AccumulationAccID	= (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).ID;
+
 			IAccountDTO newAcc = 
 				 new AccountDTO(client.ClientType, client.ID, AccountType.Deposit,
 								odwin.startAmount, 
@@ -147,16 +166,62 @@ namespace GoodBankNS.UI_one_client_account
 								(bool)odwin.TopUpCheckBox.IsChecked, 
 								(bool)odwin.WithdrawalAllowedCheckBox.IsChecked, 
 								(RecalcPeriod)odwin.Recalculation.SelectedIndex, 
-								odwin.EndDate);
+								odwin.duration);
+			
 			// Добавляем счет в базу в бэкенд
 			BA.Accounts.AddAccount(newAcc);
-			newAccountAdded = true;
+
+			// Надо будет обновить список счетов и клиентов при выходе из окна клиента
+			needToRefreshAccountsList = true;
+
+			// Обновляем счета в текущем окне клиента
 			ShowAccounts();
 		}
 
 		private void OpenCreditButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Issue a credit");
+			// Получаем список текущих счетов клиента, 
+			// на один из которых нужно перечислить выданный кредит
+			// Этот список будет выпадающем списком в окошке ввода данных вклада
+			var creditRecipientAccounts = BA.Accounts.GetClientAccounts(client.ID, AccountType.Current);
+
+			// Клиент может получить кредит наличными
+			// создаем и добавляем этот элемент списка в список счетов для накопления процентов
+			var cash = new AccountDTO(client.ClientType, client.ID, AccountType.Current, 0, 0,
+				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
+			cash.AccountNumber = "получить наличными";
+			creditRecipientAccounts.Add(cash);
+
+			OpenCreditWindow ocrwin = new OpenCreditWindow(creditRecipientAccounts);
+			var result = ocrwin.ShowDialog();
+			if (result != true) return;
+
+			// Получаем номер счета в базе счетов, на котором будет перечислена выданная сумма
+			// Если было выбрано "получить наличными", то его ID == 0
+			int	 CreRecipAccIndx		= ocrwin.CreditRecipientAccount.SelectedIndex;
+			uint CreditRecipientAccID	= 
+				(ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).ID;
+
+			IAccountDTO newAcc =
+				 new AccountDTO(client.ClientType, client.ID, AccountType.Credit,
+								-ocrwin.creditAmount,	// Записываем сумму со знаком минус!
+								ocrwin.interest,
+								true,					// Это счет с капитализацией
+								CreditRecipientAccID,
+								ocrwin.Opened,
+								true,					// Пополняемый счет
+								false,					// Понятие досрочного снятия неприменимо к кредиту
+								RecalcPeriod.Monthly,	// Начисление процентов ежемесячно
+								ocrwin.duration);
+
+			// Добавляем счет в базу в бэкенд
+			BA.Accounts.AddAccount(newAcc);
+
+			// Надо будет обновить список счетов и клиентов при выходе из окна клиента
+			needToRefreshAccountsList = true;
+
+			// Обновляем счета в текущем окне клиента
+			ShowAccounts();
 		}
 	}
 }

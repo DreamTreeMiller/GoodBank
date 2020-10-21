@@ -12,6 +12,9 @@ namespace GoodBankNS.AccountClasses
 		public override AccountType AccType { get => AccountType.Deposit; }
 		public override double Balance { get; set; }
 
+		public override DateTime? EndDate => 
+			Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
+
 		/// <summary>
 		/// Создание счета на основе введенных данных
 		/// </summary>
@@ -33,7 +36,7 @@ namespace GoodBankNS.AccountClasses
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountDeposit(IAccountDTO acc)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.EndDate)
+				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
 		{
 			AccountNumber	= "DEP" + AccountNumber;
 			Balance			= acc.Balance;
@@ -48,7 +51,7 @@ namespace GoodBankNS.AccountClasses
 		public AccountDeposit(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
 				  opened,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.EndDate)
+				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
 		{
 			AccountNumber = "DEP" + AccountNumber;
 			Balance = acc.Balance;

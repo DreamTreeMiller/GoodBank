@@ -13,6 +13,9 @@ namespace GoodBankNS.AccountClasses
 		public override AccountType AccType { get => AccountType.Current; }
 		public override double Balance { get; set; }
 
+		public override DateTime? EndDate => null;
+
+
 		/// <summary>
 		/// Создание счета на основе введенных данных
 		/// </summary>
@@ -34,7 +37,7 @@ namespace GoodBankNS.AccountClasses
 		/// EndDate		  =							--> null 
 		public AccountCurrent(IAccountDTO acc)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
-				   true, true, RecalcPeriod.NoRecalc, null)
+				   true, true, RecalcPeriod.NoRecalc, 0)
 		{
 			AccountNumber	= "CUR" + AccountNumber;
 			Balance			= acc.Balance;
@@ -49,7 +52,7 @@ namespace GoodBankNS.AccountClasses
 		public AccountCurrent(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
 				   opened,
-				   true, true, RecalcPeriod.NoRecalc, null)
+				   true, true, RecalcPeriod.NoRecalc, 0)
 		{
 			AccountNumber = "CUR" + AccountNumber;
 			Balance = acc.Balance;

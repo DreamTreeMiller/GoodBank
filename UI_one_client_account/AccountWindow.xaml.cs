@@ -1,37 +1,22 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.BankInside;
-using GoodBankNS.Binding_UI_CondeBehind;
+﻿using GoodBankNS.Binding_UI_CondeBehind;
 using GoodBankNS.ClientClasses;
 using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Data;
 using GoodBankNS.UserControlsLists;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace GoodBankNS.UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for AccountWindow.xaml
 	/// </summary>
-	public partial class AccountWindow : Window
+	public partial class AccountWindow : Window 
 	{
 		BankActions BA;
 		IClientDTO  client;
 		IAccountDTO Acc;
 
+		public bool needUpdate = false;
 
 		public AccountWindow(BankActions ba, IAccountDTO acc)
 		{
@@ -84,7 +69,18 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void TopUpButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Top Up Account");
+			if (!Acc.Topupable)
+			{
+				MessageBox.Show("Пополнение невозможно!");
+				return;
+			}
+			EnterTopUpCashAmountWindow topupwin = new EnterTopUpCashAmountWindow();
+			var result = topupwin.ShowDialog();
+			if (result != true) return;
+
+			IAccount updatedAcc = BA.Accounts.TopUp(Acc.ID, topupwin.amount);
+			Balance.Text = $"{updatedAcc.Balance:C2}";
+			needUpdate = true;
 		}
 
 		private void WithdrawCashButton_Click(object sender, RoutedEventArgs e)

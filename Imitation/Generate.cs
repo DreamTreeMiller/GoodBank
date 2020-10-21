@@ -132,7 +132,7 @@ namespace GoodBankNS.Imitation
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Current,
 									r.Next(0,100) * 1000, 					// сумма на текущем счеты
 									0,										// процент по вкладу
-					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, null));
+					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0));
 		}
 
 		private static void GenerateDeposits(IClientDTO c, int num) 
@@ -140,7 +140,7 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				DateTime? endDate	 = GenDepositCreditEndDate(GoodBank.Today, r.Next(1, 61));
+				int		 duration	 = GenDepositCreditDuration(openingDate);
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
@@ -151,8 +151,8 @@ namespace GoodBankNS.Imitation
 									openingDate,
 									TrueFalse(),					// Можем поплнять или нет
 									TrueFalse(),					// Можем частично снимать или нет
-									GenDepositRecalc(),			// Периодичность пересчета
-									endDate));						// Срок окончания вклада
+									GenDepositRecalc(),				// Периодичность пересчета
+									duration));						// Количество месяцев вклада
 			}
 		}
 
@@ -161,9 +161,8 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				int duration = r.Next(1, 61);
-				DateTime? endDate = GenDepositCreditEndDate(GoodBank.Today, duration);
-				int amount = duration * 30_000;
+				int duration = GenDepositCreditDuration(openingDate);
+				int amount = duration * 10_000 * r.Next(1,4);
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Credit,
@@ -175,7 +174,7 @@ namespace GoodBankNS.Imitation
 									true,					// Можем поплнять или нет
 									false,					// Можем частично снимать или нет
 									RecalcPeriod.Monthly,	// Периодичность пересчета
-									endDate));				// Срок погашения кредита
+									duration));				// Количество месяцев вклада
 			}
 		}
 
@@ -196,9 +195,10 @@ namespace GoodBankNS.Imitation
 			return GenDate((DateTime)c.CreationDate, DateTime.Now);
 		}
 
-		private static DateTime GenDepositCreditEndDate(DateTime sd, int totalMonths)
+		private static int GenDepositCreditDuration(DateTime sd)
 		{
-			return sd.AddMonths(totalMonths);
+			int firstTerm = (int)(GoodBank.Today.Subtract(sd).TotalDays / 365.25 * 12);
+			return firstTerm + r.Next(1, 61);
 		}
 
 		#endregion

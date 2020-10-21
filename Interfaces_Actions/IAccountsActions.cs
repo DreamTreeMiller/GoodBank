@@ -31,5 +31,7 @@ namespace GoodBankNS.Interfaces_Actions
 		IAccountDTO AddAccount(IAccountDTO acc); 
 
 		IAccountDTO GenerateAccount(IAccountDTO acc);
+
+		IAccount TopUp(uint accID, double amount);
 	}
 }

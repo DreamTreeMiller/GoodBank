@@ -1,11 +1,11 @@
-﻿<Window x:Class="GoodBankNS.UI_one_client_account.OpenDepositWindow"
+﻿<Window x:Class="GoodBankNS.UI_one_client_account.OpenCreditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodBankNS.UI_one_client_account"
         mc:Ignorable="d"
-        Title="Открыть вклад" 
+        Title="Выдать кредит" 
 		Height="310" Width="700"
 		MinHeight="310" MinWidth="700"
 		MaxHeight="310" MaxWidth="700"
@@ -65,7 +65,7 @@
 		</Grid.ColumnDefinitions>
 		<!-- Строка заголовка всего окна-->
 		<TextBlock x:Name="MainTitle"
-				   Text="ОТКРЫТЬ ВКЛАД"
+				   Text="ВЫДАТЬ КРЕДИТ"
 				   Grid.Row="0" Grid.Column="1"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center"
@@ -92,7 +92,7 @@
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Начальная сумма:" 
+			<TextBlock Text="Сумма кредита:" 
 						Grid.Row="0" Grid.Column="0"
 						Style="{StaticResource LabelStyle}"
 						/>
@@ -148,10 +148,9 @@
 					   Grid.Row="2" Grid.Column="0"
 					   Style="{StaticResource LabelStyle}"
 					   />
-			<CheckBox x:Name="TopUpCheckBox" 
+			<TextBlock Text="да" 
 					  Grid.Row="2" Grid.Column="1"
-					  IsChecked="False"
-					  HorizontalAlignment="Center" VerticalAlignment="Center"
+					  Style="{StaticResource ValueCenterAlignStyle}"
 					  />
 			<TextBlock Text="Сроком до:" 
 					   Grid.Row="2" Grid.Column="2"
@@ -161,45 +160,29 @@
 					   Grid.Row="2" Grid.Column="3"
 					   Style="{StaticResource ValueCenterAlignStyle}"
 					   />
-			<TextBlock Text="Досрочное снятие:"
-					   Grid.Row="3" Grid.Column="0"
-					   Style="{StaticResource LabelStyle}"
-					   />
-			<CheckBox x:Name="WithdrawalAllowedCheckBox" 
-					  Grid.Row="3" Grid.Column="1"
-					  HorizontalAlignment="Center" VerticalAlignment="Center"
-					  IsChecked="False"
-					  />
 			<TextBlock Text="Начисление процентов:"
 					   Grid.Row="3" Grid.Column="2"
 					   Style="{StaticResource LabelStyle}"
 					   />
-			<ComboBox x:Name="Recalculation" 
-					  Grid.Row="3" Grid.Column="3"
-					  HorizontalAlignment="Center" VerticalAlignment="Center"
-					  Width="110"
-					  SelectedIndex="0"
-					  >
-				<TextBlock Text="ежемесячно"/>
-				<TextBlock Text="ежегодно"/>
-				<TextBlock Text="в конце периода"/>
-			</ComboBox>
+			<TextBlock Text="ежемесячно" 
+					   Grid.Row="3" Grid.Column="3"
+					   Style="{StaticResource ValueCenterAlignStyle}"
+					   />
 			<TextBlock Text="Капитализация:" 
-					   Grid.Row="4" Grid.Column="0"
+					   Grid.Row="3" Grid.Column="0"
 						Style="{StaticResource LabelStyle}"
 					   />
-			<CheckBox x:Name="CompoundingCheckBox" 
-					  Grid.Row="4" Grid.Column="1"
-					  HorizontalAlignment="Center" VerticalAlignment="Center"
-					  IsChecked="False" Click="CompoundingCheckBox_Click" 
+			<TextBlock Text="да" 
+					  Grid.Row="3" Grid.Column="1"
+					  Style="{StaticResource ValueCenterAlignStyle}"
 					  />
-			<TextBlock x:Name="AccumulationAccountLabel"
-					   Text="Перечислять проценты на счет:"
-					   Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+			<TextBlock x:Name="CreditRecipientLabel"
+					   Text="Перечислить сумму кредита на счет:"
+					   Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
 					   Style="{StaticResource LabelStyle}"
 					   />
-			<ComboBox x:Name="AccumulationAccount" 
-					  Grid.Row="4" Grid.Column="3"
+			<ComboBox x:Name="CreditRecipientAccount" 
+					  Grid.Row="4" Grid.Column="2"
 					  HorizontalAlignment="Center" VerticalAlignment="Center"
 					  Width="150"
 					  SelectedIndex="0"
@@ -216,15 +199,14 @@
 					 Rows="1" Columns="2" 
 					 Margin="0,10,0,0"
 					 >
-			<Button Name="btnOk_OpenDeposit"
+			<Button Name="btnOk_OpenCredit"
 					IsDefault="True" 
 					Content="OK"
 					FontWeight="Bold"
 					Foreground="White"
 					Height="30"
 					Width="70" 
-					BorderThickness="0" 
-					Click="btnOk_OpenDeposit_Click"
+					BorderThickness="0" Click="btnOk_OpenCredit_Click" 
 					>
 				<!-- Закруглённые углы-->
 				<Button.Resources>
@@ -253,7 +235,7 @@
 					</Style>
 				</Button.Style>
 			</Button>
-			<Button Name="btnCancel_OpenCurrentAccount"
+			<Button Name="btnCancel_OpenCredit"
 					IsCancel="True"
 					Content="Отмена" 
 					FontWeight="Bold"

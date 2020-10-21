@@ -38,10 +38,16 @@ namespace GoodBankNS.Interfaces_Data
 		DateTime Opened				{ get; set; }
 
 		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
+		/// Количество месяцев, на который открыт вклад, выдан кредит.
+		/// 0 - бессрочно
 		/// </summary>
-		DateTime?	EndDate			{ get; set; }
+		int Duration			{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита. 
+		/// null - бессрочно
+		/// </summary>
+		DateTime?	EndDate			{ get; }
 
 		DateTime?	Closed			{ get; set; }
 

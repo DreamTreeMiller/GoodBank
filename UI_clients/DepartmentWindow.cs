@@ -6,10 +6,6 @@ using GoodBankNS.UI_one_client_account;
 using GoodBankNS.UserControlsLists;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Data;
-using System.Windows.Controls;
-using System.Xml;
-using System.Windows.Media;
 
 namespace GoodBankNS.UI_clients
 {
@@ -29,6 +25,7 @@ namespace GoodBankNS.UI_clients
 
 		private ClientType				ClientTypeForAccountsList;
 		private AccountsList			accountsListView;
+		ObservableCollection<AccountDTO> accountsList = new ObservableCollection<AccountDTO>();
 
 		public DepartmentWindow(WindowID wid, BankActions ba)
 		{
@@ -94,12 +91,13 @@ namespace GoodBankNS.UI_clients
 
 		private void ShowAccounts()
 		{
-			var accountsList = BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
-			accountsListView.AccountsDataGrid.ItemsSource	= accountsList.accList;
-			accountsListView.AccountsTotalNumberValue.Text	= $"{accountsList.accList.Count:N0}";
-			accountsListView.CurrentTotalAmount.Text		= $"{accountsList.totalCurr:N2}";
-			accountsListView.DepositsTotalAmount.Text		= $"{accountsList.totalDeposit:N2}";
-			accountsListView.CreditsTotalAmount.Text		= $"{accountsList.totalCredit:N2}";
+			var accList = BA.Accounts.GetAccountsList(ClientTypeForAccountsList);
+			accountsList = accList.accList;
+			accountsListView.AccountsDataGrid.ItemsSource   = accountsList;
+			accountsListView.AccountsTotalNumberValue.Text	= $"{accList.accList.Count:N0}";
+			accountsListView.CurrentTotalAmount.Text		= $"{accList.totalCurr:N2}";
+			accountsListView.DepositsTotalAmount.Text		= $"{accList.totalDeposit:N2}";
+			accountsListView.CreditsTotalAmount.Text		= $"{accList.totalCredit:N2}";
 		}
 
 		#endregion
@@ -114,7 +112,7 @@ namespace GoodBankNS.UI_clients
 			}
 			ClientWindow clientWindow = new ClientWindow(BA, client);
 			clientWindow.ShowDialog();
-			if (clientWindow.newAccountAdded)
+			if (clientWindow.needToRefreshAccountsList)
 			{
 				InitializeClientsAndWindowTypes();
 				ShowAccounts();
@@ -159,6 +157,7 @@ namespace GoodBankNS.UI_clients
 			IClient client = BA.Clients.GetClientByID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
+			if (accountWindow.needUpdate) ShowAccounts();
 
 		}
 

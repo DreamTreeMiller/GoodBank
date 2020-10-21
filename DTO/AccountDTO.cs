@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GoodBankNS.DTO
 {
@@ -70,7 +71,7 @@ namespace GoodBankNS.DTO
 				return att;
 			}
 		}
-		public uint			ID				{ get; }
+		public uint			ID				{ get; } = 0;
 		public string		AccountNumber	{ get; set; }
 		public double		Balance			{ get; set; }
 
@@ -106,10 +107,17 @@ namespace GoodBankNS.DTO
 		public DateTime		Opened			{ get; set; }
 
 		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
+		/// Количество месяцев, на который открыт вклад, выдан кредит.
+		/// 0 - бессрочно
 		/// </summary>
-		public DateTime?	EndDate			{ get; set; }
+		public int Duration { get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита. 
+		/// null - бессрочно
+		/// </summary>
+		public DateTime? EndDate =>
+			Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
 
 		/// <summary>
 		/// Дата фактического закрытия вклада
@@ -140,7 +148,7 @@ namespace GoodBankNS.DTO
 		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
 						  double balance, double interest, 
 						  bool compounding, uint compAccID, DateTime opened, 
-						  bool topup, bool withdraw, RecalcPeriod recalc, DateTime? endDate)
+						  bool topup, bool withdraw, RecalcPeriod recalc, int duration)
 
 		{
 			ClientType			= ct;
@@ -154,7 +162,7 @@ namespace GoodBankNS.DTO
 			Topupable			= topup;
 			WithdrawalAllowed	= withdraw;
 			RecalcPeriod		= recalc;
-			EndDate				= endDate;
+			Duration			= duration;
 		}
 
 	/// <summary>
@@ -173,7 +181,7 @@ namespace GoodBankNS.DTO
 			Compounding			= acc.Compounding;
 			CompoundAccID		= acc.CompoundAccID;
 			Opened				= acc.Opened;
-			EndDate				= acc.EndDate;
+			Duration			= acc.Duration;
 			Closed				= acc.Closed;
 			Topupable			= acc.Topupable;
 			WithdrawalAllowed	= acc.WithdrawalAllowed;

@@ -75,12 +75,12 @@ namespace GoodBankNS.AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract double		Balance			{ get; set; }
+		public abstract double	Balance			{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		public double Interest		{ get; set; }
+		public double			Interest		{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без
@@ -101,10 +101,16 @@ namespace GoodBankNS.AccountClasses
 		public DateTime			Opened			{ get; set; }
 
 		/// <summary>
-		/// Дата окончания вклада/кредита
-		/// null - бессрочный вклад
+		/// Количество месяцев, на который открыт вклад, выдан кредит.
+		/// 0 - бессрочно
 		/// </summary>
-		public DateTime?		EndDate			{ get; set; }
+		public int				Duration		{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита. 
+		/// null - бессрочно
+		/// </summary>
+		public abstract DateTime? EndDate		{ get; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -140,7 +146,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
 		public Account( uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
-						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
+						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
@@ -154,7 +160,7 @@ namespace GoodBankNS.AccountClasses
 			Topupable			= topup;
 			WithdrawalAllowed	= withdrawal;
 			RecalcPeriod		= recalc;
-			EndDate				= endDate;
+			Duration			= duration;
 		}
 
 		/// <summary>
@@ -167,7 +173,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="interest"></param>
 		public Account(uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
 						DateTime opened,
-						bool topup, bool withdrawal, RecalcPeriod recalc, DateTime? endDate)
+						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
@@ -181,9 +187,14 @@ namespace GoodBankNS.AccountClasses
 			Topupable			= topup;
 			WithdrawalAllowed	= withdrawal;
 			RecalcPeriod		= recalc;
-			EndDate				= endDate;
+			Duration			= duration;
 		}
 
 		#endregion
+
+		public void TopUp(double amount)
+		{
+			if (Topupable) Balance += amount;
+		}
 	}
 }
