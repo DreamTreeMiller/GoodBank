@@ -187,5 +187,21 @@ namespace GoodBankNS.BankInside
 			acc.TopUp(amount);
 			return acc;
 		}
-	}
+
+		public IAccount Withdraw(uint accID, double amount)
+		{
+			var acc = GetAccountByID(accID);
+			acc.Withdraw(amount);
+			return acc;
+		}
+
+		public IAccount CloseAccount(uint accID)
+		{
+			var acc = GetAccountByID(accID);
+			acc.Closed			  = GoodBank.Today;
+			acc.Topupable		  = false;
+			acc.WithdrawalAllowed = false;
+			return acc;
+		}
+}
 }

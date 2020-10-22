@@ -44,12 +44,12 @@ namespace GoodBankNS.AccountClasses
 		/// Это избыточное поле, но благодаря ему делается всего один проход по базе 
 		/// при показе счетов одного типа клиентов
 		/// </summary>
-		public ClientType		ClientType		{ get; set; }
+		public ClientType		ClientType			{ get; set; }
 
 		/// <summary>
 		/// ID владельца счета. 
 		/// </summary>
-		public uint				ClientID		{ get; set; }
+		public uint				ClientID			{ get; set; }
 
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
@@ -60,14 +60,14 @@ namespace GoodBankNS.AccountClasses
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
 		/// </summary>
-		public uint				ID				{ get; }
+		public uint				ID					{ get; }
 
 		/// <summary>
 		/// Уникальный номер счёта. 
 		/// Числовая часть совпадает с ID. 
 		/// Есть префикс, указывающий тип счета
 		/// </summary>
-		public string			AccountNumber	{ get; set; }
+		public string			AccountNumber		{ get; set; }
 
 		/// <summary>
 		/// Баланс счёта. Для разных типов разный
@@ -75,63 +75,57 @@ namespace GoodBankNS.AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract double	Balance			{ get; set; }
+		public abstract double	Balance				{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		public double			Interest		{ get; set; }
+		public double			Interest			{ get; set; }
 
 		/// <summary>
 		/// С капитализацией или без
 		/// </summary>
-		public bool				Compounding		{ get; set; }
-
-		/// <summary>
-		/// ID счета, куда перечислять проценты.
-		/// При капитализации, совпадает с ИД счета депозита
-		/// </summary>
-		public uint				CompoundAccID	{ get; set; }
-
-		public string			CompoundAccNum	{ get; set; }
+		public bool				Compounding			{ get; set; }
 
 		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
-		public DateTime			Opened			{ get; set; }
+		public DateTime			Opened				{ get; set; }
 
 		/// <summary>
 		/// Количество месяцев, на который открыт вклад, выдан кредит.
 		/// 0 - бессрочно
 		/// </summary>
-		public int				Duration		{ get; set; }
+		public int				Duration			{ get; set; }
 
 		/// <summary>
 		/// Дата окончания вклада/кредита. 
 		/// null - бессрочно
 		/// </summary>
-		public abstract DateTime? EndDate		{ get; }
+		public abstract DateTime? EndDate			{ get; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
 		/// Если счет открыт, то равен null
 		/// </summary>
-		public DateTime?		Closed			{ get; set; } = null;
+		public DateTime?		Closed				{ get; set; }
 
 		/// <summary>
 		/// Пополняемый счет или нет
+		/// У закрытого счета - false
 		/// </summary>
-		public bool				Topupable		{ get; set; }
+		public bool				Topupable			{ get; set; }
 
 		/// <summary>
 		/// С правом частичного снятия или нет
+		/// У закрытого счета - false
 		/// </summary>
-		public bool			WithdrawalAllowed	{ get; set; }
+		public bool			WithdrawalAllowed		{ get; set; }
 
 		/// <summary>
-		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
+		/// Период пересчета процентов - ежемесячно, ежегодно, один раз в конце
 		/// </summary>
-		public RecalcPeriod		RecalcPeriod	{ get; set; }
+		public RecalcPeriod		RecalcPeriod		{ get; set; }
 
 		#endregion
 
@@ -145,7 +139,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account( uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
+		public Account( uint clientID, ClientType clientType, bool compounding, double interest,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
 		{
 			ClientID			= clientID;
@@ -153,7 +147,6 @@ namespace GoodBankNS.AccountClasses
 			ID					= NextID();
 			AccountNumber		= $"{ID:000000000000}";
 			Compounding			= compounding;
-			CompoundAccID		= compAccID;
 			Balance				= 0;
 			Interest			= interest;
 			Opened				= DateTime.Now;
@@ -171,7 +164,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account(uint clientID, ClientType clientType, bool compounding, uint compAccID, double interest,
+		public Account(uint clientID, ClientType clientType, bool compounding, double interest,
 						DateTime opened,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
 		{
@@ -180,7 +173,6 @@ namespace GoodBankNS.AccountClasses
 			ID					= NextID();
 			AccountNumber		= $"{ID:000000000000}";
 			Compounding			= compounding;
-			CompoundAccID		= compAccID;
 			Balance				= 0;
 			Interest			= interest;
 			Opened				= opened;
@@ -195,6 +187,11 @@ namespace GoodBankNS.AccountClasses
 		public void TopUp(double amount)
 		{
 			if (Topupable) Balance += amount;
+		}
+
+		public void Withdraw(double amount)
+		{
+			if (WithdrawalAllowed) Balance -= amount;
 		}
 	}
 }

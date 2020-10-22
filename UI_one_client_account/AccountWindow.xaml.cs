@@ -1,8 +1,10 @@
-﻿using GoodBankNS.Binding_UI_CondeBehind;
+﻿using GoodBankNS.AccountClasses;
+using GoodBankNS.Binding_UI_CondeBehind;
 using GoodBankNS.ClientClasses;
 using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Data;
 using GoodBankNS.UserControlsLists;
+using System;
 using System.Windows;
 
 namespace GoodBankNS.UI_one_client_account
@@ -45,8 +47,8 @@ namespace GoodBankNS.UI_one_client_account
 			// Без капитализации указываем счет для накопления процентов
 			if(Acc.Compounding == false)
 			{
-				CompoundAccLabel.Visibility = Visibility.Visible;
-				CompoundAccValue.Visibility = Visibility.Visible;
+				InterestAccumulationAccLabel.Visibility = Visibility.Visible;
+				InterestAccumulationAccValue.Visibility = Visibility.Visible;
 			}
 
 			AccountInfo.DataContext			= Acc;
@@ -74,18 +76,34 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Пополнение невозможно!");
 				return;
 			}
-			EnterTopUpCashAmountWindow topupwin = new EnterTopUpCashAmountWindow();
-			var result = topupwin.ShowDialog();
+			EnterCashAmountWindow cashWin = new EnterCashAmountWindow();
+			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			IAccount updatedAcc = BA.Accounts.TopUp(Acc.ID, topupwin.amount);
+			IAccount updatedAcc = BA.Accounts.TopUp(Acc.ID, cashWin.amount);
 			Balance.Text = $"{updatedAcc.Balance:C2}";
 			needUpdate = true;
 		}
 
 		private void WithdrawCashButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Withdraw cash");
+			if (!Acc.WithdrawalAllowed)
+			{
+				MessageBox.Show("Снятие невозможно!");
+				return;
+			}
+			EnterCashAmountWindow cashWin = new EnterCashAmountWindow();
+			var result = cashWin.ShowDialog();
+			if (result != true) return;
+
+			if(Acc.Balance < cashWin.amount)
+			{
+				MessageBox.Show("Недостаточно средств для снятия!");
+				return;
+			}
+			IAccount updatedAcc = BA.Accounts.Withdraw(Acc.ID, cashWin.amount);
+			Balance.Text = $"{updatedAcc.Balance:C2}";
+			needUpdate = true;
 		}
 
 		private void WireButton_Click(object sender, RoutedEventArgs e)
@@ -95,7 +113,29 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void CloseAccountButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Close account");
+			IAccount closedAcc = null;
+			if (Acc.Balance < 0)
+			{
+				MessageBox.Show("Невозможно закрыть счет, на котором есть долг");
+				return;
+			}
+
+			if (Acc.Balance > 0)
+			{
+				MessageBox.Show($"Получите ваши денюшки\n в размере {Acc.Balance:N2} руб.");
+				BA.Accounts.Withdraw(Acc.ID, Acc.Balance);
+			}
+
+			closedAcc = BA.Accounts.CloseAccount(Acc.ID);
+
+			Balance.Text			 = $"{closedAcc.Balance:C2}";
+			ClosedDate.Text			 = $"{(DateTime)closedAcc.Closed:dd.MM.yyyy}";
+			TopupableFlag.Text		 = "нет";
+			WithdrawAllowedFlag.Text = "нет";
+
+			needUpdate = true;
+
+
 		}
 	}
 }

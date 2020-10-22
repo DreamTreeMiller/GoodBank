@@ -1,9 +1,6 @@
-﻿using GoodBankNS.BankInside;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,25 +16,11 @@ using System.Windows.Shapes;
 namespace GoodBankNS.UI_one_client_account
 {
 	/// <summary>
-	/// Interaction logic for OpenAccountWindow.xaml
+	/// Interaction logic for EnterTopUpCashAmountWindow.xaml
 	/// </summary>
-	public partial class OpenCurrentAccountWindow : Window
+	public partial class EnterCashAmountWindow : Window
 	{
-		public double startAmount = 0;
-
-		public DateTime	Opened { get; } = GoodBank.Today;
-
-		public OpenCurrentAccountWindow()
-		{
-			InitializeComponent();
-			DataContext = this;
-			Dispatcher.BeginInvoke((ThreadStart)delegate
-			{
-				StartAmountEntryBox.Text = "0.00";
-				StartAmountEntryBox.Focus();
-				StartAmountEntryBox.SelectionStart = StartAmountEntryBox.Text.Length;
-			});
-		}
+		public double amount = 0;
 
 		/// <summary>
 		/// Проверяет, является ли введенная строка корректным числом с плав. запятой
@@ -47,26 +30,29 @@ namespace GoodBankNS.UI_one_client_account
 		/// <returns>true/false. Если true, то в tmp результат преобразования</returns>
 		private bool IsInputValid(string input, out double tmp)
 		{
-			if(String.IsNullOrEmpty(input))
+			if (String.IsNullOrEmpty(input))
 			{
 				MessageBox.Show("Введите число.");
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					StartAmountEntryBox.Focus();
-					StartAmountEntryBox.SelectionStart = StartAmountEntryBox.Text.Length;
+					AmountEnterBox.Text = "0.00";
+					AmountEnterBox.Focus();
+					AmountEnterBox.SelectionStart = AmountEnterBox.Text.Length;
 				});
 				tmp = 0;
 				return false;
 			}
+
 			if (!Double.TryParse(input, out tmp))
 			{
 				MessageBox.Show("Некорректрый ввод! Введите число.");
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					StartAmountEntryBox.Text = "0.00";
-					StartAmountEntryBox.Focus();
-					StartAmountEntryBox.SelectionStart = StartAmountEntryBox.Text.Length;
+					AmountEnterBox.Text = "0.00";
+					AmountEnterBox.Focus();
+					AmountEnterBox.SelectionStart = AmountEnterBox.Text.Length;
 				});
+
 				return false;
 			}
 			if (tmp < 0)
@@ -74,28 +60,35 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Число не должно быть отрицательным");
 				Dispatcher.BeginInvoke((ThreadStart)delegate
 				{
-					StartAmountEntryBox.Focus();
-					StartAmountEntryBox.SelectionStart = StartAmountEntryBox.Text.Length;
+					AmountEnterBox.Focus();
+					AmountEnterBox.SelectionStart = AmountEnterBox.Text.Length;
 				});
+
 				return false;
 			}
 			return true;
 		}
 
-		private void btnOk_OpenCurrentAccount_Click(object sender, RoutedEventArgs e)
+		public EnterCashAmountWindow()
 		{
-			if (IsInputValid(StartAmountEntryBox.Text, out double tmp))
+			InitializeComponent();
+			DataContext = this;
+			Dispatcher.BeginInvoke((ThreadStart)delegate
 			{
-				startAmount  = tmp;
+				AmountEnterBox.Text = "0.00";
+				AmountEnterBox.Focus();
+				AmountEnterBox.SelectionStart = AmountEnterBox.Text.Length;
+			});
+
+		}
+
+		private void btnOk_Click(object sender, RoutedEventArgs e)
+		{
+			if (IsInputValid(AmountEnterBox.Text, out double tmp))
+			{
+				amount = tmp;
 				DialogResult = true;
 			}
-			else
-				Dispatcher.BeginInvoke((ThreadStart)delegate
-				{
-					StartAmountEntryBox.Text = "0.00";
-					StartAmountEntryBox.Focus();
-					StartAmountEntryBox.SelectionStart = StartAmountEntryBox.Text.Length;
-				});
 		}
 	}
 }

@@ -68,7 +68,7 @@ namespace GoodBankNS
 
 		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Прокрутить время на месяц вперёд");
+			MessageBox.Show("Пока не работает.\n\nПрокрутить время на месяц вперёд,\nчтобы начислить проценты.");
 		}
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)

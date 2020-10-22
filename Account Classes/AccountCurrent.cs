@@ -36,7 +36,7 @@ namespace GoodBankNS.AccountClasses
 		/// RecalcPeriod  =							--> No recalc period
 		/// EndDate		  =							--> null 
 		public AccountCurrent(IAccountDTO acc)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				   true, true, RecalcPeriod.NoRecalc, 0)
 		{
 			AccountNumber	= "CUR" + AccountNumber;
@@ -50,7 +50,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountCurrent(IAccountDTO acc, DateTime opened)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				   opened,
 				   true, true, RecalcPeriod.NoRecalc, 0)
 		{

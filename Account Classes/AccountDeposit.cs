@@ -7,10 +7,30 @@ using System.Threading.Tasks;
 
 namespace GoodBankNS.AccountClasses
 {
-	public class AccountDeposit : Account
+	public class AccountDeposit : Account, IAccountDeposit
 	{
 		public override AccountType AccType { get => AccountType.Deposit; }
+
 		public override double Balance { get; set; }
+
+		/// <summary>
+		/// ID счета, куда перечислять проценты.
+		/// При капитализации, совпадает с ИД счета депозита
+		/// Без капитализации равен 0
+		/// </summary>
+		public uint InterestAccumulationAccID { get; } = 0;
+
+		/// <summary>
+		/// Номер счета, куда перечислять проценты.
+		/// При капитализации, совпадает с номером счета депозита
+		/// Без капитализации имеет значение "внутренний счет"
+		/// </summary>
+		public string InterestAccumulationAccNum { get; } 
+
+		/// <summary>
+		/// Накомпленные проценты 
+		/// </summary>
+		public double AccumulatedInterest { get; set; } = 0;
 
 		public override DateTime? EndDate => 
 			Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
@@ -35,11 +55,13 @@ namespace GoodBankNS.AccountClasses
 		/// RecalcPeriod  =							--> из IAccountDTO acc
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountDeposit(IAccountDTO acc)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
 		{
 			AccountNumber	= "DEP" + AccountNumber;
 			Balance			= acc.Balance;
+			InterestAccumulationAccID  = acc.InterestAccumulationAccID;
+			InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
 		}
 
 		/// <summary>
@@ -49,12 +71,14 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountDeposit(IAccountDTO acc, DateTime opened)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.CompoundAccID, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				  opened,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
 		{
 			AccountNumber = "DEP" + AccountNumber;
 			Balance = acc.Balance;
+			InterestAccumulationAccID  = acc.InterestAccumulationAccID;
+			InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
 		}
 	}
 }

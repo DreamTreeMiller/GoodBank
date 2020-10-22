@@ -60,14 +60,6 @@ namespace GoodBankNS.Interfaces_Data
 		bool			Compounding		{ get; set; }
 
 		/// <summary>
-		/// ID счета, куда перечислять проценты.
-		/// При капитализации, совпадает с ИД счета депозита
-		/// </summary>
-		uint			CompoundAccID	{ get; set; }
-
-		string			CompoundAccNum	{ get; set; }
-
-		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
 		DateTime		Opened			{ get; set; }
@@ -98,5 +90,6 @@ namespace GoodBankNS.Interfaces_Data
 
 		void TopUp(double amount);
 
+		void Withdraw(double amount);
 	}
 }

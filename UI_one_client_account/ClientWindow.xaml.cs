@@ -72,7 +72,6 @@ namespace GoodBankNS.UI_one_client_account
 			AccountsList.Content	= accountsListView;
 
 			// Убираем словов "сундучки"
-			accountsListView.WordAccountsTag.Visibility  = Visibility.Collapsed;
 			accountsListView.ClientNameColumn.Visibility = Visibility.Collapsed;
 		}
 
@@ -124,7 +123,7 @@ namespace GoodBankNS.UI_one_client_account
 			var result = ocawin.ShowDialog();
 			if (result != true) return;
 			IAccountDTO newAcc = new AccountDTO(client.ClientType, client.ID, AccountType.Current,
-				ocawin.startAmount, 0, false, 0, ocawin.Opened, true, true, RecalcPeriod.NoRecalc, 0);
+				ocawin.startAmount, 0, false, 0, "не используется", ocawin.Opened, true, true, RecalcPeriod.NoRecalc, 0);
 			// Добавляем счет в базу в бэкенд
 			BA.Accounts.AddAccount(newAcc);
 			needToRefreshAccountsList = true;
@@ -136,14 +135,14 @@ namespace GoodBankNS.UI_one_client_account
 			// Получаем список текущих счетов клиента, 
 			// на которых можно накапливать проценты со вклада,
 			// если выбран режим - без капитализации
-			// Этот список будет выпадающем списком в окошке ввода данных вклада
+			// Этот список будет выпадающим списком в окошке ввода данных вклада
 			var accumulationAccounts = BA.Accounts.GetClientAccounts(client.ID, AccountType.Current);
 
 			// Клиент может накапливать проценты на отдельном безымянном счете, 
 			// привязанном ко вкладу. Я назвал его "внутренний счет"
 			// создаем и добавляем этот счет в список счетов для накопления процентов
 			var internalAccount = new AccountDTO(client.ClientType, client.ID, AccountType.Current, 0, 0,
-				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
+				false, 0, "внутренний счет", GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
 			internalAccount.AccountNumber = "внутренний счет";
 			accumulationAccounts.Add(internalAccount);
 
@@ -155,13 +154,16 @@ namespace GoodBankNS.UI_one_client_account
 			// Если был выбран "внутренний счет", то его ID == 0
 			int		AccumAccIndx		= odwin.AccumulationAccount.SelectedIndex;
 			uint	AccumulationAccID	= (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).ID;
+			string InterestAccumAccNum =
+				(odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).InterestAccumulationAccNum;
 
 			IAccountDTO newAcc = 
 				 new AccountDTO(client.ClientType, client.ID, AccountType.Deposit,
-								odwin.startAmount, 
+								odwin.depositAmount, 
 								odwin.interest, 
 								(bool)odwin.CompoundingCheckBox.IsChecked,
-								AccumulationAccID, 
+								AccumulationAccID,
+								InterestAccumAccNum,
 								odwin.Opened, 
 								(bool)odwin.TopUpCheckBox.IsChecked, 
 								(bool)odwin.WithdrawalAllowedCheckBox.IsChecked, 
@@ -182,13 +184,13 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			// Получаем список текущих счетов клиента, 
 			// на один из которых нужно перечислить выданный кредит
-			// Этот список будет выпадающем списком в окошке ввода данных вклада
+			// Этот список будет выпадающим списком в окошке ввода данных вклада
 			var creditRecipientAccounts = BA.Accounts.GetClientAccounts(client.ID, AccountType.Current);
 
 			// Клиент может получить кредит наличными
 			// создаем и добавляем этот элемент списка в список счетов для накопления процентов
 			var cash = new AccountDTO(client.ClientType, client.ID, AccountType.Current, 0, 0,
-				false, 0, GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
+				false, 0, "", GoodBank.Today, true, true, RecalcPeriod.NoRecalc, 0);
 			cash.AccountNumber = "получить наличными";
 			creditRecipientAccounts.Add(cash);
 
@@ -201,13 +203,15 @@ namespace GoodBankNS.UI_one_client_account
 			int	 CreRecipAccIndx		= ocrwin.CreditRecipientAccount.SelectedIndex;
 			uint CreditRecipientAccID	= 
 				(ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).ID;
-
+			string CreditRecipientAccNum =
+				(ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).AccountNumber;
 			IAccountDTO newAcc =
 				 new AccountDTO(client.ClientType, client.ID, AccountType.Credit,
 								-ocrwin.creditAmount,	// Записываем сумму со знаком минус!
 								ocrwin.interest,
 								true,					// Это счет с капитализацией
 								CreditRecipientAccID,
+								CreditRecipientAccNum,
 								ocrwin.Opened,
 								true,					// Пополняемый счет
 								false,					// Понятие досрочного снятия неприменимо к кредиту

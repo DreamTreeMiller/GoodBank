@@ -114,7 +114,7 @@
 				</Button.ToolTip>
 			</Button>
 			<Button x:Name="WinMenu_SelectAccount"
-					Content="Открыть сундучок"
+					Content="Карточка счета"
 					Foreground="DarkSlateGray"
 					FontSize="14"
 					FontWeight="Bold"

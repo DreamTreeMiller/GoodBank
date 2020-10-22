@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,23 +25,25 @@ namespace GoodBankNS.UI_one_client_account
 	/// </summary>
 	public partial class OpenDepositWindow : Window, INotifyPropertyChanged
 	{
-		public double	startAmount = 0;
-		public string	StartAmount
+		public double	depositAmount = 0;
+		public string	DepositAmount
 		{
-			get => $"{startAmount:N2}";
+			get => $"{depositAmount:N2}";
 			set
 			{
 				if (!Double.TryParse(value, out double tmp))
 				{
 					MessageBox.Show("Некорректрый ввод! Введите число.");
+					SetFocusOnDepositAmountEntryBox();
 					return;
 				}
 				if (tmp < 0)
 				{
 					MessageBox.Show("Число не должно быть отрицательным");
+					SetFocusOnDepositAmountEntryBox();
 					return;
 				}
-				startAmount = tmp;
+				depositAmount = tmp;
 			}
 		}
 
@@ -53,11 +56,13 @@ namespace GoodBankNS.UI_one_client_account
 				if (!Double.TryParse(value, out double tmp))
 				{
 					MessageBox.Show("Некорректрый ввод! Введите число.");
+					SetFocusOnInterestEntryBox();
 					return;
 				}
 				if (tmp < 0)
 				{
 					MessageBox.Show("Число не должно быть отрицательным");
+					SetFocusOnInterestEntryBox();
 					return;
 				}
 				interest = tmp / 100;
@@ -73,12 +78,14 @@ namespace GoodBankNS.UI_one_client_account
 			{
 				if (!Int32.TryParse(value, out int tmp))
 				{
-					MessageBox.Show("Некорректрый ввод! Введите целое число больше 0");
+					MessageBox.Show("Некорректрый ввод! Введите целое число");
+					SetFocusOnDurationEntryBox(); 
 					return;
 				}
 				if (tmp < 1)
 				{
 					MessageBox.Show("Число месяцев должно быть больше 0");
+					SetFocusOnDurationEntryBox();
 					return;
 				}
 				duration = tmp;
@@ -94,6 +101,7 @@ namespace GoodBankNS.UI_one_client_account
 			InitializeComponent();
 			AccumulationAccount.ItemsSource = accumulationAccounts;
 			DataContext = this;
+			SetFocusOnDepositAmountEntryBox();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -102,12 +110,6 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
-
-		private void btnOk_OpenDeposit_Click(object sender, RoutedEventArgs e)
-		{
-			DialogResult = true;
-		}
-
 		private void CompoundingCheckBox_Click(object sender, RoutedEventArgs e)
 		{
 			if ((bool)(sender as CheckBox).IsChecked)
@@ -120,6 +122,44 @@ namespace GoodBankNS.UI_one_client_account
 				AccumulationAccountLabel.Visibility = Visibility.Visible;
 				AccumulationAccount.Visibility = Visibility.Visible;
 			}
+		}
+
+		private void btnOk_OpenDeposit_Click(object sender, RoutedEventArgs e)
+		{
+			if (duration == 0)
+			{
+				MessageBox.Show("Число месяцев должно быть больше 0");
+				SetFocusOnDurationEntryBox();
+				return;
+			}
+			DialogResult = true;
+		}
+
+		private void SetFocusOnDepositAmountEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				DepositAmountEntryBox.Focus();
+				DepositAmountEntryBox.SelectionStart = DepositAmountEntryBox.Text.Length;
+			});
+		}
+
+		private void SetFocusOnInterestEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				InterestEntryBox.Focus();
+				InterestEntryBox.SelectionStart = InterestEntryBox.Text.Length;
+			});
+		}
+
+		private void SetFocusOnDurationEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				DurationEntryBox.Focus();
+				DurationEntryBox.SelectionStart = DurationEntryBox.Text.Length;
+			});
 		}
 	}
 }

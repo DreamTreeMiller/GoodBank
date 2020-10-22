@@ -132,7 +132,8 @@ namespace GoodBankNS.Imitation
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Current,
 									r.Next(0,100) * 1000, 					// сумма на текущем счеты
 									0,										// процент по вкладу
-					false, 0, GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0));
+					false, 0, "не используется",
+					GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0));
 		}
 
 		private static void GenerateDeposits(IClientDTO c, int num) 
@@ -147,7 +148,8 @@ namespace GoodBankNS.Imitation
 									r.Next(100, 300) * 10000,		// сумма на счету. У ВИП > 1 mln
 									((double)r.Next(1, 13))/100,	// процент
 									TrueFalse(),					// капитализация
-									0,								// У нас ещё нет счета для перечисления ...
+									0,                              // У нас ещё нет счета для перечисления ...
+									"внутренний счет",
 									openingDate,
 									TrueFalse(),					// Можем поплнять или нет
 									TrueFalse(),					// Можем частично снимать или нет
@@ -169,7 +171,8 @@ namespace GoodBankNS.Imitation
 									-amount,				// долг
 									((double)r.Next(1, 16))/100,			// процент
 									true,					// капитализация
-									0,						// на собственный
+									0,                      // на собственный
+									"не используется",
 									openingDate,
 									true,					// Можем поплнять или нет
 									false,					// Можем частично снимать или нет

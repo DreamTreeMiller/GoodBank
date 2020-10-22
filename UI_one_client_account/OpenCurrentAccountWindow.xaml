@@ -86,7 +86,7 @@
 						Grid.Row="0" Grid.Column="0"
 						Style="{StaticResource AccountInfoLabelStyle}"
 						/>
-			<TextBox Text="{Binding StartAmount}"
+			<TextBox x:Name="StartAmountEntryBox"
 					 Grid.Row="0" Grid.Column="1" 
 					 Width="120"
 					 Style="{StaticResource AccountInfoValueFieldStyle}"

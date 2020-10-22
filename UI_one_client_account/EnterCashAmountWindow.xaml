@@ -1,4 +1,4 @@
-﻿<Window x:Class="GoodBankNS.UI_one_client_account.EnterTopUpCashAmountWindow"
+﻿<Window x:Class="GoodBankNS.UI_one_client_account.EnterCashAmountWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -30,10 +30,10 @@
 					   VerticalAlignment="Bottom"
 					   />
 		<StackPanel Orientation="Horizontal">
-			<TextBox Text="{Binding Amount}"
+			<TextBox x:Name="AmountEnterBox" 
 					 Width="200"
 					 Style="{StaticResource CustomStyle}"
-					 TextAlignment="Right"
+					 TextAlignment="Right" 
 					 />
 			<TextBlock Text="руб." 
 					   Style="{StaticResource CustomStyle}"

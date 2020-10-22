@@ -33,5 +33,10 @@ namespace GoodBankNS.Interfaces_Actions
 		IAccountDTO GenerateAccount(IAccountDTO acc);
 
 		IAccount TopUp(uint accID, double amount);
+
+		IAccount Withdraw(uint accID, double amount);
+
+		IAccount CloseAccount(uint accID);
+
 	}
 }

@@ -101,6 +101,7 @@
     <Compile Include="Interfaces_Actions\IClientsActions.cs" />
     <Compile Include="Client Classes\Client.cs" />
     <Compile Include="Interfaces_Data\IAccount.cs" />
+    <Compile Include="Interfaces_Data\IAccountDeposit.cs" />
     <Compile Include="Interfaces_Data\IAccountDTO.cs" />
     <Compile Include="Interfaces_Data\IClient.cs" />
     <Compile Include="Interfaces_Data\IClientDTO.cs" />
@@ -122,8 +123,8 @@
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI_one_client_account\EnterTopUpCashAmountWindow.xaml.cs">
-      <DependentUpon>EnterTopUpCashAmountWindow.xaml</DependentUpon>
+    <Compile Include="UI_one_client_account\EnterCashAmountWindow.cs">
+      <DependentUpon>EnterCashAmountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_one_client_account\OpenCreditWindow.xaml.cs">
       <DependentUpon>OpenCreditWindow.xaml</DependentUpon>
@@ -175,7 +176,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI_one_client_account\EnterTopUpCashAmountWindow.xaml">
+    <Page Include="UI_one_client_account\EnterCashAmountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

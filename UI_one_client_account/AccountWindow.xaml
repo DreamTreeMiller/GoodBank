@@ -61,29 +61,32 @@
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
 		</Style>
 	</Window.Resources>
-    <Grid>
+	<Grid>
 		<Grid.RowDefinitions>
 			<!-- 0. Заголовок окна -->
-			<RowDefinition MinHeight="40" MaxHeight="40"/> 	
+			<RowDefinition MinHeight="40" MaxHeight="40"/>
 			<!-- Меню действий со счетом -->
-			<RowDefinition MinHeight="30" MaxHeight="30"/>	
+			<RowDefinition MinHeight="30" MaxHeight="30"/>
 			<!-- Окошко данных о счете-->
-			<RowDefinition Height="Auto"/>					
+			<RowDefinition Height="Auto"/>
 			<!-- Окошко данных клиента-->
-			<RowDefinition Height="Auto"/>					<!-- Слова: данные клиента-->
-															<!-- 2. Вложенная табличка - данные человека или организации-->
-															<!-- 2. Вложенная табличка - тел, имейл, адрес-->
+			<RowDefinition Height="Auto"/>
+			<!-- Слова: данные клиента-->
+			<!-- 2. Вложенная табличка - данные человека или организации-->
+			<!-- 2. Вложенная табличка - тел, имейл, адрес-->
 			<!-- Окошко истории транзакций-->
 			<!-- Пустое место-->
-			<!--RowDefinition MinHeight="15" MaxHeight="15"/-->	
-			
+			<!--RowDefinition MinHeight="15" MaxHeight="15"/-->
+
 			<!-- Дата грид истории действий со счетом   MinHeight="180"-->
-			<RowDefinition Height="Auto" />	
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition MinWidth="20" MaxWidth="20"/>	<!-- Отступ слева-->
+			<ColumnDefinition MinWidth="20" MaxWidth="20"/>
+			<!-- Отступ слева-->
 			<ColumnDefinition Width="*"/>
-			<ColumnDefinition MinWidth="20" MaxWidth="20"/> <!-- Отступ справа-->
+			<ColumnDefinition MinWidth="20" MaxWidth="20"/>
+			<!-- Отступ справа-->
 		</Grid.ColumnDefinitions>
 		<Grid.Resources>
 			<local:UnlimitedDateConverter x:Key="UnlimitedDateConverter"/>
@@ -307,7 +310,7 @@
 						Grid.Row="2" Grid.Column="2"
 						Style="{StaticResource AccountInfoFieldNameStyle}"
 						/>
-			<TextBlock Text="{Binding Path=Closed, Converter={StaticResource StillOpenConverter}}" 
+			<TextBlock x:Name="ClosedDate" Text="{Binding Path=Closed, Converter={StaticResource StillOpenConverter}}" 
 						Grid.Row="2" Grid.Column="3"
 						Style="{StaticResource AccountInfoValueFieldStyle}"
 						/>
@@ -315,7 +318,8 @@
 						Grid.Row="3" Grid.Column="0"
 						Style="{StaticResource AccountInfoFieldNameStyle}"
 						/>
-			<TextBlock Text="{Binding Path=Topupable, Converter={StaticResource YesNoStringConverter}}" 
+			<TextBlock x:Name="TopupableFlag"
+					   Text="{Binding Path=Topupable, Converter={StaticResource YesNoStringConverter}}" 
 					   Grid.Row="3" Grid.Column="1"
 					   Style="{StaticResource AccountNumericValueFieldStyle}"
 					   HorizontalAlignment="Center"
@@ -342,43 +346,46 @@
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
-			<TextBlock Text="Капитализация:" 
+				<TextBlock Text="Капитализация:" 
 						Grid.Row="0" Grid.Column="0"
 						Style="{StaticResource AccountInfoFieldNameStyle}"
 						/>
-			<TextBlock Text="{Binding Path=Compounding, Converter={StaticResource YesNoStringConverter}}" 
+				<TextBlock Text="{Binding Path=Compounding, Converter={StaticResource YesNoStringConverter}}" 
 						Grid.Row="0" Grid.Column="1"
 						Style="{StaticResource AccountNumericValueFieldStyle}"
-					   HorizontalAlignment="Center"
+					   HorizontalAlignment="Center" 
 						/>
-			<TextBlock Text="Досрочное снятие:"
+				<TextBlock Text="Досрочное снятие:"
 						Grid.Row="0" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource AccountInfoFieldNameStyle}" 
 						/>
-			<TextBlock Text="{Binding Path=WithdrawalAllowed, Converter={StaticResource YesNoStringConverter}}" 
-						Grid.Row="0" Grid.Column="3"
-						Style="{StaticResource AccountInfoValueFieldStyle}"
-						/>
-			<TextBlock x:Name="CompoundAccLabel"
+				<TextBlock x:Name="WithdrawAllowedFlag" 
+						   Text="{Binding Path=WithdrawalAllowed, Converter={StaticResource YesNoStringConverter}}" 
+						   Grid.Row="0" Grid.Column="3"
+						   Style="{StaticResource AccountInfoValueFieldStyle}" 
+						   />
+				<TextBlock x:Name="InterestAccumulationAccLabel"
 					   Text="Счет для накопления процентов:" 
 					   Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
 					   Style="{StaticResource AccountInfoFieldNameStyle}"
 					   HorizontalAlignment="Center"
-					   Visibility="Collapsed"
+					   Visibility="Collapsed" 
 					   />
-			<TextBlock x:Name="CompoundAccValue" 
-					   Text="{Binding CompoundAccNum}"
+				<TextBlock x:Name="InterestAccumulationAccValue" 
+					   Text="{Binding InterestAccumulationAccNum}"
 					   Grid.Row="1" Grid.Column="2" 
 					   Style="{StaticResource AccountNumericValueFieldStyle}"
-					   Visibility="Collapsed"
+					   Visibility="Collapsed" 
 					   />
 			</Grid>
 		</Grid>
 		<!-- Окошко данных клиента-->
 		<Grid Grid.Row="3" Grid.Column="1">
 			<Grid.RowDefinitions>
-				<RowDefinition MinHeight="30" MaxHeight="30"/>	<!-- 0. "Данные клиента"-->
-				<RowDefinition Height="Auto"/>					<!-- 1. Вложенная табличка - данные человека или организации-->
+				<RowDefinition MinHeight="30" MaxHeight="30"/>
+				<!-- 0. "Данные клиента"-->
+				<RowDefinition Height="Auto"/>
+				<!-- 1. Вложенная табличка - данные человека или организации-->
 			</Grid.RowDefinitions>
 			<!--надпись: Данные владельца - кнопка: Редактировать -->
 			<TextBlock x:Name="ClientInfoTitle"
@@ -395,8 +402,10 @@
 				  Grid.Row="1" Grid.Column="0"
 				  >
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>		<!-- 0. Вложенная табличка - данные человека или организации-->
-					<RowDefinition Height="Auto"/>		<!-- 1. Вложенная табличка - тел, имейл, адрес-->
+					<RowDefinition Height="Auto"/>
+					<!-- 0. Вложенная табличка - данные человека или организации-->
+					<RowDefinition Height="Auto"/>
+					<!-- 1. Вложенная табличка - тел, имейл, адрес-->
 				</Grid.RowDefinitions>
 				<!-- Поля для ВИП или физика -->
 				<Grid x:Name="PersonalInfo" 

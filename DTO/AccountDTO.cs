@@ -20,57 +20,9 @@ namespace GoodBankNS.DTO
 	public class AccountDTO : IAccountDTO
 	{
 		public ClientType	ClientType		{ get; set; }
-		public string		ClientTypeTag
-		{ 
-			get
-			{
-				string ct = "";
-				switch(ClientType)
-				{
-					case ClientType.VIP:
-						ct = "ВИП";
-						break;
-					case ClientType.Simple:
-						ct = "Физик";
-						break;
-					case ClientType.Organization:
-						ct = "Юрик";
-						break;
-					case ClientType.All:
-					default:
-						ct = "";
-						break;
-				}
-				return ct;
-			}
-		}
 		public uint			ClientID		{ get; set; }
 		public string		ClientName		{ get; set; }
 		public AccountType	AccType			{ get; set; }
-		public string		AccTypeTag							// only {get; }
-		{ 
-			get
-			{
-				string att = "";
-				switch (AccType)
-				{
-					case AccountType.Current:
-						att = "текущий";
-						break;
-					case AccountType.Deposit:
-						att = "вклад";
-						break;
-					case AccountType.Credit:
-						att = "кредит";
-						break;
-					case AccountType.Total:
-					default:
-						att = "";
-						break;
-				}
-				return att;
-			}
-		}
 		public uint			ID				{ get; } = 0;
 		public string		AccountNumber	{ get; set; }
 		public double		Balance			{ get; set; }
@@ -97,12 +49,19 @@ namespace GoodBankNS.DTO
 		/// </summary>
 		public bool			Compounding	{ get; set; } = true;
 
+		#region поля только для депозитов
 		/// <summary>
 		/// ID счета, куда перечислять проценты.
 		/// При капитализации, совпадает с ИД счета депозита
+		/// 0 - если внутренний счет
 		/// </summary>
-		public uint			CompoundAccID	{ get; set; }
-		public string		CompoundAccNum	{ get; set; } = "Fake-0000-0000-0000";
+		public uint			InterestAccumulationAccID	{ get; set; }
+
+
+		public string		InterestAccumulationAccNum	{ get; set; }
+		public double		AccumulatedInterest			{ get; set; } = 0;
+
+		#endregion
 
 		public DateTime		Opened			{ get; set; }
 
@@ -147,7 +106,7 @@ namespace GoodBankNS.DTO
 		/// </summary>
 		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
 						  double balance, double interest, 
-						  bool compounding, uint compAccID, DateTime opened, 
+						  bool compounding, uint interestAccumAccID, string interestAccumAccNum, DateTime opened, 
 						  bool topup, bool withdraw, RecalcPeriod recalc, int duration)
 
 		{
@@ -157,7 +116,8 @@ namespace GoodBankNS.DTO
 			Balance				= balance;
 			Interest			= interest;
 			Compounding			= compounding;
-			CompoundAccID		= compAccID;
+			InterestAccumulationAccID  = interestAccumAccID;
+			InterestAccumulationAccNum = interestAccumAccNum;
 			Opened				= opened;
 			Topupable			= topup;
 			WithdrawalAllowed	= withdraw;
@@ -179,7 +139,6 @@ namespace GoodBankNS.DTO
 			Balance				= acc.Balance;
 			Interest			= acc.Interest;
 			Compounding			= acc.Compounding;
-			CompoundAccID		= acc.CompoundAccID;
 			Opened				= acc.Opened;
 			Duration			= acc.Duration;
 			Closed				= acc.Closed;
@@ -187,6 +146,11 @@ namespace GoodBankNS.DTO
 			WithdrawalAllowed	= acc.WithdrawalAllowed;
 			RecalcPeriod		= acc.RecalcPeriod;
 
+			if (acc is IAccountDeposit)
+			{
+				InterestAccumulationAccID  = (acc as IAccountDeposit).InterestAccumulationAccID;
+				InterestAccumulationAccNum = (acc as IAccountDeposit).InterestAccumulationAccNum;
+			}
 
 			if (c is IClientVIP)
 			{

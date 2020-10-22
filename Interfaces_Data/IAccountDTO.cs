@@ -31,17 +31,19 @@ namespace GoodBankNS.Interfaces_Data
 		/// ID счета, куда перечислять проценты.
 		/// При капитализации, совпадает с ИД счета депозита
 		/// </summary>
-		uint		CompoundAccID	{ get; set; }
+		uint		InterestAccumulationAccID		{ get; set; }
 
-		string		CompoundAccNum	{ get; set; }
+		string		InterestAccumulationAccNum		{ get; set; }
 
-		DateTime Opened				{ get; set; }
+		double		AccumulatedInterest				{ get; set; }
+
+		DateTime	Opened				{ get; set; }
 
 		/// <summary>
 		/// Количество месяцев, на который открыт вклад, выдан кредит.
 		/// 0 - бессрочно
 		/// </summary>
-		int Duration			{ get; set; }
+		int			Duration			{ get; set; }
 
 		/// <summary>
 		/// Дата окончания вклада/кредита. 
