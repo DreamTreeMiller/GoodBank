@@ -112,11 +112,9 @@ namespace GoodBankNS.UI_clients
 			}
 			ClientWindow clientWindow = new ClientWindow(BA, client);
 			clientWindow.ShowDialog();
-			if (clientWindow.needToRefreshAccountsList)
-			{
-				InitializeClientsAndWindowTypes();
-				ShowAccounts();
-			}
+
+			if (clientWindow.clientsNeedUpdate)  InitializeClientsAndWindowTypes();
+			if (clientWindow.accountsNeedUpdate) ShowAccounts();
 		}
 
 		private void WinMenu_AddClient_Click(object sender, RoutedEventArgs e)
@@ -157,8 +155,8 @@ namespace GoodBankNS.UI_clients
 			IClient client = BA.Clients.GetClientByID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
-			if (accountWindow.needUpdate) ShowAccounts();
-
+			if (accountWindow.clientsNeedUpdate)  InitializeClientsAndWindowTypes();
+			if (accountWindow.accountsNeedUpdate) ShowAccounts();
 		}
 
 		private void WinMenu_Search_Click(object sender, RoutedEventArgs e)

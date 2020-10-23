@@ -28,6 +28,9 @@ namespace GoodBankNS.Interfaces_Actions
 
 		ObservableCollection<AccountDTO> GetClientAccounts(uint ID, AccountType accType);
 
+		ObservableCollection<IAccount> GetAllTopupableAccounts();
+
+
 		IAccountDTO AddAccount(IAccountDTO acc); 
 
 		IAccountDTO GenerateAccount(IAccountDTO acc);

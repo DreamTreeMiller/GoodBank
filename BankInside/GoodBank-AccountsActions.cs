@@ -181,6 +181,17 @@ namespace GoodBankNS.BankInside
 
 		}
 
+		public ObservableCollection<IAccount> GetAllTopupableAccounts()
+		{
+			ObservableCollection<IAccount> accList = new ObservableCollection<IAccount>();
+			for (int i = 0; i < accounts.Count; i++)
+				if (accounts[i].Topupable)
+				{
+					accList.Add(accounts[i]);
+				}
+			return accList;
+		}
+
 		public IAccount TopUp(uint accID, double amount)
 		{
 			var acc = GetAccountByID(accID);
@@ -197,10 +208,26 @@ namespace GoodBankNS.BankInside
 
 		public IAccount CloseAccount(uint accID)
 		{
-			var acc = GetAccountByID(accID);
+			IAccount acc		  = GetAccountByID(accID);
 			acc.Closed			  = GoodBank.Today;
 			acc.Topupable		  = false;
 			acc.WithdrawalAllowed = false;
+
+			IClient client = GetClientByID(acc.ClientID);
+			client.NumberOfClosedAccounts++;
+
+			switch(acc.AccType)
+			{
+				case AccountType.Current:
+					client.NumberOfCurrentAccounts--;
+					break;
+				case AccountType.Deposit:
+					client.NumberOfDeposits--;
+					break;
+				case AccountType.Credit:
+					client.NumberOfCredits--;
+					break;
+			}
 			return acc;
 		}
 }

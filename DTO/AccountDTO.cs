@@ -98,6 +98,10 @@ namespace GoodBankNS.DTO
 		/// </summary>
 		public RecalcPeriod	RecalcPeriod	{ get; set; }
 
+		/// <summary>
+		/// Конструктор для создания заглушек в разных списках счетов
+		/// </summary>
+		public AccountDTO() { }
 
 		/// <summary>
 		/// Конструктор для создания счета и записи счета в базу

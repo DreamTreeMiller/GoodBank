@@ -5,6 +5,8 @@ using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Data;
 using GoodBankNS.UserControlsLists;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace GoodBankNS.UI_one_client_account
@@ -12,19 +14,79 @@ namespace GoodBankNS.UI_one_client_account
 	/// <summary>
 	/// Interaction logic for AccountWindow.xaml
 	/// </summary>
-	public partial class AccountWindow : Window 
+	public partial class AccountWindow : Window, INotifyPropertyChanged
 	{
+		#region Account Fields in Window
+
+		private uint		accID;
+		private AccountType	accountType;
+		private string		accountNumber;
+		public	string		AccountNumber
+		{
+			get => accountNumber;
+			set {  accountNumber = value; NotifyPropertyChanged(); }
+		}
+
+		private	double		balance;
+		public	double		Balance
+		{
+			get => balance;
+			set {  balance = value; NotifyPropertyChanged(); }
+		}
+
+		public	double		Interest	{ get; set; }
+
+		public	DateTime	Opened		{ get; set; }
+
+		public	DateTime?	EndDate		{ get; set; }
+
+		private DateTime?	accClosed;
+		public	DateTime?	AccClosed 
+		{ 
+			get => accClosed;
+			set {  accClosed = value; NotifyPropertyChanged(); } 
+		}
+
+		private bool		topupable;
+		public  bool		Topupable 
+		{ 
+			get => topupable; 
+			set {  topupable = value; NotifyPropertyChanged(); }
+		}
+
+		private bool		withdrawalAllowed;
+		public	bool		WithdrawalAllowed
+		{ 
+			get => withdrawalAllowed; 
+			set {  withdrawalAllowed = value; NotifyPropertyChanged(); }
+		}
+
+		public RecalcPeriod RecalcPeriod { get; set; }
+
+		public bool Compounding { get; set; }
+
+		public string InterestAccumulationAccNum { get; set; }
+
+		#endregion
+
 		BankActions BA;
 		IClientDTO  client;
-		IAccountDTO Acc;
 
-		public bool needUpdate = false;
+		public bool accountsNeedUpdate = false;
+		public bool clientsNeedUpdate  = false;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 
 		public AccountWindow(BankActions ba, IAccountDTO acc)
 		{
 			InitializeComponent();
 			InitializeClassScopeVars(ba, acc);
-			InitializeAccountDetails();
+			InitializeAccountFieldLabelsAndVisibility();
 			InitializeClientDetails();
 		}
 
@@ -32,12 +94,27 @@ namespace GoodBankNS.UI_one_client_account
 		{
 			BA		= ba;
 			client	= new ClientDTO(BA.Clients.GetClientByID(acc.ClientID));
-			Acc		= acc;
+
+			accID						= acc.ID;
+			accountType					= acc.AccType;
+			AccountNumber				= acc.AccountNumber;
+			Balance						= acc.Balance;
+			Interest					= acc.Interest;
+			Opened						= acc.Opened;
+			EndDate						= acc.EndDate;
+			AccClosed					= acc.Closed;
+			Topupable					= acc.Topupable;
+			WithdrawalAllowed			= acc.WithdrawalAllowed;
+			RecalcPeriod				= acc.RecalcPeriod;
+			Compounding					= acc.Compounding;
+			InterestAccumulationAccNum	= acc.InterestAccumulationAccNum;
+
+			DataContext = this;
 		}
 
-		private void InitializeAccountDetails()
+		private void InitializeAccountFieldLabelsAndVisibility()
 		{
-			AccountWindowNameTags tags = new AccountWindowNameTags(Acc.AccType);
+			AccountWindowNameTags tags = new AccountWindowNameTags(accountType);
 			Title							= tags.SystemWindowTitle;
 			MainTitle.Text					= tags.WindowHeader;
 			WithdrawCashButton.Visibility	= tags.WithdrawCashButtonVisibility;
@@ -45,13 +122,12 @@ namespace GoodBankNS.UI_one_client_account
 			DepositPart.Visibility			= tags.DepositPartVisibility;
 
 			// Без капитализации указываем счет для накопления процентов
-			if(Acc.Compounding == false)
+			if(Compounding == false)
 			{
 				InterestAccumulationAccLabel.Visibility = Visibility.Visible;
 				InterestAccumulationAccValue.Visibility = Visibility.Visible;
 			}
 
-			AccountInfo.DataContext			= Acc;
 		}
 
 		private void InitializeClientDetails()
@@ -71,7 +147,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void TopUpButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!Acc.Topupable)
+			if (!Topupable)
 			{
 				MessageBox.Show("Пополнение невозможно!");
 				return;
@@ -80,14 +156,14 @@ namespace GoodBankNS.UI_one_client_account
 			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			IAccount updatedAcc = BA.Accounts.TopUp(Acc.ID, cashWin.amount);
-			Balance.Text = $"{updatedAcc.Balance:C2}";
-			needUpdate = true;
+			IAccount updatedAcc = BA.Accounts.TopUp(accID, cashWin.amount);
+			Balance = updatedAcc.Balance;
+			accountsNeedUpdate = true;
 		}
 
 		private void WithdrawCashButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!Acc.WithdrawalAllowed)
+			if (!WithdrawalAllowed)
 			{
 				MessageBox.Show("Снятие невозможно!");
 				return;
@@ -96,46 +172,45 @@ namespace GoodBankNS.UI_one_client_account
 			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			if(Acc.Balance < cashWin.amount)
+			if(Balance < cashWin.amount)
 			{
 				MessageBox.Show("Недостаточно средств для снятия!");
 				return;
 			}
-			IAccount updatedAcc = BA.Accounts.Withdraw(Acc.ID, cashWin.amount);
-			Balance.Text = $"{updatedAcc.Balance:C2}";
-			needUpdate = true;
+			IAccount updatedAcc = BA.Accounts.Withdraw(accID, cashWin.amount);
+			Balance = updatedAcc.Balance;
+			accountsNeedUpdate = true;
 		}
 
 		private void WireButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Wire to another account");
+			var topupableAccountsList = BA.Accounts.GetAllTopupableAccounts();
 		}
 
 		private void CloseAccountButton_Click(object sender, RoutedEventArgs e)
 		{
 			IAccount closedAcc = null;
-			if (Acc.Balance < 0)
+			if (Balance < 0)
 			{
 				MessageBox.Show("Невозможно закрыть счет, на котором есть долг");
 				return;
 			}
 
-			if (Acc.Balance > 0)
+			if (Balance > 0)
 			{
-				MessageBox.Show($"Получите ваши денюшки\n в размере {Acc.Balance:N2} руб.");
-				BA.Accounts.Withdraw(Acc.ID, Acc.Balance);
+				MessageBox.Show($"Получите ваши денюшки\n в размере {Balance:N2} руб.");
+				BA.Accounts.Withdraw(accID, Balance);
 			}
 
-			closedAcc = BA.Accounts.CloseAccount(Acc.ID);
+			closedAcc = BA.Accounts.CloseAccount(accID);
 
-			Balance.Text			 = $"{closedAcc.Balance:C2}";
-			ClosedDate.Text			 = $"{(DateTime)closedAcc.Closed:dd.MM.yyyy}";
-			TopupableFlag.Text		 = "нет";
-			WithdrawAllowedFlag.Text = "нет";
+			Balance				= closedAcc.Balance;
+			AccClosed			= closedAcc.Closed;
+			Topupable			= false;
+			WithdrawalAllowed	= false;
 
-			needUpdate = true;
-
-
+			accountsNeedUpdate = true;
+			clientsNeedUpdate  = true;
 		}
 	}
 }
