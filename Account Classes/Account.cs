@@ -1,14 +1,18 @@
-﻿using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.BankInside;
+using GoodBankNS.ClientClasses;
+using GoodBankNS.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.AccountClasses
+namespace GoodBankNS.AccountClasses
 {
-	public abstract class Account : IAccountDTO
+	public abstract class Account : IAccount
 	{
+		#region Статическая часть для генерации уникального ID
+
 		/// <summary>
 		/// Текущий ID счета
 		/// </summary>
@@ -32,22 +36,39 @@ namespace GoodBank.AccountClasses
 			return staticID;
 		}
 
+		#endregion
+
+		#region Общие поля для всех счетов
+		
+		/// <summary>
+		/// Тип клиента, которому принадлежит счет.
+		/// Это избыточное поле, но благодаря ему делается всего один проход по базе 
+		/// при показе счетов одного типа клиентов
+		/// </summary>
+		public ClientType		ClientType			{ get; set; }
+
+		/// <summary>
+		/// ID владельца счета. 
+		/// </summary>
+		public uint				ClientID			{ get; set; }
+
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
+		/// Дублирование, т.к. тип счета определяется его классом
 		/// </summary>
-		public AccountType		AccountType		{ get; set; }
+		public abstract AccountType		AccType		{ get; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
 		/// </summary>
-		public uint				ID				{ get; }
+		public uint				ID					{ get; }
 
 		/// <summary>
 		/// Уникальный номер счёта. 
 		/// Числовая часть совпадает с ID. 
 		/// Есть префикс, указывающий тип счета
 		/// </summary>
-		public string			AccountNumber	{ get; set; }
+		public string			AccountNumber		{ get; set; }
 
 		/// <summary>
 		/// Баланс счёта. Для разных типов разный
@@ -55,26 +76,167 @@ namespace GoodBank.AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract int		Balance			{ get; set; }
+		public abstract double	Balance				{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
 		/// </summary>
-		public int				Interest		{ get; set; }
+		public double			Interest			{ get; set; }
 
 		/// <summary>
-		/// Открытый или закрытый счет
+		/// С капитализацией или без
 		/// </summary>
-		public AccountStatus	AccountStatus	{ get; set; }
+		public bool				Compounding			{ get; set; }
 
 		/// <summary>
 		/// Дата открытия счета
 		/// </summary>
-		public DateTime			Opened			{ get; set; }
+		public DateTime			Opened				{ get; set; }
+
+		/// <summary>
+		/// Количество месяцев, на который открыт вклад, выдан кредит.
+		/// 0 - бессрочно
+		/// </summary>
+		public int				Duration			{ get; set; }
+
+		/// <summary>
+		/// Количество месяцев, прошедших с открытия вклада
+		/// </summary>
+		public int				MonthsElapsed		{ get; set; }
+
+		/// <summary>
+		/// Дата окончания вклада/кредита. 
+		/// null - бессрочно
+		/// </summary>
+		public DateTime? EndDate			{ get; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
+		/// Если счет открыт, то равен null
 		/// </summary>
-		public DateTime			Closed			{ get; set; }
+		public DateTime?		Closed				{ get; set; }
+
+		/// <summary>
+		/// Пополняемый счет или нет
+		/// У закрытого счета - false
+		/// </summary>
+		public bool				Topupable			{ get; set; }
+
+		/// <summary>
+		/// С правом частичного снятия или нет
+		/// У закрытого счета - false
+		/// </summary>
+		public bool			WithdrawalAllowed		{ get; set; }
+
+		/// <summary>
+		/// Период пересчета процентов - ежемесячно, ежегодно, один раз в конце
+		/// </summary>
+		public RecalcPeriod		RecalcPeriod		{ get; set; }
+
+		#endregion
+
+		#region Конструктор
+
+		/// <summary>
+		/// Создание счета
+		/// </summary>
+		/// <param name="clientID"></param>
+		/// <param name="clientType"></param>
+		/// <param name="compounding"></param>
+		/// <param name="compAccID"></param>
+		/// <param name="interest"></param>
+		public Account( uint clientID, ClientType clientType, bool compounding, double interest,
+						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
+		{
+			ClientID			= clientID;
+			ClientType			= clientType;
+			ID					= NextID();
+			AccountNumber		= $"{ID:000000000000}";
+			Compounding			= compounding;
+			Balance				= 0;
+			Interest			= interest;
+			Opened				= GoodBank.Today;
+			Topupable			= topup;
+			WithdrawalAllowed	= withdrawal;
+			RecalcPeriod		= recalc;
+			Duration			= duration;
+			MonthsElapsed		= 0;
+			EndDate				= Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
+		}
+
+		/// <summary>
+		/// Конструктор для генератора случайных счетов. Добавляется дата
+		/// </summary>
+		/// <param name="clientID"></param>
+		/// <param name="clientType"></param>
+		/// <param name="compounding"></param>
+		/// <param name="compAccID"></param>
+		/// <param name="interest"></param>
+		public Account(uint clientID, ClientType clientType, bool compounding, double interest,
+						DateTime opened,
+						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
+		{
+			ClientID			= clientID;
+			ClientType			= clientType;
+			ID					= NextID();
+			AccountNumber		= $"{ID:000000000000}";
+			Compounding			= compounding;
+			Balance				= 0;
+			Interest			= interest;
+			Opened				= opened;
+			Topupable			= topup;
+			WithdrawalAllowed	= withdrawal;
+			RecalcPeriod		= recalc;
+			Duration			= duration;
+			EndDate = Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
+		}
+
+		#endregion
+
+		#region Общие методы для всех типов счетов
+
+		public void TopUp(double amount)
+		{
+			Balance += amount;
+		}
+
+		public void Withdraw(double amount)
+		{
+			Balance -= amount;
+		}
+
+		#endregion
+
+		#region Абстрактные и виртуальные методы
+
+		/// <summary>
+		/// Делает пересчет процентов на указанную дату
+		/// Вызывается извне при изменении даты
+		/// </summary>
+		/// <returns>
+		/// Сумму начисленных процентов, если её надо перевести на другой счет
+		/// </returns>
+		public abstract double RecalculateInterest();
+
+		/// <summary>
+		/// Закрывает счет: обнуляет баланс и накопленный процент
+		/// ставит запрет на пополнение и снятие.
+		/// Устанавливает дату закрытия счета
+		/// </summary>
+		/// <returns>
+		/// Накопленную сумму
+		/// </returns>
+		public virtual double CloseAccount()
+		{
+			double tmp			= Balance;
+			Balance				= 0;
+			Topupable			= false;
+			WithdrawalAllowed	= false;
+			Closed				= GoodBank.Today;
+			
+			return tmp;
+		}
+
+		#endregion
 	}
 }

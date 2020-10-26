@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.AccountClasses
+namespace GoodBankNS.AccountClasses
 {
 	public enum AccountType
 	{
 		Current,
 		Deposit,
-		Credit
+		Credit,
+		Total
 	}
 
 	public enum AccountStatus
@@ -25,5 +26,13 @@ namespace GoodBank.AccountClasses
 		CashWithdrawal,
 		DepositFromAccount,
 		TransferToAccount
+	}
+
+	public enum RecalcPeriod
+	{
+		Monthly,
+		Annually,
+		AtTheEnd,
+		NoRecalc
 	}
 }

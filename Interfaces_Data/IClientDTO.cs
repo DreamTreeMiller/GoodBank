@@ -1,24 +1,29 @@
-﻿using System;
+﻿using GoodBankNS.ClientClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Data
+namespace GoodBankNS.Interfaces_Data
 {
 	public interface IClientDTO
 	{
-		uint	 ID						 { get; }
-		string	 DisplayName			 { get; set; }
-		string	 IdNumber				 { get; set; }
-		DateTime CreationDate			 { get; set; }
-		string	 Telephone				 { get; set; }
-		string	 Email					 { get; set; }
-		string	 Address				 { get; set; }
-		int		 NumberOfCurrentAccounts { get; set; }
-		int		 NumberOfDeposits		 { get; set; }
-		int		 NumberOfCredits		 { get; set; }
-		int		 NumberOfClosedAccounts	 { get; set; }
-
+		uint ID { get; }
+		ClientType ClientType { get; set; }
+		string FirstName { get; set; }
+		string MiddleName { get; set; }
+		string LastName { get; set; }
+		string MainName { get; set; }
+		string DirectorName { get; }
+		string PassportOrTIN { get; set; }
+		DateTime? CreationDate { get; set; }
+		string Telephone { get; set; }
+		string Email { get; set; }
+		string Address { get; set; }
+		int NumberOfCurrentAccounts { get; }
+		int NumberOfDeposits { get; }
+		int NumberOfCredits { get; }
+		int NumberOfClosedAccounts { get; }
 	}
 }

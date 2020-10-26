@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0D60B512-579D-4723-8F6F-15345B57FD27}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>GoodBank</RootNamespace>
+    <RootNamespace>GoodBankNS</RootNamespace>
     <AssemblyName>GoodBank</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -14,6 +14,21 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -58,47 +73,84 @@
     <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
     <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
     <Compile Include="BankInside\GoodBank-TransactionsLog.cs" />
-    <Compile Include="Interfaces_Data\IAccountDTO.cs" />
+    <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="Account Classes\Account.cs" />
     <Compile Include="Account Classes\AccountEnums.cs" />
-    <Compile Include="Account Classes\CreditAccount.cs" />
-    <Compile Include="Account Classes\CurrentAccount.cs" />
-    <Compile Include="Account Classes\DepositAccount.cs" />
+    <Compile Include="Account Classes\AccountCredit.cs" />
+    <Compile Include="Account Classes\AccountCurrent.cs" />
+    <Compile Include="Account Classes\AccountDeposit.cs" />
+    <Compile Include="Imitation\Generate.cs" />
+    <Compile Include="Imitation\GenerateWindow.xaml.cs">
+      <DependentUpon>GenerateWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Imitation\Names-FemaleFirst.cs" />
+    <Compile Include="Imitation\Names-FemaleLast.cs" />
+    <Compile Include="Imitation\Names-FemaleMiddle.cs" />
+    <Compile Include="Imitation\Names-MaleFirst.cs" />
+    <Compile Include="Imitation\Names-MaleLast.cs" />
+    <Compile Include="Imitation\Names-MaleMiddle.cs" />
     <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
     <Compile Include="Interfaces_Actions\ITransactions.cs" />
     <Compile Include="BankInside\GoodBank.cs" />
-    <Compile Include="Binding_UI_CondeBehind\ActionsUI.cs" />
+    <Compile Include="Binding_UI_CondeBehind\BankActions.cs" />
     <Compile Include="Client Classes\ClientEnums.cs" />
-    <Compile Include="Interfaces_Data\IClientDTO.cs" />
-    <Compile Include="Client Classes\ORGclient.cs" />
-    <Compile Include="Client Classes\SIMclient.cs" />
-    <Compile Include="Client Classes\VIPclient.cs" />
+    <Compile Include="DTO\ClientDTO.cs" />
+    <Compile Include="Client Classes\СlientORG.cs" />
+    <Compile Include="Client Classes\СlientSIM.cs" />
+    <Compile Include="Client Classes\ClientVIP.cs" />
     <Compile Include="Interfaces_Actions\IClientsActions.cs" />
     <Compile Include="Client Classes\Client.cs" />
+    <Compile Include="Interfaces_Data\IAccount.cs" />
+    <Compile Include="Interfaces_Data\IAccountDeposit.cs" />
+    <Compile Include="Interfaces_Data\IAccountDTO.cs" />
+    <Compile Include="Interfaces_Data\IClient.cs" />
+    <Compile Include="Interfaces_Data\IClientDTO.cs" />
     <Compile Include="Interfaces_Data\IGoodBank.cs" />
-    <Compile Include="Interfaces_Data\IOrgClient.cs" />
-    <Compile Include="Interfaces_Data\ISimpleClient.cs" />
-    <Compile Include="Interfaces_Data\ITransactionDTO.cs" />
-    <Compile Include="Interfaces_Data\IVIPClient.cs" />
+    <Compile Include="Interfaces_Data\IClientOrg.cs" />
+    <Compile Include="Interfaces_Data\IClientSimple.cs" />
+    <Compile Include="Interfaces_Data\TransactionDTO.cs" />
+    <Compile Include="Interfaces_Data\IClientVIP.cs" />
     <Compile Include="Transaction Class\Transaction.cs" />
-    <Compile Include="UI_clients\ALLclientsWindow.xaml.cs">
-      <DependentUpon>ALLclientsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI_clients\ORGclientsWindow.xaml.cs">
-      <DependentUpon>ORGclientsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI_clients\SIMclientsWindow.xaml.cs">
-      <DependentUpon>SIMclientsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI_clients\VIPclientsWindow.xaml.cs">
-      <DependentUpon>VIPclientsWindow.xaml</DependentUpon>
+    <Compile Include="UI_clients\DepartmentWindow.cs">
+      <DependentUpon>DepartmentWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_one_client_account\AccountWindow.xaml.cs">
       <DependentUpon>AccountWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_one_client_account\AddEditClientWindow.cs">
+      <DependentUpon>AddEditClientWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_one_client_account\EnterAmountAndAccountWindow.cs">
+      <DependentUpon>EnterAmountAndAccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\EnterCashAmountWindow.cs">
+      <DependentUpon>EnterCashAmountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\OpenCreditWindow.xaml.cs">
+      <DependentUpon>OpenCreditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\OpenCurrentAccountWindow.cs">
+      <DependentUpon>OpenCurrentAccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\OpenDepositWindow.xaml.cs">
+      <DependentUpon>OpenDepositWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI_one_client_account\UnlimitedDateConverter.cs" />
+    <Compile Include="UserControlsLists\AccountsList.xaml.cs">
+      <DependentUpon>AccountsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlsLists\HideRowConverter.cs" />
+    <Compile Include="UserControlsLists\NameTags.cs" />
+    <Compile Include="UserControlsLists\ClientsList.xaml.cs">
+      <DependentUpon>ClientsList.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Imitation\GenerateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,19 +163,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI_clients\ALLclientsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI_clients\ORGclientsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI_clients\SIMclientsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI_clients\VIPclientsWindow.xaml">
+    <Page Include="UI_clients\DepartmentWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -131,7 +171,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI_one_client_account\AddEditClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI_one_client_account\ClientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\EnterAmountAndAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\EnterCashAmountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenCreditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenCurrentAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_one_client_account\OpenDepositWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlsLists\AccountsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlsLists\ClientsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,8 +236,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Imitation\" />
     <Folder Include="Search\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

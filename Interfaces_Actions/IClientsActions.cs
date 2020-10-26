@@ -1,4 +1,5 @@
-﻿using GoodBank.Interfaces_Data;
+﻿using GoodBankNS.DTO;
+using GoodBankNS.Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,10 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBank.Interfaces_Actions
+namespace GoodBankNS.Interfaces_Actions
 {
 	public interface IClientsActions
 	{
-		ObservableCollection<IClientDTO> GetClientsList<TClient>();
+		IClient GetClientByID(uint id);
+		ObservableCollection<ClientDTO> GetClientsList<TClient>();
+		IClientDTO AddClient(IClientDTO client);
+		void UpdateClient(IClientDTO updatedClient);
 	}
 }

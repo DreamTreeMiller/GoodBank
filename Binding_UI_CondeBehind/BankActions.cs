@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GoodBank.Interfaces_Actions;
-using GoodBank.Interfaces_Data;
+using GoodBankNS.Interfaces_Actions;
+using GoodBankNS.Interfaces_Data;
 
-namespace GoodBank.Binding_UI_CondeBehind
+namespace GoodBankNS.Binding_UI_CondeBehind
 {
-	class ActionsUI
+	public class BankActions
 	{
 		public IClientsActions	Clients;
 		public IAccountsActions	Accounts;
 		public ITransactions	Log;
 
-		public ActionsUI(IGoodBank bank)
+		public BankActions(IGoodBank bank)
 		{
 			Clients  = bank as IClientsActions;
 			Accounts = bank as IAccountsActions;
