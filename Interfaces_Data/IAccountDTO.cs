@@ -46,26 +46,31 @@ namespace GoodBankNS.Interfaces_Data
 		int			Duration			{ get; set; }
 
 		/// <summary>
+		/// Количество месяцев, прошедших с открытия вклада
+		/// </summary>
+		int			MonthsElapsed		{ get; set; }
+
+		/// <summary>
 		/// Дата окончания вклада/кредита. 
 		/// null - бессрочно
 		/// </summary>
-		DateTime?	EndDate			{ get; }
+		DateTime?	EndDate				{ get; }
 
-		DateTime?	Closed			{ get; set; }
+		DateTime?	Closed				{ get; set; }
 
 		/// <summary>
 		/// Пополняемый счет или нет
 		/// </summary>
-		bool		Topupable		{ get; set; }
+		bool		Topupable			{ get; set; }
 
 		/// <summary>
 		/// С правом частичного снятия или нет
 		/// </summary>
-		bool	WithdrawalAllowed	{ get; set; }
+		bool		WithdrawalAllowed	{ get; set; }
 
 		/// <summary>
 		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
 		/// </summary>
-		RecalcPeriod RecalcPeriod	{ get; set; }
+		RecalcPeriod RecalcPeriod		{ get; set; }
 	}
 }

@@ -13,6 +13,8 @@ namespace GoodBankNS.Interfaces_Actions
 {
 	public interface IAccountsActions
 	{
+		IAccount GetAccountByID(uint id);
+
 		/// <summary>
 		/// Находит список всех счетов, принадлежащих клиентам данного типа
 		/// </summary>
@@ -37,9 +39,17 @@ namespace GoodBankNS.Interfaces_Actions
 
 		IAccount TopUp(uint accID, double amount);
 
+		IAccount TopUpWithAccumulatedInterest(uint accID);
+
 		IAccount Withdraw(uint accID, double amount);
 
-		IAccount CloseAccount(uint accID);
+		IAccount CloseAccount(uint accID, out double accumulatedAmount);
 
+		void Wire(uint sourceAccID, uint destAccID, double amount);
+
+		/// <summary>
+		/// Увеличивает внутреннюю дату на 1 месяц и пересчитывает проценты у всех счетов
+		/// </summary>
+		void AddOneMonth();
 	}
 }

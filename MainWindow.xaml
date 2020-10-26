@@ -187,6 +187,16 @@
 				</Button.ToolTip>
 			</Button>
 		</Grid>
+		<TextBlock x:Name="BankTodayDate"
+				   Grid.Row="1"
+				   FontSize="14"
+				   FontWeight="Bold" 
+				   Foreground="DarkSlateGray"
+				   HorizontalAlignment="Right"
+				   VerticalAlignment="Top"
+				   Margin="0,30,30,0"
+				   TextAlignment="Right"
+				   />
 		<Grid x:Name="TitleBackground"
 			  Grid.Row="2"
 			  >

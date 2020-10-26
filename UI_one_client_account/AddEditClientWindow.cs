@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
+using GoodBankNS.BankInside;
 
 namespace GoodBankNS.UI_one_client_account
 {
@@ -55,12 +56,11 @@ namespace GoodBankNS.UI_one_client_account
 			switch(nameTags.WID)
 			{
 				case WindowID.AddClientALL:
-					Height = MinHeight = MaxHeight	= 470;
+					Height = MinHeight = MaxHeight	= 450;
 					SelectClientTypeLine.Visibility = Visibility.Visible;
 					SelectTypeEntryBox.ItemsSource = clientTypesDDlist;
-					//SelectTypeEntryBox.SelectedIndex = 1;
 					break;
-				//case WindowID.AddClientVIP:
+				case WindowID.AddClientVIP:
 				case WindowID.AddClientSIM:
 				case WindowID.EditClientVIP:
 				case WindowID.EditClientSIM:
@@ -222,7 +222,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private bool IsValidRegistrationDate(DateTime date)
 		{
-				if (date > DateTime.Now)
+				if (date > GoodBank.Today)
 				{
 					MessageBox.Show("Дата не может превосходить сегодняшний день");
 					return false;
@@ -233,12 +233,12 @@ namespace GoodBankNS.UI_one_client_account
 		private bool IsValidBirthDate(DateTime date)
 		{
 
-			if ((DateTime.Now - date).TotalDays / 365.25 < 18)
+			if ((GoodBank.Today - date).TotalDays / 365.25 < 18)
 			{
 				MessageBox.Show("Только лица, достигшие 18 лет, могут быть клиентами банка.");
 				return false;
 			}
-			if ((DateTime.Now - date).TotalDays / 365.25 > 118)
+			if ((GoodBank.Today - date).TotalDays / 365.25 > 118)
 			{
 				MessageBox.Show("Сейчас на земле нет людей, которым больше 118 лет.");
 				return false;
@@ -372,16 +372,19 @@ namespace GoodBankNS.UI_one_client_account
 					tmpClient.ClientType			= ClientType.VIP;
 					PersonsNameGrid.Visibility		= Visibility.Visible;
 					OrganizationNameGrid.Visibility = Visibility.Collapsed;
+					Height = MinHeight = MaxHeight = 450;
 					break;
 				case ClientType.Simple:
 					tmpClient.ClientType			= ClientType.Simple;
 					PersonsNameGrid.Visibility      = Visibility.Visible;
 					OrganizationNameGrid.Visibility = Visibility.Collapsed;
+					Height = MinHeight = MaxHeight = 450;
 					break;
 				case ClientType.Organization:
 					tmpClient.ClientType			= ClientType.Organization;
 					PersonsNameGrid.Visibility		= Visibility.Collapsed;
 					OrganizationNameGrid.Visibility = Visibility.Visible;
+					Height = MinHeight = MaxHeight = 510;
 					break;
 			}
 		}

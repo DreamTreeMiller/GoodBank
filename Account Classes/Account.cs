@@ -1,4 +1,5 @@
-﻿using GoodBankNS.ClientClasses;
+﻿using GoodBankNS.BankInside;
+using GoodBankNS.ClientClasses;
 using GoodBankNS.Interfaces_Data;
 using System;
 using System.Collections.Generic;
@@ -99,10 +100,15 @@ namespace GoodBankNS.AccountClasses
 		public int				Duration			{ get; set; }
 
 		/// <summary>
+		/// Количество месяцев, прошедших с открытия вклада
+		/// </summary>
+		public int				MonthsElapsed		{ get; set; }
+
+		/// <summary>
 		/// Дата окончания вклада/кредита. 
 		/// null - бессрочно
 		/// </summary>
-		public abstract DateTime? EndDate			{ get; }
+		public DateTime? EndDate			{ get; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -149,11 +155,13 @@ namespace GoodBankNS.AccountClasses
 			Compounding			= compounding;
 			Balance				= 0;
 			Interest			= interest;
-			Opened				= DateTime.Now;
+			Opened				= GoodBank.Today;
 			Topupable			= topup;
 			WithdrawalAllowed	= withdrawal;
 			RecalcPeriod		= recalc;
 			Duration			= duration;
+			MonthsElapsed		= 0;
+			EndDate				= Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
 		}
 
 		/// <summary>
@@ -180,18 +188,55 @@ namespace GoodBankNS.AccountClasses
 			WithdrawalAllowed	= withdrawal;
 			RecalcPeriod		= recalc;
 			Duration			= duration;
+			EndDate = Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
 		}
 
 		#endregion
 
+		#region Общие методы для всех типов счетов
+
 		public void TopUp(double amount)
 		{
-			if (Topupable) Balance += amount;
+			Balance += amount;
 		}
 
 		public void Withdraw(double amount)
 		{
-			if (WithdrawalAllowed) Balance -= amount;
+			Balance -= amount;
 		}
+
+		#endregion
+
+		#region Абстрактные и виртуальные методы
+
+		/// <summary>
+		/// Делает пересчет процентов на указанную дату
+		/// Вызывается извне при изменении даты
+		/// </summary>
+		/// <returns>
+		/// Сумму начисленных процентов, если её надо перевести на другой счет
+		/// </returns>
+		public abstract double RecalculateInterest();
+
+		/// <summary>
+		/// Закрывает счет: обнуляет баланс и накопленный процент
+		/// ставит запрет на пополнение и снятие.
+		/// Устанавливает дату закрытия счета
+		/// </summary>
+		/// <returns>
+		/// Накопленную сумму
+		/// </returns>
+		public virtual double CloseAccount()
+		{
+			double tmp			= Balance;
+			Balance				= 0;
+			Topupable			= false;
+			WithdrawalAllowed	= false;
+			Closed				= GoodBank.Today;
+			
+			return tmp;
+		}
+
+		#endregion
 	}
 }

@@ -123,8 +123,8 @@
     <Compile Include="UI_one_client_account\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI_one_client_account\EnterAccountNumberWindow.xaml.cs">
-      <DependentUpon>EnterAccountNumberWindow.xaml</DependentUpon>
+    <Compile Include="UI_one_client_account\EnterAmountAndAccountWindow.cs">
+      <DependentUpon>EnterAmountAndAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_one_client_account\EnterCashAmountWindow.cs">
       <DependentUpon>EnterCashAmountWindow.xaml</DependentUpon>
@@ -179,7 +179,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI_one_client_account\EnterAccountNumberWindow.xaml">
+    <Page Include="UI_one_client_account\EnterAmountAndAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

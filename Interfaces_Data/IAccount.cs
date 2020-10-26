@@ -64,7 +64,16 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		DateTime		Opened			{ get; set; }
 
+		/// <summary>
+		/// Количество месяцев, на который открыт вклад, выдан кредит.
+		/// 0 - бессрочно
+		/// </summary>
 		int				Duration		{ get; set; }
+
+		/// <summary>
+		/// Количество месяцев, прошедших с открытия вклада
+		/// </summary>
+		int				MonthsElapsed	{ get; set; }
 
 		DateTime?		EndDate			{ get; }
 
@@ -91,5 +100,7 @@ namespace GoodBankNS.Interfaces_Data
 		void TopUp(double amount);
 
 		void Withdraw(double amount);
+
+		double CloseAccount();
 	}
 }

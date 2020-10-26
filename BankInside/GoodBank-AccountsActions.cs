@@ -99,6 +99,8 @@ namespace GoodBankNS.BankInside
 							break;
 						case AccountType.Deposit:
 							totalDeposit += acc.Balance;
+							if (!acc.Compounding && (acc as IAccountDeposit).InterestAccumulationAccID == 0)
+								totalDeposit += (acc as IAccountDeposit).AccumulatedInterest;
 							break;
 						case AccountType.Credit:
 							totalCredit += acc.Balance;
@@ -195,23 +197,39 @@ namespace GoodBankNS.BankInside
 		public IAccount TopUp(uint accID, double amount)
 		{
 			var acc = GetAccountByID(accID);
-			acc.TopUp(amount);
+			if (acc.Topupable) acc.TopUp(amount);
+			return acc;
+		}
+
+		public IAccount TopUpWithAccumulatedInterest(uint accID)
+		{
+			var acc = GetAccountByID(accID);
+			if (acc is IAccountDeposit)
+			{
+				acc.TopUp((acc as IAccountDeposit).AccumulatedInterest);
+				(acc as IAccountDeposit).AccumulatedInterest = 0;
+			}
+
 			return acc;
 		}
 
 		public IAccount Withdraw(uint accID, double amount)
 		{
 			var acc = GetAccountByID(accID);
-			acc.Withdraw(amount);
+			if(acc.WithdrawalAllowed) acc.Withdraw(amount);
 			return acc;
 		}
 
-		public IAccount CloseAccount(uint accID)
+		/// <summary>
+		/// Закрыть можно только нулевой счет
+		/// Проверку на наличие денег на счете осуществляет вызывающий метод
+		/// </summary>
+		/// <param name="accID"></param>
+		/// <returns></returns>
+		public IAccount CloseAccount(uint accID, out double accumulatedAmount)
 		{
-			IAccount acc		  = GetAccountByID(accID);
-			acc.Closed			  = GoodBank.Today;
-			acc.Topupable		  = false;
-			acc.WithdrawalAllowed = false;
+			IAccount acc		= GetAccountByID(accID);
+			accumulatedAmount	= acc.CloseAccount();
 
 			IClient client = GetClientByID(acc.ClientID);
 			client.NumberOfClosedAccounts++;
@@ -230,5 +248,28 @@ namespace GoodBankNS.BankInside
 			}
 			return acc;
 		}
-}
+	
+		public void Wire(uint sourceAccID, uint destAccID, double amount)
+		{
+			Withdraw(sourceAccID, amount);
+			TopUp(destAccID, amount);
+		}
+
+		public void AddOneMonth()
+		{
+			GoodBank.Today = GoodBank.Today.AddMonths(1);
+
+			for (int i = 0; i< accounts.Count; i++)
+			{
+				Account acc = accounts[i];
+				double currInterest = acc.RecalculateInterest();
+				if (acc is AccountDeposit)
+				{
+					uint destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
+					if (destAccID != 0)
+						TopUp(destAccID, currInterest);
+				}
+			}
+		}
+	}
 }

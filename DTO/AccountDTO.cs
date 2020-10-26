@@ -69,7 +69,12 @@ namespace GoodBankNS.DTO
 		/// Количество месяцев, на который открыт вклад, выдан кредит.
 		/// 0 - бессрочно
 		/// </summary>
-		public int Duration { get; set; }
+		public int			Duration		{ get; set; }
+
+		/// <summary>
+		/// Количество месяцев, прошедших с открытия вклада
+		/// </summary>
+		public int			MonthsElapsed	{ get; set; }
 
 		/// <summary>
 		/// Дата окончания вклада/кредита. 
@@ -111,7 +116,7 @@ namespace GoodBankNS.DTO
 		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
 						  double balance, double interest, 
 						  bool compounding, uint interestAccumAccID, string interestAccumAccNum, DateTime opened, 
-						  bool topup, bool withdraw, RecalcPeriod recalc, int duration)
+						  bool topup, bool withdraw, RecalcPeriod recalc, int duration, int monthsElapsed)
 
 		{
 			ClientType			= ct;
@@ -127,6 +132,7 @@ namespace GoodBankNS.DTO
 			WithdrawalAllowed	= withdraw;
 			RecalcPeriod		= recalc;
 			Duration			= duration;
+			MonthsElapsed		= monthsElapsed;
 		}
 
 	/// <summary>
@@ -154,6 +160,7 @@ namespace GoodBankNS.DTO
 			{
 				InterestAccumulationAccID  = (acc as IAccountDeposit).InterestAccumulationAccID;
 				InterestAccumulationAccNum = (acc as IAccountDeposit).InterestAccumulationAccNum;
+				AccumulatedInterest		   = (acc as IAccountDeposit).AccumulatedInterest;
 			}
 
 			if (c is IClientVIP)

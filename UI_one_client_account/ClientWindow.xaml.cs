@@ -43,6 +43,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void InitializeAccountsView(BankActions ba, IClientDTO client)
 		{
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			BA = ba;
 			OrganizationInfo.Visibility = Visibility.Collapsed;
 			PersonalInfo.Visibility		= Visibility.Visible;
@@ -131,11 +132,13 @@ namespace GoodBankNS.UI_one_client_account
 			var result = ocawin.ShowDialog();
 			if (result != true) return;
 			IAccountDTO newAcc = new AccountDTO(client.ClientType, client.ID, AccountType.Current,
-				ocawin.startAmount, 0, false, 0, "не используется", ocawin.Opened, true, true, RecalcPeriod.NoRecalc, 0);
+				ocawin.startAmount, 0, false, 0, "не используется", ocawin.Opened, true, true, RecalcPeriod.NoRecalc, 0, 0);
+
 			// Добавляем счет в базу в бэкенд
 			BA.Accounts.AddAccount(newAcc);
 			accountsNeedUpdate = true;
 			ShowAccounts();
+			clientsNeedUpdate = true;
 		}
 
 		private void OpenDepositButton_Click(object sender, RoutedEventArgs e)
@@ -153,7 +156,7 @@ namespace GoodBankNS.UI_one_client_account
 			internalAccount.AccountNumber	= "внутренний счет";
 			accumulationAccounts.Add(internalAccount);
 
-			OpenDepositWindow odwin = new OpenDepositWindow(accumulationAccounts);
+			OpenDepositWindow odwin = new OpenDepositWindow(accumulationAccounts, client.ClientType);
 			var result = odwin.ShowDialog();
 			if (result != true) return;
 
@@ -178,7 +181,8 @@ namespace GoodBankNS.UI_one_client_account
 								(bool)odwin.TopUpCheckBox.IsChecked, 
 								(bool)odwin.WithdrawalAllowedCheckBox.IsChecked, 
 								(RecalcPeriod)odwin.Recalculation.SelectedIndex, 
-								odwin.duration);
+								odwin.duration,
+								0);
 			
 			// Добавляем счет в базу в бэкенд
 			BA.Accounts.AddAccount(newAcc);
@@ -188,6 +192,7 @@ namespace GoodBankNS.UI_one_client_account
 
 			// Обновляем счета в текущем окне клиента
 			ShowAccounts();
+			clientsNeedUpdate = true;
 		}
 
 		private void OpenCreditButton_Click(object sender, RoutedEventArgs e)
@@ -203,7 +208,7 @@ namespace GoodBankNS.UI_one_client_account
 			cash.AccountNumber = "получить наличными";
 			creditRecipientAccounts.Add(cash);
 
-			OpenCreditWindow ocrwin = new OpenCreditWindow(creditRecipientAccounts);
+			OpenCreditWindow ocrwin = new OpenCreditWindow(creditRecipientAccounts, client.ClientType);
 			var result = ocrwin.ShowDialog();
 			if (result != true) return;
 
@@ -226,7 +231,8 @@ namespace GoodBankNS.UI_one_client_account
 								true,					// Пополняемый счет
 								false,					// Понятие досрочного снятия неприменимо к кредиту
 								RecalcPeriod.Monthly,	// Начисление процентов ежемесячно
-								ocrwin.duration);
+								ocrwin.duration,
+								0);
 
 			// Добавляем счет в базу в бэкенд
 			newAcc = BA.Accounts.AddAccount(newAcc);

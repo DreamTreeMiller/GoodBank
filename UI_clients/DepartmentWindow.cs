@@ -39,6 +39,8 @@ namespace GoodBankNS.UI_clients
 
 		private void InitializeView(WindowID wid, BankActions ba)
 		{
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy}";
+
 			// Прикручиваем банк с обработчиками всех действий над счетами
 			BA = ba;
 			this.wid = wid;

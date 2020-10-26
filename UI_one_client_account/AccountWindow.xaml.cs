@@ -18,7 +18,7 @@ namespace GoodBankNS.UI_one_client_account
 	{
 		#region Account Fields in Window
 
-		private uint		accID;
+		private uint		AccID;
 		private AccountType	accountType;
 		private string		accountNumber;
 		public	string		AccountNumber
@@ -67,6 +67,13 @@ namespace GoodBankNS.UI_one_client_account
 
 		public string InterestAccumulationAccNum { get; set; }
 
+		private double accumulatedInterest;
+		public  double AccumulatedInterest
+		{ 
+			get => accumulatedInterest; 
+			set {  accumulatedInterest = value; NotifyPropertyChanged(); }
+		}
+
 		#endregion
 
 		BankActions BA;
@@ -92,10 +99,11 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void InitializeClassScopeVars(BankActions ba, IAccountDTO acc)
 		{
-			BA		= ba;
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BA = ba;
 			client	= new ClientDTO(BA.Clients.GetClientByID(acc.ClientID));
 
-			accID						= acc.ID;
+			AccID						= acc.ID;
 			accountType					= acc.AccType;
 			AccountNumber				= acc.AccountNumber;
 			Balance						= acc.Balance;
@@ -108,6 +116,7 @@ namespace GoodBankNS.UI_one_client_account
 			RecalcPeriod				= acc.RecalcPeriod;
 			Compounding					= acc.Compounding;
 			InterestAccumulationAccNum	= acc.InterestAccumulationAccNum;
+			AccumulatedInterest			= acc.AccumulatedInterest;
 
 			DataContext = this;
 		}
@@ -124,8 +133,7 @@ namespace GoodBankNS.UI_one_client_account
 			// Без капитализации указываем счет для накопления процентов
 			if(Compounding == false)
 			{
-				InterestAccumulationAccLabel.Visibility = Visibility.Visible;
-				InterestAccumulationAccValue.Visibility = Visibility.Visible;
+				InterestAccumulationLine.Visibility = Visibility.Visible;
 			}
 
 		}
@@ -147,6 +155,12 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void TopUpButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (AccClosed != null)
+			{
+				MessageBox.Show($"Счет {AccountNumber} закрыт.");
+				return;
+			}
+
 			if (!Topupable)
 			{
 				MessageBox.Show("Пополнение невозможно!");
@@ -156,13 +170,19 @@ namespace GoodBankNS.UI_one_client_account
 			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			IAccount updatedAcc = BA.Accounts.TopUp(accID, cashWin.amount);
+			IAccount updatedAcc = BA.Accounts.TopUp(AccID, cashWin.amount);
 			Balance = updatedAcc.Balance;
 			accountsNeedUpdate = true;
 		}
 
 		private void WithdrawCashButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (AccClosed != null)
+			{
+				MessageBox.Show($"Счет {AccountNumber} закрыт.");
+				return;
+			}
+
 			if (!WithdrawalAllowed)
 			{
 				MessageBox.Show("Снятие невозможно!");
@@ -177,37 +197,78 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Недостаточно средств для снятия!");
 				return;
 			}
-			IAccount updatedAcc = BA.Accounts.Withdraw(accID, cashWin.amount);
+			IAccount updatedAcc = BA.Accounts.Withdraw(AccID, cashWin.amount);
 			Balance = updatedAcc.Balance;
 			accountsNeedUpdate = true;
 		}
 
 		private void WireButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (AccClosed != null)
+			{
+				MessageBox.Show($"Счет {AccountNumber} закрыт.");
+				return;
+			}
+
+			if (!WithdrawalAllowed)
+			{
+				MessageBox.Show("C данного счета нельзя снимать средства");
+				return;
+			}
+
 			var topupableAccountsList = BA.Accounts.GetAllTopupableAccounts();
+			EnterAmountAndAccountWindow eaawin = new EnterAmountAndAccountWindow(topupableAccountsList);
+			var result = eaawin.ShowDialog();
+			if (result != true) return;
+
+			double wireAmount = eaawin.amount;
+			if (wireAmount > Balance)
+			{
+				MessageBox.Show("Недостаточно средств для перевода");
+				return;
+			}
+			uint destAccID = eaawin.destinationAccount.ID;
+			BA.Accounts.Wire(AccID, destAccID, wireAmount);
+
+			Balance -= wireAmount;
+			MessageBox.Show($"Сумма {wireAmount:N2} руб. успешно переведена");
+			accountsNeedUpdate = true;
 		}
 
 		private void CloseAccountButton_Click(object sender, RoutedEventArgs e)
 		{
-			IAccount closedAcc = null;
+			if (AccClosed != null)
+			{
+				MessageBox.Show($"Счет {AccountNumber} уже закрыт.");
+				return;
+			}
+
 			if (Balance < 0)
 			{
 				MessageBox.Show("Невозможно закрыть счет, на котором есть долг");
 				return;
 			}
 
-			if (Balance > 0)
+			double accumulatedAmount;
+			IAccount closedAcc = BA.Accounts.CloseAccount(AccID, out accumulatedAmount);
+
+			if (accumulatedAmount > 0)
 			{
-				MessageBox.Show($"Получите ваши денюшки\n в размере {Balance:N2} руб.");
-				BA.Accounts.Withdraw(accID, Balance);
+				MessageBox.Show($"Получите ваши денюшки\n в размере {accumulatedAmount:N2} руб.");
 			}
 
-			closedAcc = BA.Accounts.CloseAccount(accID);
-
+			// Обновляем суммы, даты, флажки в окошке
 			Balance				= closedAcc.Balance;
+			if (closedAcc is IAccountDeposit)
+				AccumulatedInterest = (closedAcc as IAccountDeposit).AccumulatedInterest;
+
 			AccClosed			= closedAcc.Closed;
-			Topupable			= false;
-			WithdrawalAllowed	= false;
+			Topupable			= closedAcc.Topupable;
+			WithdrawalAllowed	= closedAcc.WithdrawalAllowed;
+
+			MessageBox.Show($"Счет {AccountNumber} закрыт.\n"
+				+ "Счет остается в системе, но его дальнейшее использование невозможно."
+				);
 
 			accountsNeedUpdate = true;
 			clientsNeedUpdate  = true;

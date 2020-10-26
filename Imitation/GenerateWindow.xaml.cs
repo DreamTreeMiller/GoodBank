@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,8 +26,11 @@ namespace GoodBankNS.Imitation
 			get => $"{vipClients}";
 			set 
 			{
-				if (!Int32.TryParse(value, out int tmp)) return;
-				if (tmp < 0) tmp = 1;
+				if (!IsInputValid(value, out int tmp))
+				{
+					SetFocusOnVIPclientsEntryBox();
+					return;
+				}	
 				vipClients = tmp; 
 			}
 		}
@@ -36,8 +40,11 @@ namespace GoodBankNS.Imitation
 			get => $"{simClients}";
 			set
 			{
-				if (!Int32.TryParse(value, out int tmp)) return;
-				if (tmp < 0) tmp = 1;
+				if (!IsInputValid(value, out int tmp))
+				{
+					SetFocusOnSIMclientsEntryBox();
+					return;
+				}
 				simClients = tmp;
 			}
 		}
@@ -47,10 +54,34 @@ namespace GoodBankNS.Imitation
 			get => $"{orgClients}";
 			set
 			{
-				if (!Int32.TryParse(value, out int tmp)) return;
-				if (tmp < 0) tmp = 1;
+				if (!IsInputValid(value, out int tmp))
+				{
+					SetFocusOnORGclientsEntryBox();
+					return;
+				}
 				orgClients = tmp;
 			}
+		}
+
+		private bool IsInputValid(string input, out int tmp)
+		{
+			if (String.IsNullOrEmpty(input))
+			{
+				MessageBox.Show("Введите число.");
+				tmp = 0;
+				return false;
+			}
+			if (!Int32.TryParse(input, out tmp))
+			{
+				MessageBox.Show("Некорректрый ввод! Введите число.");
+				return false;
+			}
+			if (tmp < 0)
+			{
+				MessageBox.Show("Число не должно быть отрицательным");
+				return false;
+			}
+			return true;
 		}
 
 		public GenerateWindow()
@@ -66,5 +97,33 @@ namespace GoodBankNS.Imitation
 		{
 			DialogResult = true;
 		}
+
+		private void SetFocusOnVIPclientsEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				VIPclientsEntryBox.Focus();
+				VIPclientsEntryBox.SelectionStart = VIPclientsEntryBox.Text.Length;
+			});
+		}
+
+		private void SetFocusOnSIMclientsEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				SIMclientsEntryBox.Focus();
+				SIMclientsEntryBox.SelectionStart = SIMclientsEntryBox.Text.Length;
+			});
+		}
+
+		private void SetFocusOnORGclientsEntryBox()
+		{
+			Dispatcher.BeginInvoke((ThreadStart)delegate
+			{
+				ORGclientsEntryBox.Focus();
+				ORGclientsEntryBox.SelectionStart = ORGclientsEntryBox.Text.Length;
+			});
+		}
+
 	}
 }

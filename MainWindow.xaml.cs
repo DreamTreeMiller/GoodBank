@@ -35,6 +35,7 @@ namespace GoodBankNS
 		{
 			BA = new BankActions(GoodBank);
 			BankFoundationDayMessage.Text = BankFoundationDay;
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd MMMM yyyy} г.";
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
@@ -68,7 +69,11 @@ namespace GoodBankNS
 
 		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Пока не работает.\n\nПрокрутить время на месяц вперёд,\nчтобы начислить проценты.");
+			BA.Accounts.AddOneMonth();
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd MMMM yyyy} г.";
+			MessageBox.Show("Время в мире, где существует банк, ушло на месяц вперёд.\n"
+						  + "Пересчитаны проценты на всех счетах.");
+
 		}
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)

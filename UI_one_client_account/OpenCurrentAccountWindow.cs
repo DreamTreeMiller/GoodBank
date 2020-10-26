@@ -30,6 +30,7 @@ namespace GoodBankNS.UI_one_client_account
 		public OpenCurrentAccountWindow()
 		{
 			InitializeComponent();
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			DataContext = this;
 			Dispatcher.BeginInvoke((ThreadStart)delegate
 			{

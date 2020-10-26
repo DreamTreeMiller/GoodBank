@@ -1,22 +1,13 @@
 ﻿using GoodBankNS.BankInside;
+using GoodBankNS.ClientClasses;
 using GoodBankNS.DTO;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace GoodBankNS.UI_one_client_account
 {
@@ -31,15 +22,8 @@ namespace GoodBankNS.UI_one_client_account
 			get => $"{depositAmount:N2}";
 			set
 			{
-				if (!Double.TryParse(value, out double tmp))
+				if (!IsDoubleValid(value, out double tmp))
 				{
-					MessageBox.Show("Некорректрый ввод! Введите число.");
-					SetFocusOnDepositAmountEntryBox();
-					return;
-				}
-				if (tmp < 0)
-				{
-					MessageBox.Show("Число не должно быть отрицательным");
 					SetFocusOnDepositAmountEntryBox();
 					return;
 				}
@@ -47,21 +31,15 @@ namespace GoodBankNS.UI_one_client_account
 			}
 		}
 
-		public double   interest = 0.05;
+		private double minInterest, maxInterest;
+		public double   interest;
 		public string	Interest	
 		{ 
 			get => $"{(interest * 100):N2}"; 
 			set
 			{
-				if (!Double.TryParse(value, out double tmp))
+				if (!IsInterestValid(value, out double tmp))
 				{
-					MessageBox.Show("Некорректрый ввод! Введите число.");
-					SetFocusOnInterestEntryBox();
-					return;
-				}
-				if (tmp < 0)
-				{
-					MessageBox.Show("Число не должно быть отрицательным");
 					SetFocusOnInterestEntryBox();
 					return;
 				}
@@ -71,20 +49,13 @@ namespace GoodBankNS.UI_one_client_account
 		public DateTime Opened		{ get; }	  = GoodBank.Today;
 
 		public int		duration = 12;
-		public string Duration 
+		public string	Duration 
 		{ 
 			get => $"{duration}"; 
 			set
 			{
-				if (!Int32.TryParse(value, out int tmp))
+				if (!IsDurationValid(value, out int tmp))
 				{
-					MessageBox.Show("Некорректрый ввод! Введите целое число");
-					SetFocusOnDurationEntryBox(); 
-					return;
-				}
-				if (tmp < 1)
-				{
-					MessageBox.Show("Число месяцев должно быть больше 0");
 					SetFocusOnDurationEntryBox();
 					return;
 				}
@@ -96,14 +67,6 @@ namespace GoodBankNS.UI_one_client_account
 		{ 
 			get => Opened.AddMonths(duration);
 		}
-		public OpenDepositWindow(ObservableCollection<AccountDTO> accumulationAccounts)
-		{
-			InitializeComponent();
-			AccumulationAccount.ItemsSource = accumulationAccounts;
-			DataContext = this;
-			SetFocusOnDepositAmountEntryBox();
-		}
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -124,15 +87,73 @@ namespace GoodBankNS.UI_one_client_account
 			}
 		}
 
-		private void btnOk_OpenDeposit_Click(object sender, RoutedEventArgs e)
+		/// <summary>
+		/// Проверяет, является ли введенная строка корректным числом с плав. запятой
+		/// </summary>
+		/// <param name="input">Введенная строка</param>
+		/// <param name="tmp">Преобразованное значение. Если ввод некорректный, то значение неопределено</param>
+		/// <returns>true/false. Если true, то в tmp результат преобразования</returns>
+		private bool IsDoubleValid(string input, out double tmp)
 		{
-			if (duration == 0)
+			if (String.IsNullOrEmpty(input))
+			{
+				MessageBox.Show("Введите число.");
+				tmp = 0;
+				return false;
+			}
+			if (!Double.TryParse(input, out tmp))
+			{
+				MessageBox.Show("Некорректрый ввод! Введите число.");
+				return false;
+			}
+			if (tmp < 0)
+			{
+				MessageBox.Show("Число не должно быть отрицательным");
+				return false;
+			}
+			return true;
+		}
+
+		private bool IsInterestValid(string input, out double tmp)
+		{
+			if (String.IsNullOrEmpty(input))
+			{
+				MessageBox.Show("Введите число.");
+				tmp = 0;
+				return false;
+			}
+			if (!Double.TryParse(input, out tmp))
+			{
+				MessageBox.Show("Некорректрый ввод! Введите число.");
+				return false;
+			}
+			if ( tmp < minInterest|| maxInterest < tmp )
+			{
+				MessageBox.Show($"Процент должен быть между {minInterest:N2} ~ {maxInterest:N2} %");
+				return false;
+			}
+			return true;
+		}
+
+		private bool IsDurationValid(string input, out int tmp)
+		{
+			if (String.IsNullOrEmpty(input))
+			{
+				MessageBox.Show("Введите число.");
+				tmp = 0;
+				return false;
+			}
+			if (!Int32.TryParse(input, out tmp))
+			{
+				MessageBox.Show("Некорректрый ввод! Введите число.");
+				return false;
+			}
+			if (tmp < 1)
 			{
 				MessageBox.Show("Число месяцев должно быть больше 0");
-				SetFocusOnDurationEntryBox();
-				return;
+				return false;
 			}
-			DialogResult = true;
+			return true;
 		}
 
 		private void SetFocusOnDepositAmountEntryBox()
@@ -161,5 +182,53 @@ namespace GoodBankNS.UI_one_client_account
 				DurationEntryBox.SelectionStart = DurationEntryBox.Text.Length;
 			});
 		}
+
+		public OpenDepositWindow(ObservableCollection<AccountDTO> accumulationAccounts, ClientType clientType)
+		{
+			InitializeComponent();
+			InitializeWindowLabelsAndData(accumulationAccounts, clientType);
+			SetFocusOnDepositAmountEntryBox();
+		}
+
+		private void InitializeWindowLabelsAndData(ObservableCollection<AccountDTO> accumulationAccounts, ClientType clientType)
+		{
+			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			AccumulationAccount.ItemsSource = accumulationAccounts;
+
+			switch (clientType)
+			{
+				case ClientType.VIP:
+					InterestLabel.Text = "Процент (11 ~ 20 %)";
+					minInterest = 11;
+					maxInterest = 20;
+					interest	= 0.11;
+					break;
+				case ClientType.Simple:
+					InterestLabel.Text = "Процент (5 ~ 10 %)";
+					minInterest = 5;
+					maxInterest = 10;
+					interest	= 0.05;
+					break;
+				case ClientType.Organization:
+					InterestLabel.Text = "Процент (7 ~ 15 %)";
+					minInterest = 7;
+					maxInterest = 15;
+					interest	= 0.07;
+					break;
+			}
+			DataContext = this;
+		}
+
+		private void btnOk_OpenDeposit_Click(object sender, RoutedEventArgs e)
+		{
+			if (duration == 0)
+			{
+				MessageBox.Show("Число месяцев должно быть больше 0");
+				SetFocusOnDurationEntryBox();
+				return;
+			}
+			DialogResult = true;
+		}
+
 	}
 }

@@ -11,9 +11,7 @@ namespace GoodBankNS.AccountClasses
 	{
 		public override AccountType AccType { get => AccountType.Credit; }
 		public override double		Balance { get; set; }
-
-		public override DateTime?	EndDate => 
-			Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
+		public double				AccumulatedInterest { get; set; }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных
@@ -29,7 +27,7 @@ namespace GoodBankNS.AccountClasses
 		/// Balance		  = 0;
 		/// Interest	  = interest;				--> из IAccountDTO acc
 		/// AccountStatus = AccountStatus.Opened;
-		/// Opened		  = DateTime.Now;
+		/// Opened		  = GoodBank.Today;
 		/// Topupable	  =							--> false
 		/// WithdrawalAllowed	=					--> false
 		/// RecalcPeriod  =							--> monthly
@@ -55,6 +53,34 @@ namespace GoodBankNS.AccountClasses
 		{
 			AccountNumber	= "CRE" + AccountNumber;
 			Balance			= acc.Balance;
+			MonthsElapsed	= acc.MonthsElapsed;
+		}
+
+		/// <summary>
+		/// Пересчет процентов для кредитов. Происходит только раз в месяц,
+		/// т.е. не раз в год, и не один раз в конце
+		/// </summary>
+		/// <param name="date"></param>
+		public override double RecalculateInterest()
+		{
+			if (Closed != null) return 0;
+
+			// Пересчёт не нужен. 
+			// Клиент должен пополнить счет до 0 и закрыть
+			if (Duration == MonthsElapsed) return 0;
+			MonthsElapsed++;
+
+			double calculatedInterest = Balance * Interest / 12;
+			AccumulatedInterest		 += calculatedInterest;
+			Balance					 += calculatedInterest;
+
+			return calculatedInterest;
+		}
+
+		public override double CloseAccount()
+		{
+			AccumulatedInterest = 0;
+			return base.CloseAccount();
 		}
 	}
 }

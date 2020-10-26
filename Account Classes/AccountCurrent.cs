@@ -13,9 +13,6 @@ namespace GoodBankNS.AccountClasses
 		public override AccountType AccType { get => AccountType.Current; }
 		public override double Balance { get; set; }
 
-		public override DateTime? EndDate => null;
-
-
 		/// <summary>
 		/// Создание счета на основе введенных данных
 		/// </summary>
@@ -30,7 +27,7 @@ namespace GoodBankNS.AccountClasses
 		/// Balance		  = 0;
 		/// Interest	  = interest;				--> из IAccountDTO acc
 		/// AccountStatus = AccountStatus.Opened;
-		/// Opened		  = DateTime.Now;
+		/// Opened		  = GoodBank.Today;
 		/// Topupable	  =							--> true
 		/// WithdrawalAllowed	=					--> ture
 		/// RecalcPeriod  =							--> No recalc period
@@ -55,9 +52,18 @@ namespace GoodBankNS.AccountClasses
 				   true, true, RecalcPeriod.NoRecalc, 0)
 		{
 			AccountNumber = "CUR" + AccountNumber;
-			Balance = acc.Balance;
+			Balance		  = acc.Balance;
 		}
 
+		public override double RecalculateInterest()
+		{
+			// Do nothing since no interest recalculation for current account
+			return 0;
+		}
 
+		public override double CloseAccount()
+		{
+			return base.CloseAccount();
+		}
 	}
 }

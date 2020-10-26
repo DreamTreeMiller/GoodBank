@@ -64,6 +64,15 @@
 				   FontWeight="Bold"
 				   FontSize="16" 
 				   />
+		<TextBlock x:Name="BankTodayDate"
+				   Grid.Row="0" Grid.Column="1"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Right"
+				   Margin="0,0,20,0"
+				   FontWeight="Bold"
+				   FontSize="14"
+				   Foreground="DarkSlateGray"
+				   />
 		<!-- Окошко данных о счете-->
 		<Grid x:Name="AccountInfo" 
 				Grid.Row="1" Grid.Column="1"

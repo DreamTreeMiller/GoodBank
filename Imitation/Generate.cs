@@ -85,7 +85,7 @@ namespace GoodBankNS.Imitation
 		{
 			string DFN, DMN, DLN;
 			int regcode;
-			for (int i = 0; i < num-1; i++)
+			for (int i = 0; i < num; i++)
 			{
 				// Half will be men, half women
 				if ((i & 1) == 0)
@@ -106,12 +106,6 @@ namespace GoodBankNS.Imitation
 				client = BA.Clients.AddClient(client);
 				GenerateAccountsForClient(client);
 			}
-
-			BA.Clients.AddClient(
-				new ClientDTO(ClientType.Organization, 
-				"Организация с ооооочччченнннь ооооччччееень длиннным названиеммммммммм",
-				GenMFN(), GenMMN(), GenMLN(), GenRegDate(), GenTIN(out regcode),
-									GenTel(), GenEmail(), GenOrgAddress(regcode)));
 		}
 
 		#endregion
@@ -133,7 +127,7 @@ namespace GoodBankNS.Imitation
 									r.Next(0,100) * 1000, 					// сумма на текущем счеты
 									0,										// процент по вкладу
 					false, 0, "не используется",
-					GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0));
+					GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0, 0));
 		}
 
 		private static void GenerateDeposits(IClientDTO c, int num) 
@@ -141,7 +135,8 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				int		 duration	 = GenDepositCreditDuration(openingDate);
+				int		 monthsElapsed;
+				int		 duration	 = GenDepositCreditDuration(openingDate, out monthsElapsed);
 
 				BA.Accounts.GenerateAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
@@ -154,7 +149,8 @@ namespace GoodBankNS.Imitation
 									TrueFalse(),					// Можем поплнять или нет
 									TrueFalse(),					// Можем частично снимать или нет
 									GenDepositRecalc(),				// Периодичность пересчета
-									duration));						// Количество месяцев вклада
+									duration,						// Количество месяцев вклада
+									monthsElapsed));                // Сколько месяцев уже прошло до настоящего момента 
 			}
 		}
 
@@ -163,7 +159,8 @@ namespace GoodBankNS.Imitation
 			for (int i = 0; i < num; i++)
 			{
 				DateTime openingDate = GenAccOpeningDate(c);
-				int duration = GenDepositCreditDuration(openingDate);
+				int monthsElapsed;
+				int duration = GenDepositCreditDuration(openingDate, out monthsElapsed);
 				int amount = duration * 10_000 * r.Next(1,4);
 
 				BA.Accounts.GenerateAccount(
@@ -177,7 +174,8 @@ namespace GoodBankNS.Imitation
 									true,					// Можем поплнять или нет
 									false,					// Можем частично снимать или нет
 									RecalcPeriod.Monthly,	// Периодичность пересчета
-									duration));				// Количество месяцев вклада
+									duration,				// Количество месяцев вклада
+									monthsElapsed));		// Сколько месяцев уже прошло до настоящего момента
 			}
 		}
 
@@ -194,19 +192,19 @@ namespace GoodBankNS.Imitation
 		private static DateTime GenAccOpeningDate(IClientDTO c)
 		{
 			if ((DateTime)c.CreationDate < GoodBank.BankFoundationDay)
-				return GenDate(GoodBank.BankFoundationDay, DateTime.Now);
-			return GenDate((DateTime)c.CreationDate, DateTime.Now);
+				return GenDate(GoodBank.BankFoundationDay, GoodBank.Today);
+			return GenDate((DateTime)c.CreationDate, GoodBank.Today);
 		}
 
-		private static int GenDepositCreditDuration(DateTime sd)
+		private static int GenDepositCreditDuration(DateTime sd, out int monthsElapsed)
 		{
-			int firstTerm = (int)(GoodBank.Today.Subtract(sd).TotalDays / 365.25 * 12);
-			return firstTerm + r.Next(1, 61);
+			monthsElapsed = (int)(GoodBank.Today.Subtract(sd).TotalDays / 365.25 * 12);
+			return monthsElapsed + r.Next(1, 61);
 		}
 
 		#endregion
 
-		#region Генерация полей клиента
+		#region Генерация полей имени клиента
 
 		private static string GenMFN()
 		{
@@ -262,20 +260,20 @@ namespace GoodBankNS.Imitation
 		private static DateTime GenBirthDate()
 		{
 			DateTime startDate =
-				new DateTime(DateTime.Now.Year - 100,
-							 DateTime.Now.Month,
-							 DateTime.Now.Day);
+				new DateTime(GoodBank.Today.Year - 100,
+							 GoodBank.Today.Month,
+							 GoodBank.Today.Day);
 			DateTime endDate =
-				new DateTime(DateTime.Now.Year - 19,
-							 DateTime.Now.Month,
-							 DateTime.Now.Day);
+				new DateTime(GoodBank.Today.Year - 19,
+							 GoodBank.Today.Month,
+							 GoodBank.Today.Day);
 			return GenDate(startDate, endDate);
 		}
 
 		private static DateTime GenRegDate()
 		{
 			DateTime startDate = new DateTime(1990, 1, 1);
-			DateTime endDate   = DateTime.Now;
+			DateTime endDate   = GoodBank.Today;
 			return GenDate(startDate, endDate);
 		}
 
@@ -317,7 +315,7 @@ namespace GoodBankNS.Imitation
 
 		private static RecalcPeriod GenDepositRecalc()
 		{
-			return (RecalcPeriod)r.Next(0, 4);
+			return (RecalcPeriod)r.Next(0, 3);
 		}
 
 		#endregion

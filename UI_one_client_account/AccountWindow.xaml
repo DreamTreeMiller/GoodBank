@@ -18,15 +18,15 @@
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
 		<!-- Стиль названий полей данных о счете -->
-		<Style x:Key="AccountInfoFieldNameStyle">
+		<Style x:Key="LabelStyle">
 			<Setter Property="TextBlock.FontSize"			 Value="14"/>
 			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
 			<Setter Property="TextBlock.Margin"				 Value="0,0,5,0"/>
 			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
 		</Style>
-		<!-- Стиль ЗНАЧЕНИЙ не числовых полей данных о СЧЕТЕ -->
-		<Style x:Key="AccountInfoValueFieldStyle">
+		<!-- Стиль ЗНАЧЕНИЙ выравнивание по левому краю -->
+		<Style x:Key="ValueLeftAlignStyle">
 			<Setter Property="TextBlock.FontSize"			 Value="14"/>
 			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>
 			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
@@ -34,12 +34,21 @@
 			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
 		</Style>
-		<!-- Стиль ЗНАЧЕНИЙ числовых полей данных о СЧЕТЕ -->
-		<Style x:Key="AccountNumericValueFieldStyle">
+		<!-- Стиль ЗНАЧЕНИЙ выравнивание по центру -->
+		<Style x:Key="ValueCenterAlignStyle">
 			<Setter Property="TextBlock.FontSize"			 Value="14"/>
 			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>
 			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
-			<Setter Property="TextBlock.Margin"				 Value="5,0,0,0"/>
+			<Setter Property="TextBlock.Margin"				 Value="5,0"/>
+			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
+			<Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+		</Style>
+		<!-- Стиль ЗНАЧЕНИЙ выравнивание по правому краю -->
+		<Style x:Key="ValueRightAlignStyle">
+			<Setter Property="TextBlock.FontSize"			 Value="14"/>
+			<Setter Property="TextBlock.FontWeight"			 Value="Bold"/>
+			<Setter Property="TextBlock.Foreground"			 Value="DarkBlue"/>
+			<Setter Property="TextBlock.Margin"				 Value="0,0,5,0"/>
 			<Setter Property="TextBlock.VerticalAlignment"	 Value="Center"/>
 			<Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
 		</Style>
@@ -97,13 +106,22 @@
 
 		<!-- Строка заголовка всего окна-->
 		<TextBlock x:Name="MainTitle" 
-					   Grid.Row="0" Grid.Column="1"
-					   VerticalAlignment="Center"
-					   HorizontalAlignment="Center"
-					   Foreground="Maroon"
-					   FontWeight="Bold"
-					   FontSize="16" 
-					   />
+				   Grid.Row="0" Grid.Column="1"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center"
+				   Foreground="Maroon"
+				   FontWeight="Bold"
+				   FontSize="16" 
+				   />
+		<TextBlock x:Name="BankTodayDate"
+				   Grid.Row="0" Grid.Column="1"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Right"
+				   Margin="0,0,20,0"
+				   FontWeight="Bold"
+				   FontSize="14"
+				   Foreground="DarkSlateGray"
+				   />
 		<!--Меню: Пополнить, Снять, Перевести, Закрыть -->
 		<StackPanel Grid.Row="1" Grid.Column="1" 
 					Orientation="Horizontal"
@@ -267,68 +285,67 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="№ счета:" 
 						Grid.Row="0" Grid.Column="0"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding AccountNumber}" 
 						Grid.Row="0" Grid.Column="1"
-						Style="{StaticResource AccountNumericValueFieldStyle}"
+						Style="{StaticResource ValueRightAlignStyle}"
 						/>
 			<TextBlock Text="Дата открытия:"
 						Grid.Row="0" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy}, Path=Opened}" 
 						Grid.Row="0" Grid.Column="3"
-						Style="{StaticResource AccountInfoValueFieldStyle}"
+						Style="{StaticResource ValueLeftAlignStyle}"
 						/>
 			<TextBlock Text="Баланс:" 
 						Grid.Row="1" Grid.Column="0"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding StringFormat={}{0:C2}, Path=Balance, ConverterCulture=ru-Ru}"
 					   Grid.Row="1" Grid.Column="1" 
-					   Style="{StaticResource AccountNumericValueFieldStyle}"
+					   Style="{StaticResource ValueRightAlignStyle}"
 					   />
 			<TextBlock Text="Сроком до:" 
 						Grid.Row="1" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding Path=EndDate, Converter={StaticResource UnlimitedDateConverter}}" 
 					   Grid.Row="1" Grid.Column="3"
-					   Style="{StaticResource AccountInfoValueFieldStyle}"
+					   Style="{StaticResource ValueLeftAlignStyle}"
 					   />
 			<TextBlock Text="Процент:" 
 						Grid.Row="2" Grid.Column="0"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Grid.Row="2" Grid.Column="1" 
 					   Text="{Binding StringFormat={}{0:P}, Path=Interest, ConverterCulture=ru-Ru}"
-					   Style="{StaticResource AccountNumericValueFieldStyle}"
+					   Style="{StaticResource ValueRightAlignStyle}"
 					   />
 			<TextBlock Text="Закрыт:" 
 						Grid.Row="2" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding Path=AccClosed, Converter={StaticResource StillOpenConverter}}" 
 					   Grid.Row="2" Grid.Column="3"
-					   Style="{StaticResource AccountInfoValueFieldStyle}"
+					   Style="{StaticResource ValueLeftAlignStyle}"
 					   />
 			<TextBlock Text="Пополняемый:" 
 						Grid.Row="3" Grid.Column="0"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding Path=Topupable, Converter={StaticResource YesNoStringConverter}}" 
 					   Grid.Row="3" Grid.Column="1"
-					   Style="{StaticResource AccountNumericValueFieldStyle}"
-					   HorizontalAlignment="Center"
+					   Style="{StaticResource ValueCenterAlignStyle}"
 					   />
 			<TextBlock Text="Начисление процентов:"
 						Grid.Row="3" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 			<TextBlock Text="{Binding Path=RecalcPeriod, Converter={StaticResource RecalcPeriodConverter}}" 
 						Grid.Row="3" Grid.Column="3"
-						Style="{StaticResource AccountInfoValueFieldStyle}"
+						Style="{StaticResource ValueLeftAlignStyle}"
 						/>
 			<!-- Часть только для вкладов -->
 			<Grid x:Name="DepositPart"
@@ -346,38 +363,51 @@
 				</Grid.ColumnDefinitions>
 				<TextBlock Text="Капитализация:" 
 						Grid.Row="0" Grid.Column="0"
-						Style="{StaticResource AccountInfoFieldNameStyle}"
+						Style="{StaticResource LabelStyle}"
 						/>
 				<TextBlock Text="{Binding Path=Compounding, Converter={StaticResource YesNoStringConverter}}" 
 						Grid.Row="0" Grid.Column="1"
-						Style="{StaticResource AccountNumericValueFieldStyle}"
+						Style="{StaticResource ValueRightAlignStyle}"
 					   HorizontalAlignment="Center" 
 						/>
 				<TextBlock Text="Досрочное снятие:"
 						Grid.Row="0" Grid.Column="2"
-						Style="{StaticResource AccountInfoFieldNameStyle}" 
+						Style="{StaticResource LabelStyle}" 
 						/>
 				<TextBlock Text="{Binding Path=WithdrawalAllowed, Converter={StaticResource YesNoStringConverter}}" 
 						   Grid.Row="0" Grid.Column="3"
-						   Style="{StaticResource AccountInfoValueFieldStyle}" 
+						   Style="{StaticResource ValueLeftAlignStyle}" 
 						   />
-				<StackPanel x:Name="InterestAccumulationAccLabel"
-							Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-							Orientation="Horizontal"
-							HorizontalAlignment="Right"
-							Height="30"
-							Visibility="Collapsed" 
-							>
-					<TextBlock Text="Счет для накопления процентов:" 
-							   Style="{StaticResource AccountInfoFieldNameStyle}"
-							   />
-				</StackPanel>
-				<TextBlock x:Name="InterestAccumulationAccValue"
-						   Text="{Binding InterestAccumulationAccNum}"
-						   Grid.Row="1" Grid.Column="2" 
-						   Style="{StaticResource AccountNumericValueFieldStyle}"
-						   Visibility="Collapsed" 
-						   />
+					<Grid x:Name="InterestAccumulationLine"
+						  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+						  Visibility="Collapsed" 
+						  >
+						<Grid.RowDefinitions>
+							<RowDefinition Height="30"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="Накопление процентов:"
+								   Grid.Row="0" Grid.Column="0"
+								   Style="{StaticResource LabelStyle}"
+								   />
+						<TextBlock Text="{Binding InterestAccumulationAccNum}"
+								   Grid.Row="0" Grid.Column="1" 
+								   Style="{StaticResource ValueRightAlignStyle}"
+								   />
+						<TextBlock Text="Накопленная сумма:"
+								   Grid.Row="0" Grid.Column="2"
+								   Style="{StaticResource LabelStyle}"
+								   />
+						<TextBlock Text="{Binding StringFormat={}{0:C2}, Path=AccumulatedInterest, ConverterCulture=ru-Ru}"
+								   Grid.Row="0" Grid.Column="3"
+								   Style="{StaticResource ValueLeftAlignStyle}"
+								   />
+					</Grid>
 			</Grid>
 		</Grid>
 		<!-- Окошко данных клиента-->
