@@ -148,7 +148,7 @@ namespace GoodBankNS.UI_one_client_account
 			else
 			{
 				OrganizationInfo.Visibility = Visibility.Collapsed;
-				PersonalInfo.Visibility = Visibility.Visible;
+				PersonalInfo.Visibility		= Visibility.Visible;
 			}
 			ClientInfo.DataContext = client;
 		}

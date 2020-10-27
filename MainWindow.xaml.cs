@@ -18,22 +18,23 @@ namespace GoodBankNS
 		public string BankFoundationDay = "Основан " 
 			+ $"{GoodBankNS.BankInside.GoodBank.BankFoundationDay:D}"
 			;
+
 		public MainWindow()
 		{
 			InitializeComponent();
 			InitializeBank();
-			InitializeUI();
+			InitializeWelcomeScreenMessages();
 			
 		}
 
 		private void InitializeBank()
 		{
 			GoodBank = new GoodBank();
+			BA		 = new BankActions(GoodBank);
 		}
 
-		private void InitializeUI()
+		private void InitializeWelcomeScreenMessages()
 		{
-			BA = new BankActions(GoodBank);
 			BankFoundationDayMessage.Text = BankFoundationDay;
 			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd MMMM yyyy} г.";
 		}
