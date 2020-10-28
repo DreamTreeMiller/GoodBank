@@ -238,7 +238,7 @@ namespace GoodBankNS.DTO
 				_firstName		= (c as IClientVIP).FirstName;
 				_middleName		= (c as IClientVIP).MiddleName;
 				_lastName		= (c as IClientVIP).LastName;
-				_passportOrTIN	= (c as IClientVIP).PasspostNumber;
+				_passportOrTIN	= (c as IClientVIP).PassportNumber;
 				_creationDate	= (c as IClientVIP).BirthDate;
 				return;
 			}
@@ -249,7 +249,7 @@ namespace GoodBankNS.DTO
 				_firstName		= (c as IClientSimple).FirstName;
 				_middleName		= (c as IClientSimple).MiddleName;
 				_lastName		= (c as IClientSimple).LastName;
-				_passportOrTIN	= (c as IClientSimple).PasspostNumber;
+				_passportOrTIN	= (c as IClientSimple).PassportNumber;
 				_creationDate	= (c as IClientSimple).BirthDate;
 			}
 

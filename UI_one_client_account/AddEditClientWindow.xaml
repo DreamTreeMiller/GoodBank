@@ -9,11 +9,6 @@
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
-		<!-- 
-		Height="410" 
-		MinHeight="410"
-		MaxHeight="410"
-		-->
 	<Window.Resources>
 		<Style TargetType="TextBlock">
 			<Setter Property="Margin"				Value="0,0,10,0"/>

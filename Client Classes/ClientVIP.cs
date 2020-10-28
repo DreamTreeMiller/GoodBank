@@ -14,7 +14,7 @@ namespace GoodBankNS.ClientClasses
 		public string	FirstName		{ get; set; }
 		public string	MiddleName		{ get; set; }
 		public string	LastName		{ get; set; }
-		public string	PasspostNumber	{ get; set; }
+		public string	PassportNumber	{ get; set; }
 		public DateTime	BirthDate		{ get; set; }
 
 		#endregion
@@ -27,7 +27,7 @@ namespace GoodBankNS.ClientClasses
 			FirstName		= newClient.FirstName;
 			MiddleName		= newClient.MiddleName;
 			LastName		= newClient.LastName;
-			PasspostNumber	= newClient.PassportOrTIN;
+			PassportNumber	= newClient.PassportOrTIN;
 			BirthDate		= (DateTime)newClient.CreationDate;
 		}
 
@@ -36,7 +36,7 @@ namespace GoodBankNS.ClientClasses
 			FirstName		= updatedClient.FirstName;
 			MiddleName		= updatedClient.MiddleName;
 			LastName		= updatedClient.LastName;
-			PasspostNumber	= updatedClient.PassportOrTIN;
+			PassportNumber	= updatedClient.PassportOrTIN;
 			BirthDate		= (DateTime)updatedClient.CreationDate;
 			Telephone		= updatedClient.Telephone;
 			Email			= updatedClient.Email;

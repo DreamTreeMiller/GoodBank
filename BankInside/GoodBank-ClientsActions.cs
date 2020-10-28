@@ -3,6 +3,7 @@ using GoodBankNS.ClientClasses;
 using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Actions;
 using GoodBankNS.Interfaces_Data;
+using GoodBankNS.Search;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -47,6 +48,17 @@ namespace GoodBankNS.BankInside
 			return clientsList;
 		}
 
+		public ObservableCollection<IClientDTO> GetClientsList(Compare predicate)
+		{
+			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
+			foreach (var c in clients)
+			{
+				bool flag = true;
+				flag = predicate(c, ref flag);
+				if (flag) clientsList.Add(new ClientDTO(c) as IClientDTO);
+			}
+			return clientsList;
+		}
 		public void UpdateClient(IClientDTO updatedClient)
 		{
 			int ci = clients.FindIndex(c => c.ID == updatedClient.ID);
