@@ -110,12 +110,19 @@
     <Compile Include="Interfaces_Data\IClientSimple.cs" />
     <Compile Include="Interfaces_Data\TransactionDTO.cs" />
     <Compile Include="Interfaces_Data\IClientVIP.cs" />
-    <Compile Include="Search\EnterSearchRequestForIndividualWindow.xaml.cs">
-      <DependentUpon>EnterSearchRequestForIndividualWindow.xaml</DependentUpon>
+    <Compile Include="Search\DelegateCompare.cs" />
+    <Compile Include="Search\IndividualComparators.cs" />
+    <Compile Include="Search\IndividualsSearchRequestWindow.cs">
+      <DependentUpon>IndividualsSearchRequestWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Search\PersonsSearchResultWindow.xaml.cs">
-      <DependentUpon>PersonsSearchResultWindow.xaml</DependentUpon>
+    <Compile Include="Search\OrganizationComparators.cs" />
+    <Compile Include="Search\OrganizationsSearchRequestWindow.xaml.cs">
+      <DependentUpon>OrganizationsSearchRequestWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Search\ClientsSearchResultWindow.cs">
+      <DependentUpon>ClientsSearchResultWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SharedComparators.cs" />
     <Compile Include="Transaction Class\Transaction.cs" />
     <Compile Include="UI_clients\DepartmentWindow.cs">
       <DependentUpon>DepartmentWindow.xaml</DependentUpon>
@@ -169,11 +176,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Search\EnterSearchRequestForIndividualWindow.xaml">
+    <Page Include="Search\IndividualsSearchRequestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Search\PersonsSearchResultWindow.xaml">
+    <Page Include="Search\OrganizationsSearchRequestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Search\ClientsSearchResultWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

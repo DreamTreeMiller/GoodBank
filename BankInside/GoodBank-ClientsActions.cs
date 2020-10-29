@@ -55,7 +55,7 @@ namespace GoodBankNS.BankInside
 			{
 				bool flag = true;
 				flag = predicate(c, ref flag);
-				if (flag) clientsList.Add(new ClientDTO(c) as IClientDTO);
+				if (flag) clientsList.Add(new ClientDTO(c));
 			}
 			return clientsList;
 		}

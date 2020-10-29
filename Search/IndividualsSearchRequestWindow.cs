@@ -21,7 +21,7 @@ namespace GoodBankNS.Search
 	/// <summary>
 	/// Interaction logic for EnterSearchRequestForIndividualWindow.xaml
 	/// </summary>
-	public partial class EnterSearchRequestForIndividualWindow : Window, INotifyPropertyChanged
+	public partial class IndividualsSearchRequestWindow : Window, INotifyPropertyChanged
 	{
 		public Compare CheckAllFields;
 
@@ -257,7 +257,7 @@ namespace GoodBankNS.Search
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		public EnterSearchRequestForIndividualWindow()
+		public IndividualsSearchRequestWindow()
 		{
 			InitializeComponent();
 			DataContext = this;
@@ -288,150 +288,5 @@ namespace GoodBankNS.Search
 		}
 	}
 
-	public delegate bool Compare(IClient p, ref bool flag);
-
-	class FirstNameComparator
-	{
-		string objectToFind;
-
-		public FirstNameComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).FirstName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).FirstName.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class MiddleNameComparator
-	{
-		string objectToFind;
-
-		public MiddleNameComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).MiddleName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).MiddleName.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class LastNameComparator
-	{
-		string objectToFind;
-
-		public LastNameComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).LastName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).LastName.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class StartDateComparator
-	{
-		DateTime objectToFind;
-
-		public StartDateComparator(DateTime value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = objectToFind <= (sourceP as IClientVIP).BirthDate;
-			if (sourceP is IClientSimple)
-				flag = objectToFind <= (sourceP as IClientSimple).BirthDate;
-			return flag;
-		}
-	}
-
-	class EndDateComparator
-	{
-		DateTime objectToFind;
-
-		public EndDateComparator(DateTime value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag =  (sourceP as IClientVIP).BirthDate   <= objectToFind;
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).BirthDate <= objectToFind;
-			return flag;
-		}
-	}
-
-	class PassportNumberComparator
-	{
-		string objectToFind;
-
-		public PassportNumberComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).PassportNumber.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).PassportNumber.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class TelephoneComparator
-	{
-		string objectToFind;
-
-		public TelephoneComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			flag = sourceP.Telephone.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class EmailComparator
-	{
-		string objectToFind;
-
-		public EmailComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			flag = sourceP.Email.Contains(objectToFind);
-			return flag;
-		}
-	}
-
-	class AddressComparator
-	{
-		string objectToFind;
-
-		public AddressComparator(string value) { objectToFind = value; }
-
-		public bool Compare(IClient sourceP, ref bool flag)
-		{
-			if (!flag) return false;
-			flag = sourceP.Address.Contains(objectToFind);
-			return flag;
-		}
-	}
 
 }

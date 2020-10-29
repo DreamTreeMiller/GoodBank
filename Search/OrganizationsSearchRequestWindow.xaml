@@ -1,13 +1,13 @@
-﻿<Window x:Class="GoodBankNS.Search.EnterSearchRequestForIndividualWindow"
+﻿<Window x:Class="GoodBankNS.Search.OrganizationsSearchRequestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodBankNS.Search"
         mc:Ignorable="d"
-		Title="Поиск ВИП или юрика"
+		Title="Поиск юрика"
 		Width="540" MinWidth="540" MaxWidth="5240"
-		Height="420"
+		Height="470" MinHeight="470" MaxHeight="470"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
@@ -20,9 +20,22 @@
 			<Setter Property="TextBlock.FontWeight"			Value="Bold"/>
 			<Setter Property="TextBlock.Foreground"			Value="DarkBlue"/>
 		</Style>
-		<Style TargetType="TextBox">
+		<Style x:Key="DirectorLabelStyle">
+			<Setter Property="TextBlock.Width"				Value="180"/>
+			<Setter Property="TextBlock.Margin"				Value="0,0,5,0"/>
+			<Setter Property="TextBlock.VerticalAlignment"	Value="Center"/>
+			<Setter Property="TextBlock.TextAlignment"		Value="Right"/>
+			<Setter Property="TextBlock.Foreground"			Value="DarkBlue"/>
+		</Style>
+		<Style x:Key="MainTextBox" TargetType="TextBox">
 			<Setter Property="Margin"				Value="5,0,0,0"/>
 			<Setter Property="Width"				Value="300"/>
+			<Setter Property="VerticalAlignment"	Value="Center"/>
+			<Setter Property="HorizontalAlignment"	Value="Left"/>
+		</Style>
+		<Style x:Key="DirectorTextBox" TargetType="TextBox">
+			<Setter Property="Margin"				Value="5,0,0,0"/>
+			<Setter Property="Width"				Value="270"/>
 			<Setter Property="VerticalAlignment"	Value="Center"/>
 			<Setter Property="HorizontalAlignment"	Value="Left"/>
 		</Style>
@@ -33,9 +46,11 @@
 		</Style>
 	</Window.Resources>
     <StackPanel Height="Auto" Orientation="Vertical" VerticalAlignment="Top">
+		<!-- Заголовок Поиск организации-->
 		<StackPanel Height="50">
 			<TextBlock x:Name="Header"
-					   Text="ПОИСК ЧЕЛОВЕКА"
+					   Text="ПОИСК ОРГАНИЗАЦИИ"
+					   VerticalAlignment="Center"
 					   Foreground="Maroon"
 					   FontWeight="Bold" 
 					   FontSize="14"
@@ -46,7 +61,7 @@
 		<!-- Блок для ввода ФИО ВИП или физика-->
 		<!-- Слова: Можно вводить часть имени, фамилии и т.д.-->
 		<StackPanel>
-			<TextBlock Text="Можно вводить часть имени, фамилии и т.д."
+			<TextBlock Text="Можно вводить часть названия, имени, фамилии, ИНН и т.д."
 					   FontWeight="Normal"
 					   FontStyle="Italic"
 					   Foreground="Blue"
@@ -60,58 +75,71 @@
 					Visibility="Visible">
 			<!-- Имя ВИП или физика-->
 			<StackPanel>
-				<TextBlock Text="Имя содержит"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
+				<TextBlock Text="Название содержит"
+						   Style="{StaticResource LabelStyle}"
 						   />
-				<TextBox   x:Name="FirstNameEntryBox" 
-						   Text="{Binding FirstName}"
-						   />
-			</StackPanel>
-			<!-- Отчество ВИП или физика-->
-			<StackPanel>
-				<TextBlock Text="Отчество содержит"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
-						   />
-				<TextBox   Text="{Binding MiddleName}"/>
-			</StackPanel>
-			<!-- Фамилия ВИП или физика-->
-			<StackPanel>
-				<TextBlock Text="Фамилия содержит"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
-						   />
-				<TextBox   x:Name="LastNameEntryBox" 
-						   Text="{Binding LastName}"
+				<TextBox   x:Name="OrgNameEntryBox" 
+						   Text="{Binding OrgName}"
+						   Style="{StaticResource MainTextBox}"
 						   />
 			</StackPanel>
-			<!-- Дата рождения -->
+			<!-- Имя директора-->
 			<StackPanel>
-				<TextBlock Text="Дата рождения"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
+				<TextBlock Text="Имя директора содержит"
+						   Style="{StaticResource DirectorLabelStyle}"
+						   />
+				<TextBox   Text="{Binding DirectorFirstName}"
+						   Style="{StaticResource DirectorTextBox}"
+						   />
+			</StackPanel>
+			<!-- Отчество директора-->
+			<StackPanel>
+				<TextBlock Text="Отчество директора содержит"
+						   Style="{StaticResource DirectorLabelStyle}"
+						   />
+				<TextBox   Text="{Binding DirectorMiddleName}"
+						   Style="{StaticResource DirectorTextBox}"
+						   />
+			</StackPanel>
+			<!-- Фамилия директора-->
+			<StackPanel>
+				<TextBlock Text="Фамилия директора содержит"
+						   Style="{StaticResource DirectorLabelStyle}"
+						   />
+				<TextBox   Text="{Binding LastName}"
+						   Style="{StaticResource DirectorTextBox}"
+						   />
+			</StackPanel>
+			<!-- Дата создания -->
+			<StackPanel>
+				<TextBlock Text="Дата создания"
+						   Style="{StaticResource LabelStyle}"
 						   />
 				<TextBlock Text="c" Width="20"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
+						   Style="{StaticResource LabelStyle}"
 						   />
 				<DatePicker	x:Name="StartBirthDateEntryBox" 
-							SelectedDate="{Binding StartDate}"
+							SelectedDate="{Binding RegistrationStartDate}"
 							Margin="10,0,0,0"
 							VerticalAlignment="Center" 
 							/>
 				<TextBlock Text="до" Width="30"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
+						   Style="{StaticResource LabelStyle}"
 						   />
 				<DatePicker	x:Name="EndBirthDateEntryBox" 
-							SelectedDate="{Binding EndDate}"
+							SelectedDate="{Binding RegistrationEndDate}"
 							Margin="10,0,0,0"
 							VerticalAlignment="Center" 
 							/>
 			</StackPanel>
-			<!-- Номер паспорта -->
+			<!-- ИНН -->
 			<StackPanel>
-				<TextBlock Text="№ паспорта содержит"
-						   Style="{StaticResource ResourceKey=LabelStyle}"
+				<TextBlock Text="ИНН содержит"
+						   Style="{StaticResource LabelStyle}"
 						   />
 				<TextBox x:Name="PassportNumEntryBox" 
-						 Text="{Binding PassportNumber}"
+						 Text="{Binding TIN}"
+						   Style="{StaticResource MainTextBox}"
 						 Width="200" 
 						 />
 			</StackPanel>
@@ -119,18 +147,20 @@
 		<!-- Телефон -->
 		<StackPanel>
 			<TextBlock Text="Телефон содержит"
-					   Style="{StaticResource ResourceKey=LabelStyle}"
+					   Style="{StaticResource LabelStyle}"
 					   />
 			<TextBox Text="{Binding Telephone}"
+					 Style="{StaticResource MainTextBox}"
 					 Width="200"
 					 />
 		</StackPanel>
 		<!-- Email -->
 		<StackPanel>
 			<TextBlock Text="Email содержит"
-					   Style="{StaticResource ResourceKey=LabelStyle}"
+					   Style="{StaticResource LabelStyle}"
 					   />
 			<TextBox Text="{Binding Email}"
+					 Style="{StaticResource MainTextBox}"
 					 Width="350"
 					 />
 		</StackPanel>
@@ -140,12 +170,13 @@
 					   Style="{StaticResource ResourceKey=LabelStyle}"
 					   />
 			<TextBox Text="{Binding Address}"
+					 Style="{StaticResource MainTextBox}"
 					 Width="350"
 					 />
 		</StackPanel>
 		<!-- Кнопки Ок и Отмена -->
 		<UniformGrid Columns="2" Rows="1"
-					 Margin="0,25,0,0"
+					 Margin="0,35,0,0"
 					 >
 			<Button Name="btnOk"
 					IsDefault="False" 

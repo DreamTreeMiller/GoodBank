@@ -93,26 +93,38 @@ namespace GoodBankNS
 
 		private void SearchPeopleButton_Click(object sender, RoutedEventArgs e)
 		{
-			EnterSearchRequestForIndividualWindow esriw = new EnterSearchRequestForIndividualWindow();
+			IndividualsSearchRequestWindow esriw = new IndividualsSearchRequestWindow();
 			var result = esriw.ShowDialog();
-
 			if (result != true) return;
 
 			ObservableCollection<IClientDTO> searchResult = BA.Clients.GetClientsList(esriw.CheckAllFields);
-			PersonsSearchResultWindow psrw = new PersonsSearchResultWindow();
+			ShowPersonsSearchResult(searchResult);
+		}
 
-			ClientsViewNameTags tags = new ClientsViewNameTags(WindowID.DepartmentALL);
-			ClientsList cluc = new ClientsList(tags);
-			cluc.ClientsDataGrid.ItemsSource = searchResult;
-
-			psrw.ClientsList.Content = cluc;
-
-			psrw.ShowDialog();
+		private void ShowPersonsSearchResult(ObservableCollection<IClientDTO> searchResult)
+		{
+			ClientsSearchResultWindow csrw = 
+				new ClientsSearchResultWindow(BA, searchResult, WindowID.SearchResultPersons);
+			csrw.MainTitle.Text = "РЕЗУЛЬТАТ ПОИСКА ВИП И ФИЗИКОВ";
+			csrw.ShowDialog();
 		}
 
 		private void SearchOrgButton_Click(object sender, RoutedEventArgs e)
 		{
+			OrganizationsSearchRequestWindow osriw = new OrganizationsSearchRequestWindow();
+			var result = osriw.ShowDialog();
+			if (result != true) return;
 
+			ObservableCollection<IClientDTO> searchResult = BA.Clients.GetClientsList(osriw.CheckAllFields);
+			ShowOrganizationsSearchResult(searchResult);
+		}
+
+		private void ShowOrganizationsSearchResult(ObservableCollection<IClientDTO> searchResult)
+		{
+			ClientsSearchResultWindow csrw = 
+				new ClientsSearchResultWindow(BA, searchResult, WindowID.SearchResultOrganizations);
+			csrw.MainTitle.Text = "РЕЗУЛЬТАТ ПОИСКА ЮРИКОВ";
+			csrw.ShowDialog();
 		}
 
 		private void SearchAccountsButton_Click(object sender, RoutedEventArgs e)

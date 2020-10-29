@@ -266,7 +266,7 @@ namespace GoodBankNS.Imitation
 
 		private static string GenOrgName()
 		{
-			return $"Организация {++orgCount}";
+			return $"Организация {orgCount++}";
 		}
 
 		private static string GenPassportNum()

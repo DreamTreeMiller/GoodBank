@@ -27,7 +27,10 @@ namespace GoodBankNS.UserControlsLists
 		EditClientORG,
 		AccountCurrent,
 		AccountDeposit,
-		AccountCredit
+		AccountCredit,
+		SearchResultPersons,
+		SearchResultOrganizations,
+		SearchResultAccounts
 	}
 
 	public class WindowNameTags
@@ -116,6 +119,22 @@ namespace GoodBankNS.UserControlsLists
 					ShowDirectorCB		 = Visibility.Visible;
 					MainNameTag			 = "ФИО / Название";
 					TotalNameTag		 = "клиентов:";
+					break;
+				case WindowID.SearchResultPersons:
+					CreationDateCBTag	 = "Дата рождения";
+					PassportOrTIN_CB_Tag = "Паспорт";
+					ShowClientTypeColumn = Visibility.Visible;
+					ShowDirectorCB		 = Visibility.Collapsed;
+					MainNameTag			 = "ФИО";
+					TotalNameTag		 = "клиентов:";
+					break;
+				case WindowID.SearchResultOrganizations:
+					CreationDateCBTag	 = "Дата регистрации";
+					PassportOrTIN_CB_Tag = "ИНН";
+					ShowClientTypeColumn = Visibility.Visible;
+					ShowDirectorCB		 = Visibility.Visible;
+					MainNameTag			 = "Название";
+					TotalNameTag		 = "юриков:";
 					break;
 			}
 		}
