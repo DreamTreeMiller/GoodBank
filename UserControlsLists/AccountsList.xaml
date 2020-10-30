@@ -91,7 +91,7 @@
 				</Style>
 			</DataGrid.RowStyle>			
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="№"	Binding="{Binding ID}"/>
+				<DataGridTextColumn Header="№"	Binding="{Binding AccID}"/>
 				<DataGridTextColumn x:Name="ClientTypeColumn" 
 								Header="Клиент"	
 								Binding="{Binding ClientType}"

@@ -1,4 +1,6 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using GoodBankNS.BankInside;
+using GoodBankNS.Interfaces_Data;
+using GoodBankNS.Transaction_Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +34,25 @@ namespace GoodBankNS.AccountClasses
 		/// WithdrawalAllowed	=					--> false
 		/// RecalcPeriod  =							--> monthly
 		/// EndDate		  =							--> из IAccountDTO acc 
-		public AccountCredit(IAccountDTO acc)
+		public AccountCredit(IAccountDTO acc, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
-				   true, false, RecalcPeriod.Monthly, acc.Duration)
+				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{
 			AccountNumber	= "CRE" + AccountNumber;
 			Balance			= acc.Balance;
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Кредитный счет " + AccountNumber
+				+ " на сумму " + Balance + " руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -46,14 +61,27 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountCredit(IAccountDTO acc, DateTime opened)
+		public AccountCredit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				   opened,
-				   true, false, RecalcPeriod.Monthly, acc.Duration)
+				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{
 			AccountNumber	= "CRE" + AccountNumber;
 			Balance			= acc.Balance;
 			MonthsElapsed	= acc.MonthsElapsed;
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				Opened,
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Кредитный счет " + AccountNumber
+				+ " на сумму " + Balance + " руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -65,6 +93,8 @@ namespace GoodBankNS.AccountClasses
 		{
 			if (Closed != null) return 0;
 
+			NumberOfTopUpsInDay = 0;
+
 			// Пересчёт не нужен. 
 			// Клиент должен пополнить счет до 0 и закрыть
 			if (Duration == MonthsElapsed) return 0;
@@ -74,12 +104,22 @@ namespace GoodBankNS.AccountClasses
 			AccumulatedInterest		 += calculatedInterest;
 			Balance					 += calculatedInterest;
 
+			Transaction interestAccrualTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"",
+				AccountNumber,
+				OperationType.InterestAccrual,
+				calculatedInterest,
+				"Начисление процентов на счет " + AccountNumber
+				+ $" на сумму {calculatedInterest:N2} руб."
+				);
+			OnWriteLog(interestAccrualTransaction);
 			return calculatedInterest;
 		}
 
 		public override double CloseAccount()
 		{
-			AccumulatedInterest = 0;
 			return base.CloseAccount();
 		}
 	}

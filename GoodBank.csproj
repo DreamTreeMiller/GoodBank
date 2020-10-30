@@ -108,7 +108,7 @@
     <Compile Include="Interfaces_Data\IGoodBank.cs" />
     <Compile Include="Interfaces_Data\IClientOrg.cs" />
     <Compile Include="Interfaces_Data\IClientSimple.cs" />
-    <Compile Include="Interfaces_Data\TransactionDTO.cs" />
+    <Compile Include="Interfaces_Data\ITransaction.cs" />
     <Compile Include="Interfaces_Data\IClientVIP.cs" />
     <Compile Include="Search\DelegateCompare.cs" />
     <Compile Include="Search\IndividualComparators.cs" />
@@ -160,6 +160,10 @@
     <Compile Include="UserControlsLists\ClientsList.xaml.cs">
       <DependentUpon>ClientsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControlsLists\TransactionsLogUserControl.cs">
+      <DependentUpon>TransactionsLogUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlsLists\TransactionTypeConverter.cs" />
     <Page Include="Imitation\GenerateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -229,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControlsLists\ClientsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlsLists\TransactionsLogUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

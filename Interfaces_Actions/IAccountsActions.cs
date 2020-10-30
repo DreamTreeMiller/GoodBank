@@ -30,18 +30,16 @@ namespace GoodBankNS.Interfaces_Actions
 
 		ObservableCollection<AccountDTO> GetClientAccounts(uint ID, AccountType accType);
 
-		ObservableCollection<IAccount> GetAllTopupableAccounts();
+		ObservableCollection<IAccount> GetTopupableAccountsToWireFrom(uint sourceAccID);
 
 
 		IAccountDTO AddAccount(IAccountDTO acc); 
 
 		IAccountDTO GenerateAccount(IAccountDTO acc);
 
-		IAccount TopUp(uint accID, double amount);
+		IAccount TopUpCash(uint accID, double cashAmount);
 
-		IAccount TopUpWithAccumulatedInterest(uint accID);
-
-		IAccount Withdraw(uint accID, double amount);
+		IAccount WithdrawCash(uint accID, double amount);
 
 		IAccount CloseAccount(uint accID, out double accumulatedAmount);
 

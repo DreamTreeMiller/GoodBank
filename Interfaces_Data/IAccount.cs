@@ -32,7 +32,7 @@ namespace GoodBankNS.Interfaces_Data
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
 		/// </summary>
-		uint			ID				{ get; }
+		uint			AccID				{ get; }
 
 		/// <summary>
 		/// Уникальный номер счёта. 
@@ -97,9 +97,30 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		RecalcPeriod	RecalcPeriod	{ get; set; }
 
-		void TopUp(double amount);
+		bool IsBlocked { get; set; }
 
-		void Withdraw(double amount);
+		/// <summary>
+		/// Пополнение счета наличкой
+		/// </summary>
+		void TopUpCash(double amount);
+
+		/// <summary>
+		/// Снятие налички со счета
+		/// </summary>
+		double WithdrawCash(double amount);
+
+		/// <summary>
+		/// Получение перевода на счет денег со счета-источника
+		/// </summary>
+		/// <param name="wireAmount"></param>
+		void ReceiveFromAccount(IAccount sourceAcc, double wireAmount);
+
+		/// <summary>
+		/// Перевод средств со счета на счет-получатель
+		/// </summary>
+		/// <param name="destAcc">Счет-получатель</param>
+		/// <param name="wireAmount">Сумма перевода</param>
+		void SendToAccount(IAccount destAcc, double wireAmount);
 
 		double CloseAccount();
 	}

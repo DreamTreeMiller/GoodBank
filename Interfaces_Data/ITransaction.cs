@@ -7,46 +7,46 @@ using System.Threading.Tasks;
 
 namespace GoodBankNS.Interfaces_Data
 {
-	public interface ITransactionDTO
+	public interface ITransaction
 	{
 		/// <summary>
 		/// Уникальный ID транзакции
 		/// </summary>
-		uint ID { get; }
+		uint			TransactionID		{ get; }
+
+		/// <summary>
+		/// Счет, над которым совершено действие
+		/// </summary>
+		uint			TransactionAccountID { get; }
 
 		/// <summary>
 		/// Дата и время транзакции
 		/// </summary>
-		DateTime Date { get; }
+		DateTime		TransactionDateTime	{ get; }
 
 		/// <summary>
 		/// Счёт, над которым совершили транзакцию
 		/// </summary>
-		Account Account { get; }
+		string			SourceAccount		{ get; }
 
 		/// <summary>
 		/// Тип операции - вклад или снятие налички, перевод с/на счёт
 		/// </summary>
-		OperationType OperationType { get; }
+		OperationType	OperationType		{ get; }
 
 		/// <summary>
 		/// Счёт, куда или откуда переводят деньги. Null - если операция с наличкой
 		/// </summary>
-		Account PartnerAccount { get; }
+		string			DestinationAccount	{ get; }
 
 		/// <summary>
 		/// Сумма операции. Плюс - вклад, минус - снятие
 		/// </summary>
-		int Amount { get; }
-
-		/// <summary>
-		/// Процент в операции.  0 для текщего счета
-		/// </summary>
-		int Interest { get; }
+		double			Amount				{ get; }
 
 		/// <summary>
 		/// Комментарий
 		/// </summary>
-		string Comment { get; }
+		string			Comment				{ get; }
 	}
 }

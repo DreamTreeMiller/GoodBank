@@ -1,5 +1,7 @@
-﻿using GoodBankNS.DTO;
+﻿using GoodBankNS.BankInside;
+using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Data;
+using GoodBankNS.Transaction_Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +34,25 @@ namespace GoodBankNS.AccountClasses
 		/// WithdrawalAllowed	=					--> ture
 		/// RecalcPeriod  =							--> No recalc period
 		/// EndDate		  =							--> null 
-		public AccountCurrent(IAccountDTO acc)
+		public AccountCurrent(IAccountDTO acc, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
-				   true, true, RecalcPeriod.NoRecalc, 0)
+				   true, true, RecalcPeriod.NoRecalc, 0, writeloghandler)
 		{
 			AccountNumber	= "CUR" + AccountNumber;
 			Balance			= acc.Balance;
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Текущий счет " + AccountNumber 
+				+ " с начальной суммой " + Balance + " руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -46,17 +61,32 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountCurrent(IAccountDTO acc, DateTime opened)
+		public AccountCurrent(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				   opened,
-				   true, true, RecalcPeriod.NoRecalc, 0)
+				   true, true, RecalcPeriod.NoRecalc, 0,
+				   writeloghandler)
 		{
 			AccountNumber = "CUR" + AccountNumber;
 			Balance		  = acc.Balance;
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				Opened,
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Текущий счет " + AccountNumber
+				+ " с начальной суммой " + Balance + " руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		public override double RecalculateInterest()
 		{
+			NumberOfTopUpsInDay = 0;
 			// Do nothing since no interest recalculation for current account
 			return 0;
 		}

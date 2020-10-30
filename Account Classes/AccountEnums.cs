@@ -22,10 +22,14 @@ namespace GoodBankNS.AccountClasses
 
 	public enum OperationType
 	{
+		OpenAccount,
+		CloseAccount,
 		CashDeposit,
 		CashWithdrawal,
-		DepositFromAccount,
-		TransferToAccount
+		ReceiveWireFromAccount,
+		SendWireToAccount,
+		InterestAccrual,
+		BlockAccount
 	}
 
 	public enum RecalcPeriod

@@ -11,10 +11,6 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IGoodBank
 	{
-		private List<Client>		clients;
-		private List<Account>		accounts;
-		private List<Transaction>	log;
-
 		public static DateTime BankFoundationDay = new DateTime(1992, 1, 1);
 		public static DateTime Today			 = DateTime.Now;
 		public GoodBank()
@@ -24,5 +20,10 @@ namespace GoodBankNS.BankInside
 			log		 = new List<Transaction>();
 		}
 
+		public static DateTime GetBanksTodayWithCurrentTime()
+		{
+			return new DateTime(Today.Year, Today.Month, Today.Day, 
+				DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+		}
 	}
 }

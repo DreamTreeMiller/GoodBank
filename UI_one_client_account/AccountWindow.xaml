@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:GoodBankNS.UI_one_client_account"
         mc:Ignorable="d"
         Title="{Binding}" 
-		Height="550" Width="800"
-		MinHeight="550" MinWidth="600"
+		Height="600" Width="800"
+		MinHeight="600" MinWidth="800"
 		WindowStartupLocation="CenterScreen"
 		Background="LightCyan"
 		>
@@ -84,8 +84,9 @@
 			<!-- 2. Вложенная табличка - данные человека или организации-->
 			<!-- 2. Вложенная табличка - тел, имейл, адрес-->
 			<!-- Окошко истории транзакций-->
+			<RowDefinition Height="*"/>
 			<!-- Пустое место-->
-			<!--RowDefinition MinHeight="15" MaxHeight="15"/-->
+			<RowDefinition MinHeight="20" MaxHeight="20"/>
 
 			<!-- Дата грид истории действий со счетом   MinHeight="180"-->
 			<RowDefinition Height="Auto" />
@@ -593,6 +594,21 @@
 							   />
 				</Grid>
 			</Grid>
+		</Grid>
+		<!-- История транзакций-->
+		<Grid Grid.Row="4" Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<TextBlock Text="Транзакции"
+					   VerticalAlignment="Center"
+					   HorizontalAlignment="Center"
+					   Foreground="Maroon"
+					   FontSize="14"
+					   FontWeight="Bold"
+					   />
+			<ContentPresenter x:Name="TransactionsGrid" Grid.Row="1"/>
 		</Grid>
 	</Grid>
 </Window>

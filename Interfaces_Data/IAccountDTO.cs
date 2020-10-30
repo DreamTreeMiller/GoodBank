@@ -14,7 +14,7 @@ namespace GoodBankNS.Interfaces_Data
 		string		ClientName		{ get; set; }
 		uint		ClientID		{ get; set; }
 		AccountType	AccType			{ get; set; }
-		uint		ID				{ get; }
+		uint		AccID				{ get; }
 		string		AccountNumber	{ get; set; }
 		double		Balance			{ get; set; }
 		string		CurrentAmount	{ get; }
@@ -72,5 +72,8 @@ namespace GoodBankNS.Interfaces_Data
 		/// Период пересчета процентов - ежедневно, ежемесячно, ежегодно, один раз в конце
 		/// </summary>
 		RecalcPeriod RecalcPeriod		{ get; set; }
+
+		bool IsBlocked					{ get; set; }
+
 	}
 }

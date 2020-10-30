@@ -4,6 +4,7 @@ using GoodBankNS.DTO;
 using GoodBankNS.Interfaces_Actions;
 using GoodBankNS.Interfaces_Data;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
 
@@ -11,9 +12,11 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IAccountsActions
 	{
+		private List<Account> accounts;
+
 		public IAccount GetAccountByID(uint id)
 		{
-			return accounts.Find(a => a.ID == id);
+			return accounts.Find(a => a.AccID == id);
 		}
 
 		/// <summary>
@@ -29,15 +32,15 @@ namespace GoodBankNS.BankInside
 			switch(acc.AccType)
 			{
 				case AccountType.Current:
-					newAcc = new AccountCurrent(acc);
+					newAcc = new AccountCurrent(acc, WriteLog);
 					client.NumberOfCurrentAccounts++;
 					break;
 				case AccountType.Deposit:
-					newAcc = new AccountDeposit(acc);
+					newAcc = new AccountDeposit(acc, WriteLog);
 					client.NumberOfDeposits++;
 					break;
 				case AccountType.Credit:
-					newAcc = new AccountCredit(acc);
+					newAcc = new AccountCredit(acc, WriteLog);
 					client.NumberOfCredits++;
 					break;
 			}
@@ -58,15 +61,15 @@ namespace GoodBankNS.BankInside
 			switch (acc.AccType)
 			{
 				case AccountType.Current:
-					newAcc = new AccountCurrent(acc, acc.Opened);
+					newAcc = new AccountCurrent(acc, acc.Opened, WriteLog);
 					client.NumberOfCurrentAccounts++;
 					break;
 				case AccountType.Deposit:
-					newAcc = new AccountDeposit(acc, acc.Opened);
+					newAcc = new AccountDeposit(acc, acc.Opened, WriteLog);
 					client.NumberOfDeposits++;
 					break;
 				case AccountType.Credit:
-					newAcc = new AccountCredit(acc, acc.Opened);
+					newAcc = new AccountCredit(acc, acc.Opened, WriteLog);
 					client.NumberOfCredits++;
 					break;
 			}
@@ -183,41 +186,52 @@ namespace GoodBankNS.BankInside
 
 		}
 
-		public ObservableCollection<IAccount> GetAllTopupableAccounts()
+		public ObservableCollection<IAccount> GetTopupableAccountsToWireFrom(uint sourceAccID)
 		{
 			ObservableCollection<IAccount> accList = new ObservableCollection<IAccount>();
 			for (int i = 0; i < accounts.Count; i++)
-				if (accounts[i].Topupable)
+				if (accounts[i].Topupable && accounts[i].AccID != sourceAccID)
 				{
 					accList.Add(accounts[i]);
 				}
 			return accList;
 		}
 
-		public IAccount TopUp(uint accID, double amount)
+		public IAccount TopUpCash(uint accID, double cashAmount)
 		{
 			var acc = GetAccountByID(accID);
-			if (acc.Topupable) acc.TopUp(amount);
+			if (acc.Topupable) acc.TopUpCash(cashAmount);
 			return acc;
 		}
 
-		public IAccount TopUpWithAccumulatedInterest(uint accID)
+		public IAccount WithdrawCash(uint accID, double cashAmount)
 		{
 			var acc = GetAccountByID(accID);
-			if (acc is IAccountDeposit)
+			if(acc.WithdrawalAllowed) acc.WithdrawCash(cashAmount);
+			return acc;
+		}
+
+		/// <summary>
+		/// Перевод средств со счета на счет
+		/// </summary>
+		/// <param name="sourceAccID"></param>
+		/// <param name="destAccID"></param>
+		/// <param name="wireAmount"></param>
+		public void Wire(uint sourceAccID, uint destAccID, double wireAmount)
+		{
+			var sourceAcc = GetAccountByID(sourceAccID);
+			if (sourceAcc.WithdrawalAllowed)
 			{
-				acc.TopUp((acc as IAccountDeposit).AccumulatedInterest);
-				(acc as IAccountDeposit).AccumulatedInterest = 0;
+				if (sourceAcc.Balance >= wireAmount)
+				{
+					var destAcc = GetAccountByID(destAccID);
+					if (destAcc.Topupable)
+					{
+						sourceAcc.SendToAccount(destAcc, wireAmount);
+						destAcc.ReceiveFromAccount(sourceAcc, wireAmount);
+					}
+				}
 			}
-
-			return acc;
-		}
-
-		public IAccount Withdraw(uint accID, double amount)
-		{
-			var acc = GetAccountByID(accID);
-			if(acc.WithdrawalAllowed) acc.Withdraw(amount);
-			return acc;
 		}
 
 		/// <summary>
@@ -249,12 +263,6 @@ namespace GoodBankNS.BankInside
 			return acc;
 		}
 	
-		public void Wire(uint sourceAccID, uint destAccID, double amount)
-		{
-			Withdraw(sourceAccID, amount);
-			TopUp(destAccID, amount);
-		}
-
 		public void AddOneMonth()
 		{
 			GoodBank.Today = GoodBank.Today.AddMonths(1);
@@ -266,10 +274,23 @@ namespace GoodBankNS.BankInside
 				if (acc is AccountDeposit)
 				{
 					uint destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
-					if (destAccID != 0)
-						TopUp(destAccID, currInterest);
+					if (!(acc as AccountDeposit).Compounding && 
+						destAccID    != 0 && 
+						currInterest != 0)
+					{
+						IAccount destAcc = GetAccountByID(destAccID);
+						WireInterestToAccount(acc as IAccountDeposit, destAcc, currInterest);
+					}
 				}
 			}
 		}
+
+		private void WireInterestToAccount(IAccountDeposit sourceAcc, IAccount destAcc, double accumulatedInterest)
+		{
+			sourceAcc.SendInterestToAccount(destAcc, accumulatedInterest);
+			destAcc.ReceiveFromAccount(sourceAcc, accumulatedInterest);
+		}
+
+
 	}
 }

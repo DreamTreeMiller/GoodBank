@@ -11,6 +11,6 @@ namespace GoodBankNS.Interfaces_Actions
 {
 	public interface ITransactions
 	{
-		ObservableCollection<ITransactionDTO> GetTransactionsLog(AccountDTO account);
+		ObservableCollection<ITransaction> GetAccountTransactionsLog(uint accID);
 	}
 }

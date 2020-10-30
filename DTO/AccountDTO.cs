@@ -23,7 +23,7 @@ namespace GoodBankNS.DTO
 		public uint			ClientID		{ get; set; }
 		public string		ClientName		{ get; set; }
 		public AccountType	AccType			{ get; set; }
-		public uint			ID				{ get; } = 0;
+		public uint			AccID			{ get; } = 0;
 		public string		AccountNumber	{ get; set; }
 		public double		Balance			{ get; set; }
 
@@ -103,6 +103,8 @@ namespace GoodBankNS.DTO
 		/// </summary>
 		public RecalcPeriod	RecalcPeriod	{ get; set; }
 
+		public bool			IsBlocked		{ get; set; }
+
 		/// <summary>
 		/// Конструктор для создания заглушек в разных списках счетов
 		/// </summary>
@@ -144,7 +146,7 @@ namespace GoodBankNS.DTO
 		{
 			ClientID			= c.ID;
 			AccType				= acc.AccType;
-			ID					= acc.ID;				// Account ID
+			AccID					= acc.AccID;				// Account ID
 			AccountNumber		= acc.AccountNumber;
 			Balance				= acc.Balance;
 			Interest			= acc.Interest;
@@ -155,6 +157,7 @@ namespace GoodBankNS.DTO
 			Topupable			= acc.Topupable;
 			WithdrawalAllowed	= acc.WithdrawalAllowed;
 			RecalcPeriod		= acc.RecalcPeriod;
+			IsBlocked			= acc.IsBlocked;
 
 			if (acc is IAccountDeposit)
 			{

@@ -26,5 +26,13 @@ namespace GoodBankNS.Interfaces_Data
 		/// Если без капитализации 
 		/// </summary>
 		double AccumulatedInterest { get; set; }
+
+		/// <summary>
+		/// Переводит на другой счет накопленный процент.
+		/// Это нельзя делать обычным переводом, т.к. деньги не списываются с основного счета
+		/// </summary>
+		/// <param name="destAcc"></param>
+		/// <param name="accumulatedInterest"></param>
+		void SendInterestToAccount(IAccount destAcc, double accumulatedInterest);
 	}
 }

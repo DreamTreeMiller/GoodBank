@@ -11,6 +11,8 @@ namespace GoodBankNS.BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
+		private List<Client> clients;
+
 		/// <summary>
 		/// Находит клиента с указанным ID
 		/// </summary>

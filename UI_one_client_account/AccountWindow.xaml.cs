@@ -74,6 +74,8 @@ namespace GoodBankNS.UI_one_client_account
 			set {  accumulatedInterest = value; NotifyPropertyChanged(); }
 		}
 
+		private bool IsBlocked;
+
 		#endregion
 
 		BankActions BA;
@@ -81,6 +83,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		public bool accountsNeedUpdate = false;
 		public bool clientsNeedUpdate  = false;
+		TransactionsLogUserControl transLogUC;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -95,6 +98,7 @@ namespace GoodBankNS.UI_one_client_account
 			InitializeClassScopeVars(ba, acc);
 			InitializeAccountFieldLabelsAndVisibility();
 			InitializeClientDetails();
+			ShowAccountTransactionsLog();
 		}
 
 		private void InitializeClassScopeVars(BankActions ba, IAccountDTO acc)
@@ -103,7 +107,7 @@ namespace GoodBankNS.UI_one_client_account
 			BA = ba;
 			client	= new ClientDTO(BA.Clients.GetClientByID(acc.ClientID));
 
-			AccID						= acc.ID;
+			AccID						= acc.AccID;
 			accountType					= acc.AccType;
 			AccountNumber				= acc.AccountNumber;
 			Balance						= acc.Balance;
@@ -117,6 +121,8 @@ namespace GoodBankNS.UI_one_client_account
 			Compounding					= acc.Compounding;
 			InterestAccumulationAccNum	= acc.InterestAccumulationAccNum;
 			AccumulatedInterest			= acc.AccumulatedInterest;
+			IsBlocked					= acc.IsBlocked;
+
 
 			DataContext = this;
 		}
@@ -153,11 +159,29 @@ namespace GoodBankNS.UI_one_client_account
 			ClientInfo.DataContext = client;
 		}
 
+		private void ShowAccountTransactionsLog()
+		{
+			transLogUC = new TransactionsLogUserControl();
+			TransactionsGrid.Content = transLogUC;
+			UpdateAccountTransactionsLog();
+		}
+
+		private void UpdateAccountTransactionsLog()
+		{
+			var accTransLog = BA.Log.GetAccountTransactionsLog(AccID);
+			transLogUC.TransactionsLog.ItemsSource = accTransLog;
+		}
 		private void TopUpButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (AccClosed != null)
 			{
 				MessageBox.Show($"Счет {AccountNumber} закрыт.");
+				return;
+			}
+
+			if (IsBlocked)
+			{
+				MessageBox.Show($"Счет {AccountNumber} заблокирован.");
 				return;
 			}
 
@@ -170,9 +194,16 @@ namespace GoodBankNS.UI_one_client_account
 			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			IAccount updatedAcc = BA.Accounts.TopUp(AccID, cashWin.amount);
+			IAccount updatedAcc = BA.Accounts.TopUpCash(AccID, cashWin.amount);
 			Balance = updatedAcc.Balance;
+			IsBlocked = updatedAcc.IsBlocked;
 			accountsNeedUpdate = true;
+			UpdateAccountTransactionsLog();
+
+			if (IsBlocked)
+			{
+				MessageBox.Show($"Счет {AccountNumber} заблокирован.");
+			}
 		}
 
 		private void WithdrawCashButton_Click(object sender, RoutedEventArgs e)
@@ -180,6 +211,12 @@ namespace GoodBankNS.UI_one_client_account
 			if (AccClosed != null)
 			{
 				MessageBox.Show($"Счет {AccountNumber} закрыт.");
+				return;
+			}
+
+			if (IsBlocked)
+			{
+				MessageBox.Show($"Счет {AccountNumber} заблокирован.");
 				return;
 			}
 
@@ -197,9 +234,10 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Недостаточно средств для снятия!");
 				return;
 			}
-			IAccount updatedAcc = BA.Accounts.Withdraw(AccID, cashWin.amount);
+			IAccount updatedAcc = BA.Accounts.WithdrawCash(AccID, cashWin.amount);
 			Balance = updatedAcc.Balance;
 			accountsNeedUpdate = true;
+			UpdateAccountTransactionsLog();
 		}
 
 		private void WireButton_Click(object sender, RoutedEventArgs e)
@@ -210,13 +248,19 @@ namespace GoodBankNS.UI_one_client_account
 				return;
 			}
 
+			if (IsBlocked)
+			{
+				MessageBox.Show($"Счет {AccountNumber} заблокирован.");
+				return;
+			}
+
 			if (!WithdrawalAllowed)
 			{
 				MessageBox.Show("C данного счета нельзя снимать средства");
 				return;
 			}
 
-			var topupableAccountsList = BA.Accounts.GetAllTopupableAccounts();
+			var topupableAccountsList = BA.Accounts.GetTopupableAccountsToWireFrom(AccID);
 			EnterAmountAndAccountWindow eaawin = new EnterAmountAndAccountWindow(topupableAccountsList);
 			var result = eaawin.ShowDialog();
 			if (result != true) return;
@@ -227,12 +271,13 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Недостаточно средств для перевода");
 				return;
 			}
-			uint destAccID = eaawin.destinationAccount.ID;
+			uint destAccID = eaawin.destinationAccount.AccID;
 			BA.Accounts.Wire(AccID, destAccID, wireAmount);
 
 			Balance -= wireAmount;
 			MessageBox.Show($"Сумма {wireAmount:N2} руб. успешно переведена");
 			accountsNeedUpdate = true;
+			UpdateAccountTransactionsLog();
 		}
 
 		private void CloseAccountButton_Click(object sender, RoutedEventArgs e)
@@ -240,6 +285,12 @@ namespace GoodBankNS.UI_one_client_account
 			if (AccClosed != null)
 			{
 				MessageBox.Show($"Счет {AccountNumber} уже закрыт.");
+				return;
+			}
+
+			if (IsBlocked)
+			{
+				MessageBox.Show($"Счет {AccountNumber} заблокирован.");
 				return;
 			}
 
@@ -272,6 +323,7 @@ namespace GoodBankNS.UI_one_client_account
 
 			accountsNeedUpdate = true;
 			clientsNeedUpdate  = true;
+			UpdateAccountTransactionsLog();
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using GoodBankNS.BankInside;
+using GoodBankNS.Interfaces_Data;
+using GoodBankNS.Transaction_Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,14 +53,36 @@ namespace GoodBankNS.AccountClasses
 		/// WithdrawalAllowed	=					--> из IAccountDTO acc
 		/// RecalcPeriod  =							--> из IAccountDTO acc
 		/// EndDate		  =							--> из IAccountDTO acc 
-		public AccountDeposit(IAccountDTO acc)
+		public AccountDeposit(IAccountDTO acc, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
+				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
+				  writeloghandler)
 		{
 			AccountNumber	= "DEP" + AccountNumber;
 			Balance			= acc.Balance;
-			InterestAccumulationAccID  = acc.InterestAccumulationAccID;
-			InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
+			if (acc.Compounding)
+			{
+				InterestAccumulationAccID  = AccID;
+				InterestAccumulationAccNum = AccountNumber;
+			}
+			else
+			{
+				InterestAccumulationAccID  = acc.InterestAccumulationAccID;
+				InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
+			}
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Вклад " + AccountNumber
+				+ $" с начальной суммой {Balance:N2} руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -67,16 +91,39 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountDeposit(IAccountDTO acc, DateTime opened)
+		public AccountDeposit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
 			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
 				  opened,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
+				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
+				  writeloghandler)
 		{
 			AccountNumber = "DEP" + AccountNumber;
 			Balance = acc.Balance;
-			InterestAccumulationAccID  = acc.InterestAccumulationAccID;
-			InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
+			if (acc.Compounding)
+			{
+				InterestAccumulationAccID  = AccID;
+				InterestAccumulationAccNum = AccountNumber;
+			}
+			else
+			{
+				InterestAccumulationAccID  = acc.InterestAccumulationAccID;
+				InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
+			}
+
 			MonthsElapsed = acc.MonthsElapsed;
+
+			Transaction openAccountTransaction = new Transaction(
+				AccID,
+				Opened,
+				"",
+				"",
+				OperationType.OpenAccount,
+				Balance,
+				"Вклад " + AccountNumber
+				+ $" с начальной суммой {Balance:N2} руб."
+				+ " открыт."
+				);
+			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -87,9 +134,12 @@ namespace GoodBankNS.AccountClasses
 		{
 			if (Closed != null) return 0;
 
+			if (IsBlocked) return 0;
+
+			NumberOfTopUpsInDay = 0;
+
 			// Пересчёт не нужен. Клиент должен снять средства и закрыть счет
 			if (Duration == MonthsElapsed) return 0;
-
 			double calculatedInterest = 0;
 			MonthsElapsed++;
 
@@ -105,8 +155,12 @@ namespace GoodBankNS.AccountClasses
 						// Владельцу счета надо снять деньги и закрыть счет
 						Topupable		  = false;
 						WithdrawalAllowed = true;
+
+							UpdateLog(calculatedInterest);
+
 					}
 					break;
+
 				// Счет, у которого начисление происходит раз в год
 				case RecalcPeriod.Annually:
 					// Срок год или больше, и прошёл ровно год 
@@ -114,6 +168,8 @@ namespace GoodBankNS.AccountClasses
 					{
 						calculatedInterest   = Balance * Interest;
 						AccumulatedInterest += calculatedInterest;
+
+						UpdateLog(calculatedInterest);
 					}
 
 					if (MonthsElapsed == Duration)
@@ -130,6 +186,8 @@ namespace GoodBankNS.AccountClasses
 						{
 							calculatedInterest   = Balance * Interest * MonthsRemained / 12;
 							AccumulatedInterest += calculatedInterest;
+
+							UpdateLog(calculatedInterest);
 						}
 					}	
 					break;
@@ -137,6 +195,7 @@ namespace GoodBankNS.AccountClasses
 				case RecalcPeriod.Monthly:
 					calculatedInterest   = Balance * Interest / 12;
 					AccumulatedInterest += calculatedInterest;
+
 					if (Duration == MonthsElapsed)
 					{
 						// Срок истёк. Пополнять больше нельзя. 
@@ -144,6 +203,8 @@ namespace GoodBankNS.AccountClasses
 						Topupable		  = false;
 						WithdrawalAllowed = true;
 					}
+
+					UpdateLog(calculatedInterest);
 					break;
 			}
 
@@ -152,17 +213,67 @@ namespace GoodBankNS.AccountClasses
 			return calculatedInterest;
 		}
 
+		/// <summary>
+		/// Переводит на другой счет накопленный процент.
+		/// Это нельзя делать обычным переводом, т.к. деньги не списываются с основного счета
+		/// </summary>
+		/// <param name="destAcc"></param>
+		/// <param name="accumulatedInterest"></param>
+		public void SendInterestToAccount(IAccount destAcc, double accumulatedInterest)
+		{
+			Transaction withdrawCashTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"накопленный процент",
+				destAcc.AccountNumber,
+				OperationType.SendWireToAccount,
+				accumulatedInterest,
+				"Перевод накопленных процентов"
+				+ " на счет " + destAcc.AccountNumber
+				+ $" в размере {accumulatedInterest:N2} руб."
+				);
+			OnWriteLog(withdrawCashTransaction);
+		}
+
+		private void UpdateLog(double calculatedInterest)
+		{
+			string comment;
+
+			if (InterestAccumulationAccID == 0)
+			{
+				comment = "Начисление процентов на внутренний счет"
+							+ $" на сумму {calculatedInterest:N2} руб.";
+			}
+			else
+			{
+				comment = $"Начисление процентов на сумму {calculatedInterest:N2} руб.";
+			}
+
+
+			Transaction interestAccrualTransaction = new Transaction(
+				AccID,
+				GoodBank.GetBanksTodayWithCurrentTime(),
+				"",
+				InterestAccumulationAccNum,
+				OperationType.InterestAccrual,
+				calculatedInterest,
+				comment
+				);
+
+			OnWriteLog(interestAccrualTransaction);
+		}
+
 		public override double CloseAccount()
 		{
-			double totalBalance = base.CloseAccount();
-
 			// Если без капитализации и накапливали на внутреннем счету,
-			// тогда этот процент надо тоже суммировать
+			// тогда этот процент переводим на основной счет
 			if (!Compounding && InterestAccumulationAccID == 0)
-				totalBalance += AccumulatedInterest;
-			AccumulatedInterest = 0;
+			{
+				Balance += AccumulatedInterest;
+				AccumulatedInterest = 0;
+			}
 
-			return totalBalance;
+			return base.CloseAccount();
 		}
 
 	}
