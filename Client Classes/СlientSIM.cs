@@ -1,13 +1,13 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public class СlientSIM : Client, IClientSimple
+	public class ClientSIM : Client
 	{
 		#region ФИО, № паспорта, дата рождения
 
@@ -21,7 +21,7 @@ namespace GoodBankNS.ClientClasses
 
 		#region Конструктор
 
-		public СlientSIM(IClientDTO newClient)
+		public ClientSIM(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
 			FirstName		= newClient.FirstName;

@@ -1,23 +1,23 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Actions;
-using GoodBankNS.Interfaces_Data;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using GoodBankNS.Transaction_Class;
-using System;
+using AccountClasses;
+using ClientClasses;
+using Transaction_Class;
+using EF;
 
-namespace GoodBankNS.BankInside
+namespace BankInside
 {
-	public partial class GoodBank : IGoodBank
+	public partial class GoodBank
 	{
 		public static DateTime BankFoundationDay = new DateTime(1992, 1, 1);
 		public static DateTime Today			 = DateTime.Now;
+		private BankContext		db;
 		public GoodBank()
 		{
 			clients  = new List<Client>();
 			accounts = new List<Account>();
 			log		 = new List<Transaction>();
+			db		 = new BankContext();
 		}
 
 		public static DateTime GetBanksTodayWithCurrentTime()

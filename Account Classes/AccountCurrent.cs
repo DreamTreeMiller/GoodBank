@@ -1,14 +1,14 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Transaction_Class;
+﻿using BankInside;
+using DTO;
+using Interfaces_Data;
+using Transaction_Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.AccountClasses
+namespace AccountClasses
 {
 	public class AccountCurrent : Account
 	{
@@ -42,7 +42,7 @@ namespace GoodBankNS.AccountClasses
 			Balance			= acc.Balance;
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				"",
@@ -71,7 +71,7 @@ namespace GoodBankNS.AccountClasses
 			Balance		  = acc.Balance;
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				Opened,
 				"",
 				"",

@@ -1,13 +1,13 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public abstract class Client : IClient
+	public abstract class Client
 	{
 
 		#region Статическая часть для генерации уникального ID
@@ -15,7 +15,7 @@ namespace GoodBankNS.ClientClasses
 		/// <summary>
 		/// Текущий ID счета
 		/// </summary>
-		private static uint staticID;
+		private static int staticID;
 
 		/// <summary>
 		/// Статический конструктор. Обнуляет счетчик ID
@@ -29,7 +29,7 @@ namespace GoodBankNS.ClientClasses
 		/// Герерирует следующий ID
 		/// </summary>
 		/// <returns>New unique ID</returns>
-		private static uint NextID()
+		private static int NextID()
 		{
 			staticID++;
 			return staticID;
@@ -42,7 +42,7 @@ namespace GoodBankNS.ClientClasses
 		/// <summary>
 		/// ID клиента в базе
 		/// </summary>
-		public uint		ID						{ get; }
+		public int		ID						{ get; set; }
 
 		public string	Telephone				{ get; set; }
 		public string	Email					{ get; set; }

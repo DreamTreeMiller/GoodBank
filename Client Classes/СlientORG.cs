@@ -1,13 +1,13 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public class СlientORG : Client, IClientOrg
+	public class ClientORG : Client
 	{
 		#region Название организации, ФИО директора, ИНН, дата регистрации
 
@@ -30,7 +30,7 @@ namespace GoodBankNS.ClientClasses
 
 		#region Конструктор
 
-		public СlientORG(IClientDTO newClient)
+		public ClientORG(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
 			OrgName				= newClient.MainName;

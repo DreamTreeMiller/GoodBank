@@ -1,15 +1,12 @@
-﻿using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.Imitation;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.UI_clients;
-using GoodBankNS.BankInside;
-using System.Windows;
-using GoodBankNS.UserControlsLists;
-using GoodBankNS.Search;
-using System.Windows.Documents;
-using GoodBankNS.DTO;
-using System.Collections.Generic;
+﻿using System.Windows;
 using System.Collections.ObjectModel;
+using Binding_UI_CondeBehind;
+using Imitation;
+using Interfaces_Data;
+using UI_clients;
+using BankInside;
+using UserControlsLists;
+using Search;
 
 namespace GoodBankNS
 {
@@ -18,10 +15,9 @@ namespace GoodBankNS
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private IGoodBank GoodBank;
 		private BankActions BA;
 		public string BankFoundationDay = "Основан " 
-			+ $"{GoodBankNS.BankInside.GoodBank.BankFoundationDay:D}"
+			+ $"{BankInside.GoodBank.BankFoundationDay:D}"
 			;
 
 		public MainWindow()
@@ -34,14 +30,13 @@ namespace GoodBankNS
 
 		private void InitializeBank()
 		{
-			GoodBank = new GoodBank();
-			BA		 = new BankActions(GoodBank);
+			BA		 = new BankActions();
 		}
 
 		private void InitializeWelcomeScreenMessages()
 		{
 			BankFoundationDayMessage.Text = BankFoundationDay;
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd MMMM yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
@@ -76,7 +71,7 @@ namespace GoodBankNS
 		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
 		{
 			BA.Accounts.AddOneMonth();
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd MMMM yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
 			MessageBox.Show("Время в мире, где существует банк, ушло на месяц вперёд.\n"
 						  + "Пересчитаны проценты на всех счетах.");
 

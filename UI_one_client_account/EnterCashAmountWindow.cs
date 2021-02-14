@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for EnterTopUpCashAmountWindow.xaml

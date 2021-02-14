@@ -1,25 +1,14 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
+﻿using BankInside;
+using ClientClasses;
+using Interfaces_Data;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for OpenCreditWindow.xaml
@@ -181,7 +170,7 @@ namespace GoodBankNS.UI_one_client_account
 			});
 		}
 
-		public OpenCreditWindow(ObservableCollection<AccountDTO> creditRecipientAccounts, ClientType clientType)
+		public OpenCreditWindow(ObservableCollection<IAccountDTO> creditRecipientAccounts, ClientType clientType)
 		{
 			InitializeComponent();
 			InitializeWindowLabelsAndData(creditRecipientAccounts, clientType);
@@ -189,9 +178,9 @@ namespace GoodBankNS.UI_one_client_account
 			SetFocusOnCreditAmountEntryBox();
 		}
 
-		private void InitializeWindowLabelsAndData(ObservableCollection<AccountDTO> creditRecipientAccounts, ClientType clientType)
+		private void InitializeWindowLabelsAndData(ObservableCollection<IAccountDTO> creditRecipientAccounts, ClientType clientType)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd.MM.yyyy} г.";
 			CreditRecipientAccount.ItemsSource = creditRecipientAccounts;
 
 			switch (clientType)

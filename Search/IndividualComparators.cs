@@ -1,11 +1,8 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	public class FirstNameComparator
 	{
@@ -13,13 +10,13 @@ namespace GoodBankNS.Search
 
 		public FirstNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).FirstName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).FirstName.Contains(objectToFind);
+			if (sourceP is ClientVIP)
+				flag = (sourceP as ClientVIP).FirstName.Contains(objectToFind);
+			if (sourceP is ClientSIM)
+				flag = (sourceP as ClientSIM).FirstName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -30,13 +27,13 @@ namespace GoodBankNS.Search
 
 		public MiddleNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).MiddleName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).MiddleName.Contains(objectToFind);
+			if (sourceP is ClientVIP)
+				flag = (sourceP as ClientVIP).MiddleName.Contains(objectToFind);
+			if (sourceP is ClientSIM)
+				flag = (sourceP as ClientSIM).MiddleName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -47,13 +44,13 @@ namespace GoodBankNS.Search
 
 		public LastNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).LastName.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).LastName.Contains(objectToFind);
+			if (sourceP is ClientVIP)
+				flag = (sourceP as ClientVIP).LastName.Contains(objectToFind);
+			if (sourceP is ClientSIM)
+				flag = (sourceP as ClientSIM).LastName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -64,10 +61,10 @@ namespace GoodBankNS.Search
 
 		public StartDateComparator(DateTime value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = objectToFind <= (sourceP as IClientSimple).BirthDate;
+			flag = objectToFind <= (sourceP as ClientSIM).BirthDate;
 			return flag;
 		}
 	}
@@ -78,13 +75,13 @@ namespace GoodBankNS.Search
 
 		public EndDateComparator(DateTime value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).BirthDate <= objectToFind;
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).BirthDate <= objectToFind;
+			if (sourceP is ClientVIP)
+				flag = (sourceP as ClientVIP).BirthDate <= objectToFind;
+			if (sourceP is ClientSIM)
+				flag = (sourceP as ClientSIM).BirthDate <= objectToFind;
 			return flag;
 		}
 	}
@@ -95,13 +92,13 @@ namespace GoodBankNS.Search
 
 		public PassportNumberComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			if (sourceP is IClientVIP)
-				flag = (sourceP as IClientVIP).PassportNumber.Contains(objectToFind);
-			if (sourceP is IClientSimple)
-				flag = (sourceP as IClientSimple).PassportNumber.Contains(objectToFind);
+			if (sourceP is ClientVIP)
+				flag = (sourceP as ClientVIP).PassportNumber.Contains(objectToFind);
+			if (sourceP is ClientSIM)
+				flag = (sourceP as ClientSIM).PassportNumber.Contains(objectToFind);
 			return flag;
 		}
 	}

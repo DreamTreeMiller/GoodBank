@@ -1,13 +1,13 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public class ClientVIP : Client, IClientVIP
+	public class ClientVIP : Client
 	{
 		#region ФИО, № паспорта, дата рождения
 

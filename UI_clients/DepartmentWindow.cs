@@ -1,13 +1,13 @@
-﻿using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.UI_one_client_account;
-using GoodBankNS.UserControlsLists;
+﻿using Binding_UI_CondeBehind;
+using ClientClasses;
+using DTO;
+using Interfaces_Data;
+using UI_one_client_account;
+using UserControlsLists;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace GoodBankNS.UI_clients
+namespace UI_clients
 {
 	/// <summary>
 	/// Interaction logic for VIPclientsWindow.xaml
@@ -21,11 +21,11 @@ namespace GoodBankNS.UI_clients
 		private ClientsList				clientsListView;
 		private ClientsViewNameTags		clntag;
 		private WindowID				addClientWID;
-		ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
+		ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
 
 		private ClientType				ClientTypeForAccountsList;
 		private AccountsList			accountsListView;
-		ObservableCollection<AccountDTO> accountsList = new ObservableCollection<AccountDTO>();
+		ObservableCollection<IAccountDTO> accountsList = new ObservableCollection<IAccountDTO>();
 
 		public DepartmentWindow(WindowID wid, BankActions ba)
 		{
@@ -39,7 +39,7 @@ namespace GoodBankNS.UI_clients
 
 		private void InitializeView(WindowID wid, BankActions ba)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy}";
+			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy}";
 
 			// Прикручиваем банк с обработчиками всех действий над счетами
 			BA = ba;
@@ -67,22 +67,22 @@ namespace GoodBankNS.UI_clients
 			switch (wid)
 			{
 				case WindowID.DepartmentVIP:
-					clientsList = BA.Clients.GetClientsList<IClientVIP>();
+					clientsList = BA.Clients.GetClientsList(ClientType.VIP);
 					ClientTypeForAccountsList	= ClientType.VIP;
 					addClientWID				= WindowID.AddClientVIP;
 					break;
 				case WindowID.DepartmentSIM:
-					clientsList = BA.Clients.GetClientsList<IClientSimple>();
+					clientsList = BA.Clients.GetClientsList(ClientType.Simple);
 					ClientTypeForAccountsList	= ClientType.Simple;
 					addClientWID				= WindowID.AddClientSIM;
 					break;
 				case WindowID.DepartmentORG:
-					clientsList = BA.Clients.GetClientsList<IClientOrg>();
+					clientsList = BA.Clients.GetClientsList(ClientType.Organization);
 					ClientTypeForAccountsList	= ClientType.Organization;
 					addClientWID				= WindowID.AddClientORG;
 					break;
 				case WindowID.DepartmentALL:
-					clientsList = BA.Clients.GetClientsList<IClient>();
+					clientsList = BA.Clients.GetClientsList(ClientType.All);
 					ClientTypeForAccountsList	= ClientType.All;
 					addClientWID				= WindowID.AddClientALL;
 					break;
@@ -154,7 +154,7 @@ namespace GoodBankNS.UI_clients
 				MessageBox.Show("Выберите счет для показа");
 				return;
 			}
-			IClient client = BA.Clients.GetClientByID(account.ClientID);
+			//IClientDTO client = BA.Clients.GetClientDTObyID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
 			if (accountWindow.clientsNeedUpdate)  InitializeClientsAndWindowTypes();

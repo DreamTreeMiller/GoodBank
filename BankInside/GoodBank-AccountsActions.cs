@@ -1,22 +1,22 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Actions;
-using GoodBankNS.Interfaces_Data;
+﻿using AccountClasses;
+using ClientClasses;
+using DTO;
+using Interfaces_Actions;
+using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
 
-namespace GoodBankNS.BankInside
+namespace BankInside
 {
 	public partial class GoodBank : IAccountsActions
 	{
 		private List<Account> accounts;
 
-		public IAccount GetAccountByID(uint id)
+		public Account GetAccountByID(int id)
 		{
-			return accounts.Find(a => a.AccID == id);
+			return accounts.Find(a => a.AccountID == id);
 		}
 
 		/// <summary>
@@ -45,6 +45,8 @@ namespace GoodBankNS.BankInside
 					break;
 			}
 			accounts.Add(newAcc);
+			db.Accounts.Add(newAcc);
+			db.SaveChanges();
 			return new AccountDTO(client, newAcc);
 		}
 
@@ -74,6 +76,8 @@ namespace GoodBankNS.BankInside
 					break;
 			}
 			accounts.Add(newAcc);
+			db.Accounts.Add(newAcc);
+			db.SaveChanges();
 			return new AccountDTO(client, newAcc);
 		}
 
@@ -84,12 +88,12 @@ namespace GoodBankNS.BankInside
 		/// <returns>
 		/// возвращает коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
 		/// </returns>
-		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+		public (ObservableCollection<IAccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
 			GetAccountsList(ClientType clientType)
 		{
-			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
 			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
-			IAccount acc;
+			Account acc;
 			if (clientType == ClientType.All)
 			{
 				for (int i = 0; i < accounts.Count; i++)
@@ -102,8 +106,8 @@ namespace GoodBankNS.BankInside
 							break;
 						case AccountType.Deposit:
 							totalDeposit += acc.Balance;
-							if (!acc.Compounding && (acc as IAccountDeposit).InterestAccumulationAccID == 0)
-								totalDeposit += (acc as IAccountDeposit).AccumulatedInterest;
+							if (!acc.Compounding && (acc as AccountDeposit).InterestAccumulationAccID == 0)
+								totalDeposit += (acc as AccountDeposit).AccumulatedInterest;
 							break;
 						case AccountType.Credit:
 							totalCredit += acc.Balance;
@@ -142,13 +146,13 @@ namespace GoodBankNS.BankInside
 		/// <returns>
 		/// возвращает коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
 		/// </returns>
-		public (ObservableCollection<AccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
-			GetClientAccounts(uint clientID)
+		public (ObservableCollection<IAccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
+			GetClientAccounts(int clientID)
 		{
-			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
 			var client = GetClientByID(clientID);
 			double totalCurr = 0, totalDeposit = 0, totalCredit = 0;
-			IAccount acc;
+			Account acc;
 
 			for (int i = 0; i < accounts.Count; i++)
 				if (accounts[i].ClientID == clientID)
@@ -171,9 +175,9 @@ namespace GoodBankNS.BankInside
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
-		public ObservableCollection<AccountDTO> GetClientAccounts(uint clientID, AccountType accType)
+		public ObservableCollection<IAccountDTO> GetClientAccounts(int clientID, AccountType accType)
 		{
-			ObservableCollection<AccountDTO> accList = new ObservableCollection<AccountDTO>();
+			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
 			var client = GetClientByID(clientID);
 
 			for (int i = 0; i < accounts.Count; i++)
@@ -186,29 +190,34 @@ namespace GoodBankNS.BankInside
 
 		}
 
-		public ObservableCollection<IAccount> GetTopupableAccountsToWireFrom(uint sourceAccID)
+		/// <summary>
+		/// Формирует коллекцию номеров счетов, на которые можно переводить деньги 
+		/// </summary>
+		/// <param name="sourceAccID"></param>
+		/// <returns></returns>
+		public ObservableCollection<IAccountDTO> GetTopupableAccountsToWireTo(int sourceAccID)
 		{
-			ObservableCollection<IAccount> accList = new ObservableCollection<IAccount>();
+			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
 			for (int i = 0; i < accounts.Count; i++)
-				if (accounts[i].Topupable && accounts[i].AccID != sourceAccID)
+				if (accounts[i].Topupable && accounts[i].AccountID != sourceAccID)
 				{
-					accList.Add(accounts[i]);
+					accList.Add(new AccountDTO(accounts[i]));
 				}
 			return accList;
 		}
 
-		public IAccount TopUpCash(uint accID, double cashAmount)
+		public IAccountDTO TopUpCash(int accID, double cashAmount)
 		{
 			var acc = GetAccountByID(accID);
 			if (acc.Topupable) acc.TopUpCash(cashAmount);
-			return acc;
+			return new AccountDTO(acc);
 		}
 
-		public IAccount WithdrawCash(uint accID, double cashAmount)
+		public IAccountDTO WithdrawCash(int accID, double cashAmount)
 		{
 			var acc = GetAccountByID(accID);
 			if(acc.WithdrawalAllowed) acc.WithdrawCash(cashAmount);
-			return acc;
+			return new AccountDTO(acc);
 		}
 
 		/// <summary>
@@ -217,18 +226,18 @@ namespace GoodBankNS.BankInside
 		/// <param name="sourceAccID"></param>
 		/// <param name="destAccID"></param>
 		/// <param name="wireAmount"></param>
-		public void Wire(uint sourceAccID, uint destAccID, double wireAmount)
+		public void Wire(int sourceAccID, int destAccID, double wireAmount)
 		{
-			var sourceAcc = GetAccountByID(sourceAccID);
+			Account sourceAcc = GetAccountByID(sourceAccID);
 			if (sourceAcc.WithdrawalAllowed)
 			{
 				if (sourceAcc.Balance >= wireAmount)
 				{
-					var destAcc = GetAccountByID(destAccID);
+					Account destAcc = GetAccountByID(destAccID);
 					if (destAcc.Topupable)
 					{
-						sourceAcc.SendToAccount(destAcc, wireAmount);
-						destAcc.ReceiveFromAccount(sourceAcc, wireAmount);
+						sourceAcc.SendToAccount(destAcc.AccountNumber, wireAmount);
+						destAcc.ReceiveFromAccount(sourceAcc.AccountNumber, wireAmount);
 					}
 				}
 			}
@@ -240,12 +249,12 @@ namespace GoodBankNS.BankInside
 		/// </summary>
 		/// <param name="accID"></param>
 		/// <returns></returns>
-		public IAccount CloseAccount(uint accID, out double accumulatedAmount)
+		public IAccountDTO CloseAccount(int accID, out double accumulatedAmount)
 		{
-			IAccount acc		= GetAccountByID(accID);
+			Account acc			= GetAccountByID(accID);
 			accumulatedAmount	= acc.CloseAccount();
 
-			IClient client = GetClientByID(acc.ClientID);
+			Client client		= GetClientByID(acc.ClientID);
 			client.NumberOfClosedAccounts++;
 
 			switch(acc.AccType)
@@ -260,9 +269,9 @@ namespace GoodBankNS.BankInside
 					client.NumberOfCredits--;
 					break;
 			}
-			return acc;
+			return new AccountDTO(acc);
 		}
-	
+
 		public void AddOneMonth()
 		{
 			GoodBank.Today = GoodBank.Today.AddMonths(1);
@@ -273,22 +282,22 @@ namespace GoodBankNS.BankInside
 				double currInterest = acc.RecalculateInterest();
 				if (acc is AccountDeposit)
 				{
-					uint destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
+					int destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
 					if (!(acc as AccountDeposit).Compounding && 
 						destAccID    != 0 && 
 						currInterest != 0)
 					{
-						IAccount destAcc = GetAccountByID(destAccID);
-						WireInterestToAccount(acc as IAccountDeposit, destAcc, currInterest);
+						Account destAcc = GetAccountByID(destAccID);
+						WireInterestToAccount(acc as AccountDeposit, destAcc, currInterest);
 					}
 				}
 			}
 		}
 
-		private void WireInterestToAccount(IAccountDeposit sourceAcc, IAccount destAcc, double accumulatedInterest)
+		private void WireInterestToAccount(AccountDeposit sourceAcc, Account destAcc, double accumulatedInterest)
 		{
-			sourceAcc.SendInterestToAccount(destAcc, accumulatedInterest);
-			destAcc.ReceiveFromAccount(sourceAcc, accumulatedInterest);
+			sourceAcc.SendInterestToAccount(destAcc.AccountNumber, accumulatedInterest);
+			destAcc.ReceiveFromAccount(sourceAcc.AccountNumber, accumulatedInterest);
 		}
 
 

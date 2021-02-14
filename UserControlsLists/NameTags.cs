@@ -1,5 +1,5 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
+﻿using AccountClasses;
+using ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace GoodBankNS.UserControlsLists
+namespace UserControlsLists
 {
 	/// <summary>
 	/// Номер окошка. В зависимости от номера, разное наполнение

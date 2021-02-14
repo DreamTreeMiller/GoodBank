@@ -1,12 +1,12 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.DTO;
+﻿using AccountClasses;
+using DTO;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace GoodBankNS.UserControlsLists
+namespace UserControlsLists
 {
 	[ValueConversion(typeof(Object[]), typeof(Visibility))]
 	public class HideRowConverter : IMultiValueConverter

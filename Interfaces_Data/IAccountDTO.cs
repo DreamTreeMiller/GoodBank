@@ -1,20 +1,20 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
+﻿using AccountClasses;
+using ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.Interfaces_Data
+namespace Interfaces_Data
 {
 	public interface IAccountDTO 
 	{
 		ClientType	ClientType		{ get; set; }
 		string		ClientName		{ get; set; }
-		uint		ClientID		{ get; set; }
+		int			ClientID		{ get; set; }
 		AccountType	AccType			{ get; set; }
-		uint		AccID				{ get; }
+		int			AccountID		{ get; }
 		string		AccountNumber	{ get; set; }
 		double		Balance			{ get; set; }
 		string		CurrentAmount	{ get; }
@@ -31,7 +31,7 @@ namespace GoodBankNS.Interfaces_Data
 		/// ID счета, куда перечислять проценты.
 		/// При капитализации, совпадает с ИД счета депозита
 		/// </summary>
-		uint		InterestAccumulationAccID		{ get; set; }
+		int			InterestAccumulationAccID		{ get; set; }
 
 		string		InterestAccumulationAccNum		{ get; set; }
 
@@ -73,7 +73,7 @@ namespace GoodBankNS.Interfaces_Data
 		/// </summary>
 		RecalcPeriod RecalcPeriod		{ get; set; }
 
-		bool IsBlocked					{ get; set; }
+		bool			IsBlocked		{ get; set; }
 
 	}
 }

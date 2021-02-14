@@ -1,15 +1,15 @@
-﻿using GoodBankNS.ClientClasses;
+﻿using ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.Interfaces_Data
+namespace Interfaces_Data
 {
 	public interface IClientDTO
 	{
-		uint ID { get; }
+		int ID { get; }
 		ClientType ClientType { get; set; }
 		string FirstName { get; set; }
 		string MiddleName { get; set; }

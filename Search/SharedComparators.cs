@@ -1,11 +1,7 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	public class TelephoneComparator
 	{
@@ -13,7 +9,7 @@ namespace GoodBankNS.Search
 
 		public TelephoneComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
 			flag = sourceP.Telephone.Contains(objectToFind);
@@ -27,7 +23,7 @@ namespace GoodBankNS.Search
 
 		public EmailComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
 			flag = sourceP.Email.Contains(objectToFind);
@@ -41,7 +37,7 @@ namespace GoodBankNS.Search
 
 		public AddressComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
 			flag = sourceP.Address.Contains(objectToFind);

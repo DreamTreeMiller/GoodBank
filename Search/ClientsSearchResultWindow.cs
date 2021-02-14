@@ -1,8 +1,8 @@
-﻿using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.UI_one_client_account;
-using GoodBankNS.UserControlsLists;
+﻿using Binding_UI_CondeBehind;
+using DTO;
+using Interfaces_Data;
+using UI_one_client_account;
+using UserControlsLists;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	/// <summary>
 	/// Interaction logic for PersonsSearchResultWindow.xaml

@@ -1,21 +1,10 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	/// <summary>
 	/// Interaction logic for OrganizationsSearchRequestWindow1.xaml
@@ -304,9 +293,9 @@ namespace GoodBankNS.Search
 			DialogResult = true;
 		}
 
-		private bool CheckIfOrganization(IClient p, ref bool flag)
+		private bool CheckIfOrganization(Client p, ref bool flag)
 		{
-			if (p is IClientOrg) return true;
+			if (p is ClientORG) return true;
 			flag = false;
 			return false;
 		}

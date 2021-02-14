@@ -1,11 +1,6 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
-	public delegate bool Compare(IClient p, ref bool flag);
+	public delegate bool Compare(Client p, ref bool flag);
 }

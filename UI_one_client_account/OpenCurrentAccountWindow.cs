@@ -1,4 +1,4 @@
-﻿using GoodBankNS.BankInside;
+﻿using BankInside;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for OpenAccountWindow.xaml
@@ -30,7 +30,7 @@ namespace GoodBankNS.UI_one_client_account
 		public OpenCurrentAccountWindow()
 		{
 			InitializeComponent();
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			DataContext = this;
 			Dispatcher.BeginInvoke((ThreadStart)delegate
 			{

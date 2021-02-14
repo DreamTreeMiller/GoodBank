@@ -1,11 +1,8 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	public class OrgNameComparator
 	{
@@ -13,10 +10,10 @@ namespace GoodBankNS.Search
 
 		public OrgNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).OrgName.Contains(objectToFind);
+			flag = (sourceP as ClientORG).OrgName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -28,10 +25,10 @@ namespace GoodBankNS.Search
 
 		public DirectorFirstNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).DirectorFirstName.Contains(objectToFind);
+			flag = (sourceP as ClientORG).DirectorFirstName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -42,10 +39,10 @@ namespace GoodBankNS.Search
 
 		public DirectorMiddleNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).DirectorMiddleName.Contains(objectToFind);
+			flag = (sourceP as ClientORG).DirectorMiddleName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -56,10 +53,10 @@ namespace GoodBankNS.Search
 
 		public DirectorLastNameComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).DirectorLastName.Contains(objectToFind);
+			flag = (sourceP as ClientORG).DirectorLastName.Contains(objectToFind);
 			return flag;
 		}
 	}
@@ -70,10 +67,10 @@ namespace GoodBankNS.Search
 
 		public RegistrationStartDateComparator(DateTime value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = objectToFind <= (sourceP as IClientOrg).RegistrationDate;
+			flag = objectToFind <= (sourceP as ClientORG).RegistrationDate;
 			return flag;
 		}
 	}
@@ -84,10 +81,10 @@ namespace GoodBankNS.Search
 
 		public RegistrationEndDateComparator(DateTime value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).RegistrationDate <= objectToFind;
+			flag = (sourceP as ClientORG).RegistrationDate <= objectToFind;
 			return flag;
 		}
 	}
@@ -98,10 +95,10 @@ namespace GoodBankNS.Search
 
 		public TINComparator(string value) { objectToFind = value; }
 
-		public bool Compare(IClient sourceP, ref bool flag)
+		public bool Compare(Client sourceP, ref bool flag)
 		{
 			if (!flag) return false;
-			flag = (sourceP as IClientOrg).TIN.Contains(objectToFind);
+			flag = (sourceP as ClientORG).TIN.Contains(objectToFind);
 			return flag;
 		}
 	}

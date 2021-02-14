@@ -1,15 +1,10 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Actions;
-using GoodBankNS.Interfaces_Data;
+﻿using AccountClasses;
+using ClientClasses;
+using Interfaces_Actions;
+using Interfaces_Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
-namespace GoodBankNS.DTO
+namespace DTO
 {
 	/// <summary>
 	/// Структура для показа данных о любом счете
@@ -19,11 +14,14 @@ namespace GoodBankNS.DTO
 	/// </summary>
 	public class AccountDTO : IAccountDTO
 	{
+		#region Свойства
+
+		#endregion
 		public ClientType	ClientType		{ get; set; }
-		public uint			ClientID		{ get; set; }
+		public int			ClientID		{ get; set; }
 		public string		ClientName		{ get; set; }
 		public AccountType	AccType			{ get; set; }
-		public uint			AccID			{ get; } = 0;
+		public int			AccountID			{ get; } = 0;
 		public string		AccountNumber	{ get; set; }
 		public double		Balance			{ get; set; }
 
@@ -55,7 +53,7 @@ namespace GoodBankNS.DTO
 		/// При капитализации, совпадает с ИД счета депозита
 		/// 0 - если внутренний счет
 		/// </summary>
-		public uint			InterestAccumulationAccID	{ get; set; }
+		public int			InterestAccumulationAccID	{ get; set; }
 
 
 		public string		InterestAccumulationAccNum	{ get; set; }
@@ -115,9 +113,9 @@ namespace GoodBankNS.DTO
 		/// Данные получены от ручного ввода
 		/// 14 полей!!! ужас!!!
 		/// </summary>
-		public AccountDTO(ClientType ct, uint clientID, AccountType accType,
+		public AccountDTO(ClientType ct, int clientID, AccountType accType,
 						  double balance, double interest, 
-						  bool compounding, uint interestAccumAccID, string interestAccumAccNum, DateTime opened, 
+						  bool compounding, int interestAccumAccID, string interestAccumAccNum, DateTime opened, 
 						  bool topup, bool withdraw, RecalcPeriod recalc, int duration, int monthsElapsed)
 
 		{
@@ -137,16 +135,16 @@ namespace GoodBankNS.DTO
 			MonthsElapsed		= monthsElapsed;
 		}
 
-	/// <summary>
-	/// Конструктор для формирования ДТО для ПОКАЗА счетов
-	/// </summary>
-	/// <param name="c">Клиент</param>
-	/// <param name="acc">Счет</param>
-	public AccountDTO(IClient c, IAccount acc)
+		/// <summary>
+		/// Конструктор для формирования ДТО для ПОКАЗА счетов
+		/// </summary>
+		/// <param name="c">Клиент</param>
+		/// <param name="acc">Счет</param>
+		public AccountDTO(Client c, Account acc)
 		{
 			ClientID			= c.ID;
 			AccType				= acc.AccType;
-			AccID					= acc.AccID;				// Account ID
+			AccountID				= acc.AccountID;
 			AccountNumber		= acc.AccountNumber;
 			Balance				= acc.Balance;
 			Interest			= acc.Interest;
@@ -159,39 +157,76 @@ namespace GoodBankNS.DTO
 			RecalcPeriod		= acc.RecalcPeriod;
 			IsBlocked			= acc.IsBlocked;
 
-			if (acc is IAccountDeposit)
+			if (acc is AccountDeposit)
 			{
-				InterestAccumulationAccID  = (acc as IAccountDeposit).InterestAccumulationAccID;
-				InterestAccumulationAccNum = (acc as IAccountDeposit).InterestAccumulationAccNum;
-				AccumulatedInterest		   = (acc as IAccountDeposit).AccumulatedInterest;
+				InterestAccumulationAccID  = (acc as AccountDeposit).InterestAccumulationAccID;
+				InterestAccumulationAccNum = (acc as AccountDeposit).InterestAccumulationAccNum;
+				AccumulatedInterest		   = (acc as AccountDeposit).AccumulatedInterest;
 			}
 
-			if (c is IClientVIP)
+			if (c is ClientVIP)
 			{
 				ClientType = ClientType.VIP;
 				ClientName =
-					(c as IClientVIP).LastName + " " +
-					(c as IClientVIP).FirstName +
-					(String.IsNullOrEmpty((c as IClientVIP).MiddleName) ? "" : " ") +
-					(c as IClientVIP).MiddleName;
+					(c as ClientVIP).LastName + " " +
+					(c as ClientVIP).FirstName +
+					(String.IsNullOrEmpty((c as ClientVIP).MiddleName) ? "" : " ") +
+					(c as ClientVIP).MiddleName;
 			}
 
-			if (c is IClientSimple)
+			if (c is ClientSIM)
 			{
 				ClientType = ClientType.Simple;
 				ClientName =
-					(c as IClientSimple).LastName + " " +
-					(c as IClientSimple).FirstName +
-					(String.IsNullOrEmpty((c as IClientSimple).MiddleName) ? "" : " ") +
-					(c as IClientSimple).MiddleName;
+					(c as ClientSIM).LastName + " " +
+					(c as ClientSIM).FirstName +
+					(String.IsNullOrEmpty((c as ClientSIM).MiddleName) ? "" : " ") +
+					(c as ClientSIM).MiddleName;
 			}
 
-			if (c is IClientOrg)
+			if (c is ClientORG)
 			{
 				ClientType = ClientType.Organization;
-				ClientName = (c as IClientOrg).OrgName;
+				ClientName = (c as ClientORG).OrgName;
 			}
 
+		}
+
+				/// <summary>
+		/// Конструктор для формирования ДТО для ПОКАЗА счетов
+		/// </summary>
+		/// <param name="c">Клиент</param>
+		/// <param name="acc">Счет</param>
+		public AccountDTO(Account acc)
+		{
+			ClientID			= acc.ClientID;
+			ClientType			= acc.ClientType;
+			ClientName			= "";
+			AccType				= acc.AccType;
+			AccountID				= acc.AccountID;
+			AccountNumber		= acc.AccountNumber;
+			Balance				= acc.Balance;
+			Interest			= acc.Interest;
+			Compounding			= acc.Compounding;
+			Opened				= acc.Opened;
+			Duration			= acc.Duration;
+			Closed				= acc.Closed;
+			Topupable			= acc.Topupable;
+			WithdrawalAllowed	= acc.WithdrawalAllowed;
+			RecalcPeriod		= acc.RecalcPeriod;
+			IsBlocked			= acc.IsBlocked;
+
+			if (acc is AccountDeposit)
+			{
+				InterestAccumulationAccID  = (acc as AccountDeposit).InterestAccumulationAccID;
+				InterestAccumulationAccNum = (acc as AccountDeposit).InterestAccumulationAccNum;
+				AccumulatedInterest		   = (acc as AccountDeposit).AccumulatedInterest;
+			}
+
+			if (acc is AccountCredit)
+			{
+				AccumulatedInterest = (acc as AccountCredit).AccumulatedInterest;
+			}
 		}
 	}
 }
