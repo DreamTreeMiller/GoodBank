@@ -73,7 +73,7 @@ namespace AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract double	Balance				{ get; set; }
+		public double			Balance				{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга

@@ -12,8 +12,12 @@ namespace AccountClasses
 	public class AccountCredit : Account
 	{
 		public override AccountType AccType { get => AccountType.Credit; }
-		public override double		Balance { get; set; }
 		public double				AccumulatedInterest { get; set; }
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public AccountCredit() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных

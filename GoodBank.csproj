@@ -127,7 +127,7 @@
       <DependentUpon>ClientsSearchResultWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\SharedComparators.cs" />
-    <Compile Include="Transaction Class\Transaction.cs" />
+    <Compile Include="Logging\Transaction.cs" />
     <Compile Include="UI_clients\DepartmentWindow.cs">
       <DependentUpon>DepartmentWindow.xaml</DependentUpon>
     </Compile>

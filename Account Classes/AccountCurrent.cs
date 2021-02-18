@@ -13,7 +13,11 @@ namespace AccountClasses
 	public class AccountCurrent : Account
 	{
 		public override AccountType AccType { get => AccountType.Current; }
-		public override double Balance { get; set; }
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public AccountCurrent() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных

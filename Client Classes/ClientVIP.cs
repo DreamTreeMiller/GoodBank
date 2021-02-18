@@ -19,7 +19,12 @@ namespace ClientClasses
 
 		#endregion
 
-		#region Конструктор
+		#region Конструкторы
+
+		/// <summary>
+		/// Конструктор для корректной работы Entity Framework
+		/// </summary>
+		public ClientVIP() { }
 
 		public ClientVIP(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)

@@ -14,8 +14,6 @@ namespace BankInside
 		private BankContext		db;
 		public GoodBank()
 		{
-			clients  = new List<Client>();
-			accounts = new List<Account>();
 			log		 = new List<Transaction>();
 			db		 = new BankContext();
 		}

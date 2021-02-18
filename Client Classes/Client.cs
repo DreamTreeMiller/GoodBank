@@ -55,7 +55,7 @@ namespace ClientClasses
 
 		#endregion
 
-		#region Конструктор нового клиента
+		#region Конструкторы
 
 		/// <summary>
 		/// Базовый конструктор для любого клиента. Обнуляет количество всех счетов
@@ -74,6 +74,11 @@ namespace ClientClasses
 			NumberOfCredits			= 0;
 			NumberOfClosedAccounts	= 0;
 		}
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public Client() { }
 
 		#endregion
 

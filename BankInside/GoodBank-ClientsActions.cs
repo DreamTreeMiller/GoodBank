@@ -11,8 +11,6 @@ namespace BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
-		private List<Client> clients;
-
 		/// <summary>
 		/// Находит клиента с указанным ID
 		/// </summary>
@@ -20,7 +18,7 @@ namespace BankInside
 		/// <returns></returns>
 		public Client GetClientByID(int id)
 		{
-			return clients.Find(c => c.ID == id);
+			return db.Clients.Find(id);
 		}
 
 		/// <summary>
@@ -30,7 +28,7 @@ namespace BankInside
 		/// <returns></returns>
 		public IClientDTO GetClientDTObyID(int id)
 		{
-			return new ClientDTO(clients.Find(c => c.ID == id));
+			return new ClientDTO(db.Clients.Find(id));
 		}
 
 		public IClientDTO AddClient(IClientDTO client)
@@ -48,24 +46,39 @@ namespace BankInside
 					newClient = new ClientORG(client);
 					break;
 			}
-			clients.Add(newClient);
+			db.Clients.Add(newClient);
 			return new ClientDTO(newClient);
 		}
 
 		public ObservableCollection<IClientDTO> GetClientsList(ClientType clientType)
 		{
+			// Here should be ling to entity query
+			switch(clientType)
+			{
+				case ClientType.VIP:
+					return GetClientsList<ClientVIP>();
+				case ClientType.Simple:
+					return GetClientsList<ClientSIM>();
+				case ClientType.Organization:
+					return GetClientsList<ClientORG>();
+			}
+			return GetClientsList<Client>();
+		}
+
+		private ObservableCollection<IClientDTO> GetClientsList<TClient>()
+		{
 			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
 
-			// Here should be ling to entity query
-			//foreach (var c in clients) 
-				//if (c is TClient) clientsList.Add(new ClientDTO(c));
+			// TODO Here should be linq to entity query
+			foreach (Client c in db.Clients)
+				if (c is TClient) clientsList.Add(new ClientDTO(c));
 			return clientsList;
 		}
 
 		public ObservableCollection<IClientDTO> GetClientsList(Compare predicate)
 		{
 			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
-			foreach (var c in clients)
+			foreach (Client c in db.Clients)
 			{
 				bool flag = true;
 				flag = predicate(c, ref flag);
@@ -75,8 +88,9 @@ namespace BankInside
 		}
 		public void UpdateClient(IClientDTO updatedClient)
 		{
-			int ci = clients.FindIndex(c => c.ID == updatedClient.ID);
-			clients[ci].UpdateMyself(updatedClient);
+			Client client = db.Clients.Find(updatedClient.ID);
+			client.UpdateMyself(updatedClient);
+			db.SaveChanges();
 		}
 	}
 }

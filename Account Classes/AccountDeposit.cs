@@ -13,7 +13,6 @@ namespace AccountClasses
 	{
 		public override AccountType AccType { get => AccountType.Deposit; }
 
-		public override double Balance { get; set; }
 
 		/// <summary>
 		/// ID счета, куда перечислять проценты.
@@ -33,6 +32,11 @@ namespace AccountClasses
 		/// Накомпленные проценты 
 		/// </summary>
 		public double AccumulatedInterest { get; set; } = 0;
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public AccountDeposit() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных

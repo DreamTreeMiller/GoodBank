@@ -19,7 +19,12 @@ namespace ClientClasses
 
 		#endregion
 
-		#region Конструктор
+		#region Конструкторы
+
+		/// <summary>
+		/// Конструктор для корректной работы Entity Framework
+		/// </summary>
+		public ClientSIM() { }
 
 		public ClientSIM(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
