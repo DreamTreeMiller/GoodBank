@@ -1,15 +1,12 @@
 ﻿using BankInside;
-using DTO;
 using Interfaces_Data;
 using Transaction_Class;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountClasses
 {
+	[Table("AccountsCurrent")]
 	public class AccountCurrent : Account
 	{
 		public override AccountType AccType { get => AccountType.Current; }

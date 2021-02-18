@@ -2,13 +2,11 @@
 using Interfaces_Data;
 using Transaction_Class;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountClasses
 {
+	[Table("AccountsCredit")]
 	public class AccountCredit : Account
 	{
 		public override AccountType AccType { get => AccountType.Credit; }

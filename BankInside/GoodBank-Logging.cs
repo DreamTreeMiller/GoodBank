@@ -9,11 +9,10 @@ namespace BankInside
 {
 	public partial class GoodBank : ILogActions
 	{
-		private List<Transaction> log;
-
 		public void WriteLog(Transaction t)
 		{
-			log.Add(t);
+			db.Log.Add(t);
+			db.SaveChanges();
 		}
 
 		/// <summary>
@@ -24,7 +23,7 @@ namespace BankInside
 		public ObservableCollection<ITransactionDTO> GetAccountTransactionsLog(int accID)
 		{
 			ObservableCollection<ITransactionDTO> accountLog = new ObservableCollection<ITransactionDTO>();
-			foreach (var t in log)
+			foreach (Transaction t in db.Log)
 				if (t.TransactionAccountID == accID) accountLog.Add(t);
 			return accountLog;
 		}

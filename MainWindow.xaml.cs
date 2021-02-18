@@ -16,9 +16,6 @@ namespace GoodBankNS
 	public partial class MainWindow : Window
 	{
 		private BankActions BA;
-		public string BankFoundationDay = "Основан " 
-			+ $"{BankInside.GoodBank.BankFoundationDay:D}"
-			;
 
 		public MainWindow()
 		{
@@ -30,13 +27,13 @@ namespace GoodBankNS
 
 		private void InitializeBank()
 		{
-			BA		 = new BankActions();
+			BA = new BankActions();
 		}
 
 		private void InitializeWelcomeScreenMessages()
 		{
-			BankFoundationDayMessage.Text = BankFoundationDay;
-			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
+			BankFoundationDayMessage.Text = $"Основан {GoodBank.BankFoundationDay:D}";
+			BankTodayDate.Text			  = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)

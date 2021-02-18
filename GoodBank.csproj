@@ -82,7 +82,9 @@
     </ApplicationDefinition>
     <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
     <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
-    <Compile Include="BankInside\GoodBank-TransactionsLog.cs" />
+    <Compile Include="BankInside\GoodBank-Date.cs" />
+    <Compile Include="BankInside\GoodBank-Logging.cs" />
+    <Compile Include="BankDateTime\GoodBankDate.cs" />
     <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="Account Classes\Account.cs" />
     <Compile Include="Account Classes\AccountEnums.cs" />

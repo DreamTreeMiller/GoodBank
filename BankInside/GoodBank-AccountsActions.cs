@@ -275,7 +275,7 @@ namespace BankInside
 
 		public void AddOneMonth()
 		{
-			GoodBank.Today = GoodBank.Today.AddMonths(1);
+			AddOneMonthToBankDate();
 
 			foreach(Account acc in db.Accounts)
 			{
