@@ -1,5 +1,4 @@
-﻿using System;
-using EF;
+﻿using EF;
 
 namespace BankInside
 {

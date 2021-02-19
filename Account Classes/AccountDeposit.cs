@@ -1,6 +1,6 @@
 ﻿using BankInside;
 using Interfaces_Data;
-using Transaction_Class;
+using LoggingNS;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

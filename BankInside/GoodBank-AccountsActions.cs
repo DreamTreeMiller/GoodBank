@@ -3,7 +3,7 @@ using ClientClasses;
 using DTO;
 using Interfaces_Actions;
 using Interfaces_Data;
-using System.Collections.Generic;
+using System.Linq;
 using System.Collections.ObjectModel;
 
 namespace BankInside
@@ -99,6 +99,10 @@ namespace BankInside
 							break;
 						case AccountType.Deposit:
 							totalDeposit += acc.Balance;
+							// Добавляем средства, накопленные на внутренних счетах депозитов,
+							// которые будут переведены на счет с номером,
+							// и соответственно доступны для снятия,
+							// только после окончания срока вклада
 							if (!acc.Compounding && (acc as AccountDeposit).InterestAccumulationAccID == 0)
 								totalDeposit += (acc as AccountDeposit).AccumulatedInterest;
 							break;
@@ -111,23 +115,32 @@ namespace BankInside
 				return (accList, totalCurr, totalDeposit, totalCredit);
 			}
 
-			foreach (Account acc in db.Accounts)
-				if (acc.ClientType == clientType)
+			IQueryable<Account> clientTypeAccounts = from acc in db.Accounts
+													 where acc.ClientType == clientType
+													 select acc;
+
+			foreach (Account acc in clientTypeAccounts)
+			{
+				switch (acc.AccType)
 				{
-					switch (acc.AccType)
-					{
-						case AccountType.Current:
-							totalCurr += acc.Balance;
-							break;
-						case AccountType.Deposit:
-							totalDeposit += acc.Balance;
-							break;
-						case AccountType.Credit:
-							totalCredit += acc.Balance;
-							break;
-					}
-					accList.Add(new AccountDTO(GetClientByID(acc.ClientID), acc));
+					case AccountType.Current:
+						totalCurr += acc.Balance;
+						break;
+					case AccountType.Deposit:
+						totalDeposit += acc.Balance;
+						// Добавляем средства, накопленные на внутренних счетах депозитов,
+						// которые будут переведены на счет с номером,
+						// и соответственно доступны для снятия,
+						// только после окончания срока вклада
+						if (!acc.Compounding && (acc as AccountDeposit).InterestAccumulationAccID == 0)
+							totalDeposit += (acc as AccountDeposit).AccumulatedInterest;
+						break;
+					case AccountType.Credit:
+						totalCredit += acc.Balance;
+						break;
 				}
+				accList.Add(new AccountDTO(GetClientByID(acc.ClientID), acc));
+			}
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
@@ -145,23 +158,26 @@ namespace BankInside
 			Client  client	  = GetClientByID(clientID);
 			double  totalCurr = 0, totalDeposit = 0, totalCredit = 0;
 
-			foreach (Account acc in db.Accounts)
-				if (acc.ClientID == clientID)
+			var clientAccounts = from acc in db.Accounts
+								 where acc.ClientID == clientID
+								 select acc;
+
+			foreach (Account acc in clientAccounts)
+			{
+				switch (acc.AccType)
 				{
-					switch (acc.AccType)
-					{
-						case AccountType.Current:
-							totalCurr += acc.Balance;
-							break;
-						case AccountType.Deposit:
-							totalDeposit += acc.Balance;
-							break;
-						case AccountType.Credit:
-							totalCredit += acc.Balance;
-							break;
-					}
-					accList.Add(new AccountDTO(client, acc));
+					case AccountType.Current:
+						totalCurr += acc.Balance;
+						break;
+					case AccountType.Deposit:
+						totalDeposit += acc.Balance;
+						break;
+					case AccountType.Credit:
+						totalCredit += acc.Balance;
+						break;
 				}
+				accList.Add(new AccountDTO(client, acc));
+			}
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
@@ -176,11 +192,18 @@ namespace BankInside
 			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
 			Client client = GetClientByID(clientID);
 
-			foreach (Account acc in db.Accounts)
-			{
-				if (acc.ClientID == clientID && acc.AccType == accType)
-					accList.Add(new AccountDTO(client, acc));
-			}
+			var clientAccounts = from acc in db.Accounts
+								 where acc.ClientID == clientID && acc.AccType == accType
+								 select acc;
+
+			foreach (Account acc in clientAccounts) accList.Add(new AccountDTO(client, acc));
+
+			//foreach (Account acc in db.Accounts)
+			//{
+			//	if (acc.ClientID == clientID && acc.AccType == accType)
+			//		accList.Add(new AccountDTO(client, acc));
+			//}
+
 			return accList;
 
 		}
@@ -193,17 +216,25 @@ namespace BankInside
 		public ObservableCollection<IAccountDTO> GetTopupableAccountsToWireTo(int sourceAccID)
 		{
 			ObservableCollection<IAccountDTO> accList = new ObservableCollection<IAccountDTO>();
-			foreach (Account acc in db.Accounts)
-				if (acc.Topupable && acc.AccountID != sourceAccID)
-				{
-					accList.Add(new AccountDTO(acc));
-				}
+
+			var topupableAccounts = from acc in db.Accounts
+									where acc.Topupable && acc.AccountID != sourceAccID
+									select acc;
+
+			foreach (Account tAcc in topupableAccounts) accList.Add(new AccountDTO(tAcc));
+
+			//foreach (Account acc in db.Accounts)
+			//	if (acc.Topupable && acc.AccountID != sourceAccID)
+			//	{
+			//		accList.Add(new AccountDTO(acc));
+			//	}
 			return accList;
 		}
 
 		public IAccountDTO TopUpCash(int accID, double cashAmount)
 		{
 			Account acc = db.Accounts.Find(accID);
+			acc.WriteLog += WriteLog;
 
 			if (acc.Topupable) acc.TopUpCash(cashAmount);
 			db.SaveChanges();
@@ -213,6 +244,7 @@ namespace BankInside
 		public IAccountDTO WithdrawCash(int accID, double cashAmount)
 		{
 			Account acc = db.Accounts.Find(accID);
+			acc.WriteLog += WriteLog;
 
 			if (acc.WithdrawalAllowed) acc.WithdrawCash(cashAmount);
 			db.SaveChanges();
@@ -228,11 +260,15 @@ namespace BankInside
 		public void Wire(int sourceAccID, int destAccID, double wireAmount)
 		{
 			Account sourceAcc = db.Accounts.Find(sourceAccID);
+			sourceAcc.WriteLog += WriteLog;
+
 			if (sourceAcc.WithdrawalAllowed)
 			{
 				if (sourceAcc.Balance >= wireAmount)
 				{
 					Account destAcc = db.Accounts.Find(destAccID);
+					destAcc.WriteLog += WriteLog;
+
 					if (destAcc.Topupable)
 					{
 						sourceAcc.SendToAccount(destAcc.AccountNumber, wireAmount);
@@ -252,6 +288,7 @@ namespace BankInside
 		public IAccountDTO CloseAccount(int accID, out double accumulatedAmount)
 		{
 			Account acc		  = db.Accounts.Find(accID);
+			acc.WriteLog	 += WriteLog;
 			accumulatedAmount = acc.CloseAccount();
 
 			Client client = GetClientByID(acc.ClientID);
@@ -279,6 +316,7 @@ namespace BankInside
 
 			foreach(Account acc in db.Accounts)
 			{
+				acc.WriteLog += WriteLog;
 				double currInterest = acc.RecalculateInterest();
 				if (acc is AccountDeposit)
 				{
@@ -288,6 +326,7 @@ namespace BankInside
 						currInterest != 0)
 					{
 						Account destAcc = GetAccountByID(destAccID);
+						destAcc.WriteLog += WriteLog;
 						WireInterestToAccount(acc as AccountDeposit, destAcc, currInterest);
 					}
 				}

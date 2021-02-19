@@ -1,12 +1,12 @@
 ﻿using System.Data.Entity;
 using AccountClasses;
 using ClientClasses;
-using Transaction_Class;
+using LoggingNS;
 using BankDate;
 
 namespace EF
 {
-	class BankContext : DbContext
+	public class BankContext : DbContext
 	{
 		public BankContext() : base("dbBankConnection") { }
 

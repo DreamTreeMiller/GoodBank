@@ -1,7 +1,6 @@
 ﻿using BankInside;
 using ClientClasses;
-using Interfaces_Data;
-using Transaction_Class;
+using LoggingNS;
 using System;
 
 namespace AccountClasses

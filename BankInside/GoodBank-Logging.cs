@@ -1,7 +1,6 @@
 ﻿using Interfaces_Actions;
 using Interfaces_Data;
-using Transaction_Class;
-using System.Collections.Generic;
+using LoggingNS;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -22,9 +21,15 @@ namespace BankInside
 		/// <returns></returns>
 		public ObservableCollection<ITransactionDTO> GetAccountTransactionsLog(int accID)
 		{
-			ObservableCollection<ITransactionDTO> accountLog = new ObservableCollection<ITransactionDTO>();
-			foreach (Transaction t in db.Log)
-				if (t.TransactionAccountID == accID) accountLog.Add(t);
+			IQueryable<Transaction> accLog = from t in db.Log
+											 where t.TransactionAccountID == accID
+											 select t;
+			ObservableCollection <ITransactionDTO> accountLog = 
+				new ObservableCollection<ITransactionDTO>(accLog);
+
+			//foreach (Transaction t in db.Log)
+			//	if (t.TransactionAccountID == accID) accountLog.Add(t);
+
 			return accountLog;
 		}
 	}

@@ -2,7 +2,7 @@
 using Interfaces_Data;
 using System;
 
-namespace Transaction_Class
+namespace LoggingNS
 {
 	public class Transaction : ITransactionDTO
 	{
