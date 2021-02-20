@@ -47,6 +47,7 @@ namespace BankInside
 					break;
 			}
 			db.Clients.Add(newClient);
+			db.SaveChanges();
 			return new ClientDTO(newClient);
 		}
 

@@ -17,7 +17,7 @@ namespace ClientClasses
 		/// <summary>
 		/// ИНН - Taxpayer Individual Number
 		/// </summary>
-		public string	TIN	{ get; set; }
+		public string	TIN					{ get; set; }
 
 		/// <summary>
 		/// Дата регистрации организации

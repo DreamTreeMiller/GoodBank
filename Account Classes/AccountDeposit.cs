@@ -9,9 +9,6 @@ namespace AccountClasses
 	[Table("AccountsDeposit")]
 	public class AccountDeposit : Account
 	{
-		public override AccountType AccType { get => AccountType.Deposit; }
-
-
 		/// <summary>
 		/// ID счета, куда перечислять проценты.
 		/// При капитализации, совпадает с ИД счета депозита
@@ -56,7 +53,7 @@ namespace AccountClasses
 		/// RecalcPeriod  =							--> из IAccountDTO acc
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountDeposit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
 				  writeloghandler)
 		{
@@ -94,7 +91,7 @@ namespace AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountDeposit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
 				  opened,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
 				  writeloghandler)

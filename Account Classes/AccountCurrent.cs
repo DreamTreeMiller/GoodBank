@@ -9,12 +9,10 @@ namespace AccountClasses
 	[Table("AccountsCurrent")]
 	public class AccountCurrent : Account
 	{
-		public override AccountType AccType { get => AccountType.Current; }
-
-		/// <summary>
-		/// Конструктор для работы Entity Framework
-		/// </summary>
-		public AccountCurrent() { }
+	/// <summary>
+	/// Конструктор для работы Entity Framework
+	/// </summary>
+	public AccountCurrent() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных
@@ -36,7 +34,7 @@ namespace AccountClasses
 		/// RecalcPeriod  =							--> No recalc period
 		/// EndDate		  =							--> null 
 		public AccountCurrent(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Current, acc.Compounding, acc.Interest,
 				   true, true, RecalcPeriod.NoRecalc, 0, writeloghandler)
 		{
 			AccountNumber	= "CUR" + AccountNumber;
@@ -63,7 +61,7 @@ namespace AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountCurrent(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Current, acc.Compounding, acc.Interest,
 				   opened,
 				   true, true, RecalcPeriod.NoRecalc, 0,
 				   writeloghandler)

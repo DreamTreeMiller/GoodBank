@@ -9,8 +9,7 @@ namespace AccountClasses
 	[Table("AccountsCredit")]
 	public class AccountCredit : Account
 	{
-		public override AccountType AccType { get => AccountType.Credit; }
-		public double				AccumulatedInterest { get; set; }
+		public double AccumulatedInterest { get; set; }
 
 		/// <summary>
 		/// Конструктор для работы Entity Framework
@@ -37,7 +36,7 @@ namespace AccountClasses
 		/// RecalcPeriod  =							--> monthly
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountCredit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Credit, acc.Compounding, acc.Interest,
 				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{
 			AccountNumber	= "CRE" + AccountNumber;
@@ -64,7 +63,8 @@ namespace AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountCredit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, 
+				   AccountType.Credit, acc.Compounding, acc.Interest,
 				   opened,
 				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{

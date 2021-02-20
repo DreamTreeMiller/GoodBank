@@ -7,33 +7,6 @@ namespace AccountClasses
 {
 	public abstract class Account
 	{
-		#region Статическая часть для генерации уникального ID
-
-		/// <summary>
-		/// Текущий ID счета
-		/// </summary>
-		private static int		staticID;
-
-		/// <summary>
-		/// Статический конструктор. Обнуляет счетчик ID
-		/// </summary>
-		static Account()
-		{
-			staticID = 0;
-		}
-
-		/// <summary>
-		/// Герерирует следующий ID
-		/// </summary>
-		/// <returns>New unique ID</returns>
-		private static int		NextID()
-		{
-			staticID++;
-			return staticID;
-		}
-
-		#endregion
-
 		#region Общие поля для всех счетов
 		
 		/// <summary>
@@ -52,7 +25,7 @@ namespace AccountClasses
 		/// Тип счета текущий, вклад или кредит
 		/// Дублирование, т.к. тип счета определяется его классом
 		/// </summary>
-		public abstract AccountType		AccType		{ get; }
+		public AccountType		AccType				{ get; set; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
@@ -104,7 +77,7 @@ namespace AccountClasses
 		/// Дата окончания вклада/кредита. 
 		/// null - бессрочно
 		/// </summary>
-		public DateTime?		EndDate				{ get; }
+		public DateTime?		EndDate				{ get; set; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -131,9 +104,9 @@ namespace AccountClasses
 
 		#endregion
 
-		#region Поля противодействия отмыванию денег
+		#region Свойства противодействия отмыванию денег
 
-		protected int NumberOfTopUpsInDay = 0;
+		protected int NumberOfTopUpsInDay			{ get; set; } = 0;
 
 		public bool				IsBlocked			{ get; set; } = false;
 
@@ -149,13 +122,14 @@ namespace AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account( int clientID, ClientType clientType, bool compounding, double interest,
+		public Account( int clientID, ClientType clientType, 
+						AccountType accType, bool compounding, double interest,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
 						Action<Transaction> writeloghandler)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
-			AccountID			= NextID();
+			AccType				= accType;
 			AccountNumber		= $"{AccountID:000000000000}";
 			Compounding			= compounding;
 			Balance				= 0;
@@ -178,14 +152,15 @@ namespace AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account(int clientID, ClientType clientType, bool compounding, double interest,
+		public Account(int clientID, ClientType clientType, 
+						AccountType accType, bool compounding, double interest,
 						DateTime opened,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
 						Action<Transaction> writeloghandler)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
-			AccountID			= NextID();
+			AccType				= accType;
 			AccountNumber		= $"{AccountID:000000000000}";
 			Compounding			= compounding;
 			Balance				= 0;
