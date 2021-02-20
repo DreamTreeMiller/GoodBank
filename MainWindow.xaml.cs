@@ -89,7 +89,7 @@ namespace GoodBankNS
 			var result = esriw.ShowDialog();
 			if (result != true) return;
 
-			ObservableCollection<IClientDTO> searchResult = BA.Clients.GetClientsList(esriw.CheckAllFields);
+			ObservableCollection<IClientDTO> searchResult = BA.Search.GetClientsList(esriw.CheckAllFields);
 			ShowPersonsSearchResult(searchResult);
 		}
 
@@ -107,7 +107,7 @@ namespace GoodBankNS
 			var result = osriw.ShowDialog();
 			if (result != true) return;
 
-			ObservableCollection<IClientDTO> searchResult = BA.Clients.GetClientsList(osriw.CheckAllFields);
+			ObservableCollection<IClientDTO> searchResult = BA.Search.GetClientsList(osriw.CheckAllFields);
 			ShowOrganizationsSearchResult(searchResult);
 		}
 

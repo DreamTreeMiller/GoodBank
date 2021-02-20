@@ -75,17 +75,6 @@ namespace BankInside
 			return clientsList;
 		}
 
-		public ObservableCollection<IClientDTO> GetClientsList(Compare predicate)
-		{
-			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
-			foreach (Client c in db.Clients)
-			{
-				bool flag = true;
-				flag = predicate(c, ref flag);
-				if (flag) clientsList.Add(new ClientDTO(c));
-			}
-			return clientsList;
-		}
 		public void UpdateClient(IClientDTO updatedClient)
 		{
 			Client client = db.Clients.Find(updatedClient.ID);

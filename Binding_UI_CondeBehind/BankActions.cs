@@ -8,6 +8,7 @@ namespace Binding_UI_CondeBehind
 		public IClientsActions	Clients;
 		public IAccountsActions	Accounts;
 		public ILogActions		Log;
+		public ISearch			Search;
 		private GoodBank		bank; 
 
 		public BankActions()
@@ -16,6 +17,7 @@ namespace Binding_UI_CondeBehind
 			Clients  = bank;
 			Accounts = bank;
 			Log		 = bank;
+			Search	 = bank;
 		}
 	}
 }

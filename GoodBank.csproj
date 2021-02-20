@@ -81,6 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
+    <Compile Include="BankInside\GoodBank-Search.cs" />
     <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
     <Compile Include="BankInside\GoodBank-Date.cs" />
     <Compile Include="BankInside\GoodBank-Logging.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Imitation\Names-MaleLast.cs" />
     <Compile Include="Imitation\Names-MaleMiddle.cs" />
     <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
+    <Compile Include="Interfaces_Actions\ISearch.cs" />
     <Compile Include="Interfaces_Actions\ILogActions.cs" />
     <Compile Include="BankInside\GoodBank.cs" />
     <Compile Include="Binding_UI_CondeBehind\BankActions.cs" />

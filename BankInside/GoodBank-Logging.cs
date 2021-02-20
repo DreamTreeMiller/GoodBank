@@ -1,8 +1,9 @@
-﻿using Interfaces_Actions;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Interfaces_Actions;
 using Interfaces_Data;
 using LoggingNS;
-using System.Collections.ObjectModel;
-using System.Linq;
+using EF;
 
 namespace BankInside
 {
@@ -10,8 +11,11 @@ namespace BankInside
 	{
 		public void WriteLog(Transaction t)
 		{
-			db.Log.Add(t);
-			db.SaveChanges();
+			//using (db = new BankContext())
+			//{
+				db.Log.Add(t);
+				//db.SaveChanges();
+			//}
 		}
 
 		/// <summary>

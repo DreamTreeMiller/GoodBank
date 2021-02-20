@@ -7,8 +7,11 @@ namespace BankInside
 		private BankContext	db;
 		public GoodBank()
 		{
-			db = new BankContext();
-			InitializeBankDate();
+			//using (db = new BankContext())
+			//{
+				db = new BankContext();
+				InitializeBankDate();
+			//}
 		}
 	}
 }
