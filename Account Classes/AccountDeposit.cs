@@ -190,7 +190,7 @@ namespace AccountClasses
 						}
 					}	
 					break;
-				// Счет, у которого начисление происходит раз в год
+				// Счет, у которого начисление происходит раз в месяц
 				case RecalcPeriod.Monthly:
 					calculatedInterest   = Balance * Interest / 12;
 					AccumulatedInterest += calculatedInterest;

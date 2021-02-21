@@ -46,8 +46,7 @@ namespace BankInside
 		}
 
 		/// <summary>
-		/// Добавляет счет, данные которого получены от ручного ввода
-		/// Эти данные не содержат ID и номера счета
+		/// Добавляет искусственно сгенерированный счёт
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <returns>Возвращает созданный счет с уникальным ID счета</returns>
@@ -80,7 +79,7 @@ namespace BankInside
 		/// </summary>
 		/// <param name="clientType">Тип клиента</param>
 		/// <returns>
-		/// возвращает коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
+		/// коллекцию счетов и общую сумму каждой группы счетов - текущие, вклады, кредиты
 		/// </returns>
 		public (ObservableCollection<IAccountDTO> accList, double totalCurr, double totalDeposit, double totalCredit)
 			GetAccountsList(ClientType clientType)

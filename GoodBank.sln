@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodBank", "GoodBank.csproj", "{0D60B512-579D-4723-8F6F-15345B57FD27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodBankTest", "GoodBankTest\GoodBankTest.csproj", "{A6365464-6C51-4D27-9A56-889D9A2C8375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunTests", "RunTests\RunTests.csproj", "{C7906495-652D-4162-8C36-777A6A97F043}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{0D60B512-579D-4723-8F6F-15345B57FD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D60B512-579D-4723-8F6F-15345B57FD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D60B512-579D-4723-8F6F-15345B57FD27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6365464-6C51-4D27-9A56-889D9A2C8375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6365464-6C51-4D27-9A56-889D9A2C8375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6365464-6C51-4D27-9A56-889D9A2C8375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6365464-6C51-4D27-9A56-889D9A2C8375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7906495-652D-4162-8C36-777A6A97F043}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7906495-652D-4162-8C36-777A6A97F043}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7906495-652D-4162-8C36-777A6A97F043}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7906495-652D-4162-8C36-777A6A97F043}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
