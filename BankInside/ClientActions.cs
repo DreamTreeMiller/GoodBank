@@ -9,8 +9,11 @@ using System.Collections.ObjectModel;
 
 namespace BankInside
 {
-	public partial class GoodBank : IClientsActions
+	public class ClientActions : IClientActions
 	{
+		private readonly IRepository dbe;
+		public ClientActions(IRepository dbengine) { dbe = dbengine; }
+
 		/// <summary>
 		/// Находит клиента с указанным ID
 		/// </summary>
@@ -18,7 +21,7 @@ namespace BankInside
 		/// <returns></returns>
 		public Client GetClientByID(int id)
 		{
-			return db.Clients.Find(id);
+			return dbe.GetClientByID(id);
 		}
 
 		/// <summary>
@@ -28,7 +31,7 @@ namespace BankInside
 		/// <returns></returns>
 		public IClientDTO GetClientDTObyID(int id)
 		{
-			return new ClientDTO(db.Clients.Find(id));
+			return new ClientDTO(dbe.GetClientByID(id));
 		}
 
 		public IClientDTO AddClient(IClientDTO client)
@@ -46,8 +49,7 @@ namespace BankInside
 					newClient = new ClientORG(client);
 					break;
 			}
-			db.Clients.Add(newClient);
-			db.SaveChanges();
+			dbe.AddClient(newClient);
 			return new ClientDTO(newClient);
 		}
 
@@ -71,16 +73,16 @@ namespace BankInside
 			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
 
 			// TODO Here should be linq to entity query
-			foreach (Client c in db.Clients)
+			foreach (Client c in dbe.GetClients())
 				if (c is TClient) clientsList.Add(new ClientDTO(c));
 			return clientsList;
 		}
 
 		public void UpdateClient(IClientDTO updatedClient)
 		{
-			Client client = db.Clients.Find(updatedClient.ID);
+			Client client = dbe.GetClientByID(updatedClient.ID);
 			client.UpdateMyself(updatedClient);
-			db.SaveChanges();
+			dbe.SaveChanges();
 		}
 	}
 }

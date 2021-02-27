@@ -1,5 +1,4 @@
-﻿using BankInside;
-using Interfaces_Data;
+﻿using Interfaces_Data;
 using LoggingNS;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,47 +16,7 @@ namespace AccountClasses
 		public AccountCredit() { }
 
 		/// <summary>
-		/// Создание счета на основе введенных данных
-		/// </summary>
-		/// <param name="acc">Данные для открытия счета</param>
-		/// Напоминалка, что инициализируется в базовом классе
-		/// ClientID	  = clientID;				--> из IAccountDTO acc
-		/// ClientType	  = clientType;				--> из IAccountDTO acc
-		/// ID			  = NextID();
-		/// AccountNumber = $"{ID:000000000000}";	--> добавляется CRE
-		/// Compounding	  = compounding;			--> из IAccountDTO acc
-		/// CompoundAccID = compAccID;				--> из IAccountDTO acc
-		/// Balance		  = 0;
-		/// Interest	  = interest;				--> из IAccountDTO acc
-		/// AccountStatus = AccountStatus.Opened;
-		/// Opened		  = GoodBank.Today;
-		/// Topupable	  =							--> false
-		/// WithdrawalAllowed	=					--> false
-		/// RecalcPeriod  =							--> monthly
-		/// EndDate		  =							--> из IAccountDTO acc 
-		public AccountCredit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, AccountType.Credit, acc.Compounding, acc.Interest,
-				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
-		{
-			AccountNumber	= "CRE" + AccountNumber;
-			Balance			= acc.Balance;
-
-			Transaction openAccountTransaction = new Transaction(
-				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
-				"",
-				"",
-				OperationType.OpenAccount,
-				Balance,
-				"Кредитный счет " + AccountNumber
-				+ " на сумму " + Balance + " руб."
-				+ " открыт."
-				);
-			OnWriteLog(openAccountTransaction);
-		}
-
-		/// <summary>
-		/// Констркуктор для искусственной генерации счета. 
+		/// Констркуктор создания счета. 
 		/// Включает в себя поле даты открытия счета
 		/// </summary>
 		/// <param name="acc"></param>
@@ -91,7 +50,7 @@ namespace AccountClasses
 		/// т.е. не раз в год, и не один раз в конце
 		/// </summary>
 		/// <param name="date"></param>
-		public override double RecalculateInterest()
+		public override double RecalculateInterest(DateTime currentBankTime)
 		{
 			if (Closed != null) return 0;
 
@@ -108,7 +67,7 @@ namespace AccountClasses
 
 			Transaction interestAccrualTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				"",
 				AccountNumber,
 				OperationType.InterestAccrual,
@@ -120,9 +79,9 @@ namespace AccountClasses
 			return calculatedInterest;
 		}
 
-		public override double CloseAccount()
+		public override double CloseAccount(DateTime currentBankTime)
 		{
-			return base.CloseAccount();
+			return base.CloseAccount(currentBankTime);
 		}
 	}
 }

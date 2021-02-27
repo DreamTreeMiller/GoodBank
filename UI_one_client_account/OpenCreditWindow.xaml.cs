@@ -1,12 +1,13 @@
-﻿using BankInside;
-using ClientClasses;
-using Interfaces_Data;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
+using BankInside;
+using ClientClasses;
+using Interfaces_Data;
+using Binding_UI_CondeBehind;
 
 namespace UI_one_client_account
 {
@@ -15,7 +16,9 @@ namespace UI_one_client_account
 	/// </summary>
 	public partial class OpenCreditWindow : Window, INotifyPropertyChanged
 	{
-		public	double		creditAmount = 0;
+		#region Поля и свойства
+
+		public double		creditAmount = 0;
 		public	string		CreditAmount
 		{
 			get => $"{creditAmount:N2}";
@@ -45,7 +48,7 @@ namespace UI_one_client_account
 				interest = tmp / 100;
 			}
 		}
-		public	DateTime	Opened { get; } = GoodBank.Today;
+		public	DateTime	Opened { get; }
 
 		public	int			duration = 12;
 		public	string		Duration
@@ -73,6 +76,21 @@ namespace UI_one_client_account
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		#endregion
+
+		private readonly BankActions BA;
+		public OpenCreditWindow(BankActions ba, ObservableCollection<IAccountDTO> creditRecipientAccounts, ClientType clientType)
+		{
+			InitializeComponent();
+			BA	   = ba;
+			Opened = BA.GBDateTime.Today();
+			InitializeWindowLabelsAndData(creditRecipientAccounts, clientType);
+
+			SetFocusOnCreditAmountEntryBox();
+		}
+
+		#region Проверка валидности введённых данных
 
 		/// <summary>
 		/// Проверяет, является ли введенная строка корректным числом с плав. запятой
@@ -143,6 +161,10 @@ namespace UI_one_client_account
 			return true;
 		}
 
+		#endregion
+
+		#region Устанавливает фокус в предыдущем поле для ввода
+
 		private void SetFocusOnCreditAmountEntryBox()
 		{
 			Dispatcher.BeginInvoke((ThreadStart)delegate
@@ -170,17 +192,11 @@ namespace UI_one_client_account
 			});
 		}
 
-		public OpenCreditWindow(ObservableCollection<IAccountDTO> creditRecipientAccounts, ClientType clientType)
-		{
-			InitializeComponent();
-			InitializeWindowLabelsAndData(creditRecipientAccounts, clientType);
-
-			SetFocusOnCreditAmountEntryBox();
-		}
+		#endregion
 
 		private void InitializeWindowLabelsAndData(ObservableCollection<IAccountDTO> creditRecipientAccounts, ClientType clientType)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy} г.";
 			CreditRecipientAccount.ItemsSource = creditRecipientAccounts;
 
 			switch (clientType)

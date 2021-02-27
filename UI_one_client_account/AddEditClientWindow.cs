@@ -1,13 +1,14 @@
-﻿using DTO;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using DTO;
 using UserControlsLists;
 using ClientClasses;
 using Interfaces_Data;
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Threading;
 using BankInside;
+using Binding_UI_CondeBehind;
 
 namespace UI_one_client_account
 {
@@ -15,6 +16,7 @@ namespace UI_one_client_account
 	{
 		public string clientTypeStr  { get; }
 		public ClientType clientType { get; }
+
 		public ClientTypeTuple(string s, ClientType t)
 		{
 			clientTypeStr	= s;
@@ -23,6 +25,7 @@ namespace UI_one_client_account
 	}
 	public partial class AddEditClientWindow : Window
 	{
+		private readonly BankActions BA;
 		public IClientDTO tmpClient = null;
 
 		public readonly List<ClientTypeTuple> clientTypesDDlist = 
@@ -32,8 +35,9 @@ namespace UI_one_client_account
 				new ClientTypeTuple("Физик",	  ClientType.Simple),
 				new ClientTypeTuple("Юрик",		  ClientType.Organization)
 			};
-		public AddEditClientWindow(AddEditClientNameTags nameTags, IClientDTO client)
+		public AddEditClientWindow(BankActions ba, AddEditClientNameTags nameTags, IClientDTO client)
 		{
+			BA = ba;
 			InitializeComponent();
 			InitializeTextFields(nameTags, client);
 		}
@@ -213,7 +217,7 @@ namespace UI_one_client_account
 
 		private bool IsValidRegistrationDate(DateTime date)
 		{
-				if (date > GoodBank.Today)
+				if (date > BA.GBDateTime.Today())
 				{
 					MessageBox.Show("Дата не может превосходить сегодняшний день");
 					return false;
@@ -224,12 +228,12 @@ namespace UI_one_client_account
 		private bool IsValidBirthDate(DateTime date)
 		{
 
-			if ((GoodBank.Today - date).TotalDays / 365.25 < 18)
+			if ((BA.GBDateTime.Today() - date).TotalDays / 365.25 < 18)
 			{
 				MessageBox.Show("Только лица, достигшие 18 лет, могут быть клиентами банка.");
 				return false;
 			}
-			if ((GoodBank.Today - date).TotalDays / 365.25 > 118)
+			if ((BA.GBDateTime.Today() - date).TotalDays / 365.25 > 118)
 			{
 				MessageBox.Show("Сейчас на земле нет людей, которым больше 118 лет.");
 				return false;

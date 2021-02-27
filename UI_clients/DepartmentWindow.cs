@@ -39,11 +39,13 @@ namespace UI_clients
 
 		private void InitializeView(WindowID wid, BankActions ba)
 		{
-			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy}";
 
 			// Прикручиваем банк с обработчиками всех действий над счетами
 			BA = ba;
 			this.wid = wid;
+
+			// Помещаем текущую дату банка в правый верхний угол окна
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy}";
 
 			// Вставляем нужные надписи в окошко департаментов
 						 deptwinnametags = new WindowNameTags(wid);
@@ -123,7 +125,7 @@ namespace UI_clients
 		{
 			AddEditClientNameTags nameTags  = new AddEditClientNameTags(addClientWID);
 			IClientDTO newClient = null;
-			AddEditClientWindow addСlientWin = new AddEditClientWindow(nameTags, newClient);
+			AddEditClientWindow addСlientWin = new AddEditClientWindow(BA, nameTags, newClient);
 			bool? result = addСlientWin.ShowDialog();
 			
 			if (result != true) return;

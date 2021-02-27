@@ -43,8 +43,8 @@ namespace UI_one_client_account
 
 		private void InitializeAccountsView(BankActions ba, IClientDTO client)
 		{
-			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			BA = ba;
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy} г.";
 			OrganizationInfo.Visibility = Visibility.Collapsed;
 			PersonalInfo.Visibility		= Visibility.Visible;
 			this.client					= client;
@@ -95,7 +95,7 @@ namespace UI_one_client_account
 		private void ClientWindow_EditClient_Click(object sender, RoutedEventArgs e)
 		{
 			var tags				= new AddEditClientNameTags(wid);
-			var editClientWindow	= new AddEditClientWindow(tags, client);
+			var editClientWindow	= new AddEditClientWindow(BA, tags, client);
 			var result = editClientWindow.ShowDialog();
 			if (result != true) return;
 
@@ -128,7 +128,7 @@ namespace UI_one_client_account
 
 		private void OpenCurrentAccountButton_Click(object sender, RoutedEventArgs e)
 		{
-			OpenCurrentAccountWindow ocawin = new OpenCurrentAccountWindow();
+			OpenCurrentAccountWindow ocawin = new OpenCurrentAccountWindow(BA);
 			var result = ocawin.ShowDialog();
 			if (result != true) return;
 			IAccountDTO newAcc = new AccountDTO(client.ClientType, client.ID, AccountType.Current,
@@ -156,7 +156,7 @@ namespace UI_one_client_account
 			internalAccount.AccountNumber	= "внутренний счет";
 			accumulationAccounts.Add(internalAccount);
 
-			OpenDepositWindow odwin = new OpenDepositWindow(accumulationAccounts, client.ClientType);
+			OpenDepositWindow odwin = new OpenDepositWindow(BA, accumulationAccounts, client.ClientType);
 			var result = odwin.ShowDialog();
 			if (result != true) return;
 
@@ -208,7 +208,7 @@ namespace UI_one_client_account
 			cash.AccountNumber = "получить наличными";
 			creditRecipientAccounts.Add(cash);
 
-			OpenCreditWindow ocrwin = new OpenCreditWindow(creditRecipientAccounts, client.ClientType);
+			OpenCreditWindow ocrwin = new OpenCreditWindow(BA, creditRecipientAccounts, client.ClientType);
 			var result = ocrwin.ShowDialog();
 			if (result != true) return;
 

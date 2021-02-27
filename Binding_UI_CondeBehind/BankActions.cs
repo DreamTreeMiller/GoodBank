@@ -1,23 +1,27 @@
 ﻿using Interfaces_Actions;
 using BankInside;
+using Repository;
+using Search;
 
 namespace Binding_UI_CondeBehind
 {
 	public class BankActions
 	{
-		public IClientsActions	Clients;
-		public IAccountsActions	Accounts;
+		public IAccountActions	Accounts;
+		public IClientActions	Clients;
 		public ILogActions		Log;
+		public IDateManagement	GBDateTime;
 		public ISearch			Search;
-		private GoodBank		bank; 
+		private IRepository		dbe; 
 
 		public BankActions()
 		{
-			bank	 = new GoodBank();
-			Clients  = bank;
-			Accounts = bank;
-			Log		 = bank;
-			Search	 = bank;
+			dbe	 = new DataBaseEngine();
+			Accounts	= new AccountActions(dbe);
+			Clients		= new ClientActions(dbe);
+			Log			= new Logging(dbe);
+			GBDateTime	= new DateManagement(dbe);
+			Search		= new SearchEngine(dbe);
 		}
 	}
 }

@@ -115,43 +115,8 @@ namespace AccountClasses
 		#region Конструктор
 
 		/// <summary>
-		/// Создание счета
+		/// Конструктор для создания счетов. Добавляется дата
 		/// </summary>
-		/// <param name="clientID"></param>
-		/// <param name="clientType"></param>
-		/// <param name="compounding"></param>
-		/// <param name="compAccID"></param>
-		/// <param name="interest"></param>
-		public Account( int clientID, ClientType clientType, 
-						AccountType accType, bool compounding, double interest,
-						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
-						Action<Transaction> writeloghandler)
-		{
-			ClientID			= clientID;
-			ClientType			= clientType;
-			AccType				= accType;
-			AccountNumber		= $"{AccountID:000000000000}";
-			Compounding			= compounding;
-			Balance				= 0;
-			Interest			= interest;
-			Opened				= GoodBank.Today;
-			Topupable			= topup;
-			WithdrawalAllowed	= withdrawal;
-			RecalcPeriod		= recalc;
-			Duration			= duration;
-			MonthsElapsed		= 0;
-			EndDate				= Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
-			WriteLog		   += writeloghandler;
-		}
-
-		/// <summary>
-		/// Конструктор для генератора случайных счетов. Добавляется дата
-		/// </summary>
-		/// <param name="clientID"></param>
-		/// <param name="clientType"></param>
-		/// <param name="compounding"></param>
-		/// <param name="compAccID"></param>
-		/// <param name="interest"></param>
 		public Account(int clientID, ClientType clientType, 
 						AccountType accType, bool compounding, double interest,
 						DateTime opened,
@@ -201,7 +166,7 @@ namespace AccountClasses
 		/// Пополнение счета наличкой
 		/// </summary>
 		/// <param name="cashAmount"></param>
-		public void TopUpCash(double cashAmount)
+		public void TopUpCash(double cashAmount, DateTime currentBankTime)
 		{
 			if (IsBlocked) return;
 
@@ -215,7 +180,7 @@ namespace AccountClasses
 
 					Transaction blockAccountTransaction = new Transaction(
 						AccountID,
-						GoodBank.GetBanksTodayWithCurrentTime(),
+						currentBankTime,
 						"",
 						AccountNumber,
 						OperationType.BlockAccount,
@@ -230,7 +195,7 @@ namespace AccountClasses
 			Balance += cashAmount;
 			Transaction topUpCashTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				"",
 				AccountNumber,
 				OperationType.CashDeposit,
@@ -244,13 +209,13 @@ namespace AccountClasses
 		/// Снятие налички со счета
 		/// </summary>
 		/// <param name="cashAmount"></param>
-		public double WithdrawCash(double cashAmount)
+		public double WithdrawCash(double cashAmount, DateTime currentBankTime)
 		{
 			if (IsBlocked) return 0;
 			Balance -= cashAmount;
 			Transaction withdrawCashTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				AccountNumber,
 				"",
 				OperationType.CashWithdrawal,
@@ -266,13 +231,13 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="sourceAcc">Счет-источник</param>
 		/// <param name="wireAmount">сумма перевода</param>
-		public void ReceiveFromAccount(string sourceAccNum, double wireAmount)
+		public void ReceiveFromAccount(string sourceAccNum, double wireAmount, DateTime currentBankTime)
 		{
 			if (IsBlocked) return;
 			Balance += wireAmount;
 			Transaction DepositFromAccountTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				sourceAccNum,
 				AccountNumber,
 				OperationType.ReceiveWireFromAccount,
@@ -289,14 +254,14 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="destAcc">Счет-получатель</param>
 		/// <param name="wireAmount">Сумма перевода</param>
-		public void SendToAccount(string destAccNum, double wireAmount)
+		public void SendToAccount(string destAccNum, double wireAmount, DateTime currentBankTime)
 		{
 			if (IsBlocked) return;
 
 			Balance -= wireAmount;
 			Transaction withdrawCashTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				AccountNumber,
 				destAccNum,
 				OperationType.SendWireToAccount,
@@ -319,7 +284,7 @@ namespace AccountClasses
 		/// <returns>
 		/// Сумму начисленных процентов, если её надо перевести на другой счет
 		/// </returns>
-		public abstract double RecalculateInterest();
+		public abstract double RecalculateInterest(DateTime currentBankTime);
 
 		/// <summary>
 		/// Закрывает счет: обнуляет баланс и накопленный процент
@@ -329,18 +294,18 @@ namespace AccountClasses
 		/// <returns>
 		/// Накопленную сумму
 		/// </returns>
-		public virtual double CloseAccount()
+		public virtual double CloseAccount(DateTime currentBankTime)
 		{
 			if (IsBlocked) return 0;
 
-			double tmp			= WithdrawCash(Balance);
+			double tmp			= WithdrawCash(Balance, currentBankTime);
 			Topupable			= false;
 			WithdrawalAllowed	= false;
-			Closed				= GoodBank.Today;
+			Closed				= currentBankTime;
 
 			Transaction closeAccountTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				"",
 				"",
 				OperationType.CloseAccount,

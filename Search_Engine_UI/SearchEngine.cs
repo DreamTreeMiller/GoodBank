@@ -1,16 +1,16 @@
-﻿using AccountClasses;
+﻿using System.Collections.ObjectModel;
 using ClientClasses;
 using DTO;
 using Interfaces_Actions;
 using Interfaces_Data;
-using Search;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace BankInside
+namespace Search
 {
-	public partial class GoodBank : ISearch
+	public class SearchEngine : ISearch
 	{
+		private readonly IRepository dbe;
+		public SearchEngine(IRepository dbengine) { dbe = dbengine; }
+
 		/// <summary>
 		/// Ищет клиентов, удовлетворяющих условиям в предикате. 
 		/// Предикат - набор делегатов, каждый из которых проверяет одно из полей клиента.
@@ -18,10 +18,10 @@ namespace BankInside
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <returns></returns>
-		public ObservableCollection<IClientDTO> GetClientsList(Compare predicate)
+		public ObservableCollection<IClientDTO> FindClients(Compare predicate)
 		{
 			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
-			foreach (Client c in db.Clients)
+			foreach (Client c in dbe.GetClients())
 			{
 				bool flag = true;
 				flag = predicate(c, ref flag);

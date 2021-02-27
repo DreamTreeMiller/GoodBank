@@ -1,20 +1,8 @@
-﻿using BankInside;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using BankInside;
+using Binding_UI_CondeBehind;
 
 namespace UI_one_client_account
 {
@@ -25,12 +13,16 @@ namespace UI_one_client_account
 	{
 		public double startAmount = 0;
 
-		public DateTime	Opened { get; } = GoodBank.Today;
+		public DateTime	Opened { get; }
 
-		public OpenCurrentAccountWindow()
+		private readonly BankActions BA;
+
+		public OpenCurrentAccountWindow(BankActions ba)
 		{
 			InitializeComponent();
-			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BA = ba;
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy} г.";
+			Opened = BA.GBDateTime.Today();
 			DataContext = this;
 			Dispatcher.BeginInvoke((ThreadStart)delegate
 			{

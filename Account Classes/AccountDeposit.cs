@@ -34,58 +34,7 @@ namespace AccountClasses
 		public AccountDeposit() { }
 
 		/// <summary>
-		/// Создание счета на основе введенных данных
-		/// </summary>
-		/// <param name="acc">Данные для открытия счета</param>
-		/// Напоминалка, что инициализируется в базовом классе
-		/// ClientID	  = clientID;				--> потом из IAccountDTO acc
-		/// ClientType	  = clientType;				--> потом из IAccountDTO acc
-		/// ID			  = NextID();
-		/// AccountNumber = $"{ID:000000000000}";	--> потом добавляется CUR
-		/// Compounding	  = compounding;			--> потом из IAccountDTO acc
-		/// CompoundAccID = compAccID;				--> потом из IAccountDTO acc
-		/// Balance		  = 0;
-		/// Interest	  = interest;				--> потом из IAccountDTO acc
-		/// AccountStatus = AccountStatus.Opened;
-		/// Opened		  = GoodBank.Today;
-		/// Topupable	  =							--> из IAccountDTO acc
-		/// WithdrawalAllowed	=					--> из IAccountDTO acc
-		/// RecalcPeriod  =							--> из IAccountDTO acc
-		/// EndDate		  =							--> из IAccountDTO acc 
-		public AccountDeposit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
-				  writeloghandler)
-		{
-			AccountNumber	= "DEP" + AccountNumber;
-			Balance			= acc.Balance;
-			if (acc.Compounding)
-			{
-				InterestAccumulationAccID  = AccountID;
-				InterestAccumulationAccNum = AccountNumber;
-			}
-			else
-			{
-				InterestAccumulationAccID  = acc.InterestAccumulationAccID;
-				InterestAccumulationAccNum = acc.InterestAccumulationAccNum;
-			}
-
-			Transaction openAccountTransaction = new Transaction(
-				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
-				"",
-				"",
-				OperationType.OpenAccount,
-				Balance,
-				"Вклад " + AccountNumber
-				+ $" с начальной суммой {Balance:N2} руб."
-				+ " открыт."
-				);
-			OnWriteLog(openAccountTransaction);
-		}
-
-		/// <summary>
-		/// Констркуктор для искусственной генерации счета. 
+		/// Констркуктор для создания счета. 
 		/// Включает в себя поле даты открытия счета
 		/// </summary>
 		/// <param name="acc"></param>
@@ -129,7 +78,7 @@ namespace AccountClasses
 		/// Этот метод вызывается точно один раз в месяц
 		/// </summary>
 		/// <param name="date"></param>
-		public override double RecalculateInterest()
+		public override double RecalculateInterest(DateTime currentBankTime)
 		{
 			if (Closed != null) return 0;
 
@@ -155,7 +104,7 @@ namespace AccountClasses
 						Topupable		  = false;
 						WithdrawalAllowed = true;
 
-							UpdateLog(calculatedInterest);
+							UpdateLog(calculatedInterest, currentBankTime);
 
 					}
 					break;
@@ -168,7 +117,7 @@ namespace AccountClasses
 						calculatedInterest   = Balance * Interest;
 						AccumulatedInterest += calculatedInterest;
 
-						UpdateLog(calculatedInterest);
+						UpdateLog(calculatedInterest, currentBankTime);
 					}
 
 					if (MonthsElapsed == Duration)
@@ -186,7 +135,7 @@ namespace AccountClasses
 							calculatedInterest   = Balance * Interest * MonthsRemained / 12;
 							AccumulatedInterest += calculatedInterest;
 
-							UpdateLog(calculatedInterest);
+							UpdateLog(calculatedInterest, currentBankTime);
 						}
 					}	
 					break;
@@ -203,7 +152,7 @@ namespace AccountClasses
 						WithdrawalAllowed = true;
 					}
 
-					UpdateLog(calculatedInterest);
+					UpdateLog(calculatedInterest, currentBankTime);
 					break;
 			}
 
@@ -218,11 +167,11 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="destAcc"></param>
 		/// <param name="accumulatedInterest"></param>
-		public void SendInterestToAccount(string destAccNum, double accumulatedInterest)
+		public void SendInterestToAccount(string destAccNum, double accumulatedInterest, DateTime currentBankTime)
 		{
 			Transaction withdrawCashTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				"накопленный процент",
 				destAccNum,
 				OperationType.SendWireToAccount,
@@ -234,7 +183,7 @@ namespace AccountClasses
 			OnWriteLog(withdrawCashTransaction);
 		}
 
-		private void UpdateLog(double calculatedInterest)
+		private void UpdateLog(double calculatedInterest, DateTime currentBankTime)
 		{
 			string comment;
 
@@ -251,7 +200,7 @@ namespace AccountClasses
 
 			Transaction interestAccrualTransaction = new Transaction(
 				AccountID,
-				GoodBank.GetBanksTodayWithCurrentTime(),
+				currentBankTime,
 				"",
 				InterestAccumulationAccNum,
 				OperationType.InterestAccrual,
@@ -262,7 +211,7 @@ namespace AccountClasses
 			OnWriteLog(interestAccrualTransaction);
 		}
 
-		public override double CloseAccount()
+		public override double CloseAccount(DateTime currentBankTime)
 		{
 			// Если без капитализации и накапливали на внутреннем счету,
 			// тогда этот процент переводим на основной счет
@@ -272,7 +221,7 @@ namespace AccountClasses
 				AccumulatedInterest = 0;
 			}
 
-			return base.CloseAccount();
+			return base.CloseAccount(currentBankTime);
 		}
 
 	}

@@ -1,21 +1,18 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.ObjectModel;
 using Interfaces_Actions;
 using Interfaces_Data;
 using LoggingNS;
-using EF;
 
 namespace BankInside
 {
-	public partial class GoodBank : ILogActions
+	public class Logging : ILogActions
 	{
+		private readonly IRepository dbe;
+		public Logging(IRepository dbengine) { dbe = dbengine; }
 		public void WriteLog(Transaction t)
 		{
-			//using (db = new BankContext())
-			//{
-				db.Log.Add(t);
-				//db.SaveChanges();
-			//}
+			dbe.WriteLog(t);
 		}
 
 		/// <summary>
@@ -25,7 +22,7 @@ namespace BankInside
 		/// <returns></returns>
 		public ObservableCollection<ITransactionDTO> GetAccountTransactionsLog(int accID)
 		{
-			IQueryable<Transaction> accLog = from t in db.Log
+			IQueryable<Transaction> accLog = from t in dbe.GetLog()
 											 where t.TransactionAccountID == accID
 											 select t;
 			ObservableCollection <ITransactionDTO> accountLog = 

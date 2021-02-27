@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using BankInside;
 using ClientClasses;
 using Interfaces_Data;
+using Binding_UI_CondeBehind;
 
 namespace UI_one_client_account
 {
@@ -46,7 +47,7 @@ namespace UI_one_client_account
 				interest = tmp / 100;
 			}
 		}
-		public DateTime Opened		{ get; }	  = GoodBank.Today;
+		public DateTime Opened		{ get; }
 
 		public int		duration = 12;
 		public string	Duration 
@@ -183,16 +184,19 @@ namespace UI_one_client_account
 			});
 		}
 
-		public OpenDepositWindow(ObservableCollection<IAccountDTO> accumulationAccounts, ClientType clientType)
+		private readonly BankActions BA;
+		public OpenDepositWindow(BankActions ba, ObservableCollection<IAccountDTO> accumulationAccounts, ClientType clientType)
 		{
 			InitializeComponent();
+			BA = ba;
+			Opened = BA.GBDateTime.Today();
 			InitializeWindowLabelsAndData(accumulationAccounts, clientType);
 			SetFocusOnDepositAmountEntryBox();
 		}
 
 		private void InitializeWindowLabelsAndData(ObservableCollection<IAccountDTO> accumulationAccounts, ClientType clientType)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy} г.";
 			AccumulationAccount.ItemsSource = accumulationAccounts;
 
 			switch (clientType)

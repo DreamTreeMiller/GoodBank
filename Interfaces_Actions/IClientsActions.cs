@@ -4,7 +4,7 @@ using ClientClasses;
 
 namespace Interfaces_Actions
 {
-	public interface IClientsActions
+	public interface IClientActions
 	{
 		IClientDTO GetClientDTObyID(int id);
 		ObservableCollection<IClientDTO> GetClientsList(ClientType clientType);

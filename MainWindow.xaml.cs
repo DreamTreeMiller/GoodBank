@@ -4,7 +4,6 @@ using Binding_UI_CondeBehind;
 using Imitation;
 using Interfaces_Data;
 using UI_clients;
-using BankInside;
 using UserControlsLists;
 using Search;
 
@@ -32,8 +31,8 @@ namespace GoodBankNS
 
 		private void InitializeWelcomeScreenMessages()
 		{
-			BankFoundationDayMessage.Text = $"Основан {GoodBank.BankFoundationDay:D}";
-			BankTodayDate.Text			  = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
+			BankFoundationDayMessage.Text = $"Основан {BA.GBDateTime.BankFoundationDay():D}";
+			BankTodayDate.Text			  = $"Сегодня {BA.GBDateTime.Today():dd MMMM yyyy} г.";
 		}
 
 		private void VipClientsDeptButton_Click(object sender, RoutedEventArgs e)
@@ -68,7 +67,7 @@ namespace GoodBankNS
 		private void TimeMachineButton_Click(object sender, RoutedEventArgs e)
 		{
 			BA.Accounts.AddOneMonth();
-			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd MMMM yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd MMMM yyyy} г.";
 			MessageBox.Show("Время в мире, где существует банк, ушло на месяц вперёд.\n"
 						  + "Пересчитаны проценты на всех счетах.");
 
@@ -76,10 +75,11 @@ namespace GoodBankNS
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)
 		{
+			Generate generate = new Generate(BA);
 			var gw = new GenerateWindow();
 			var result = gw.ShowDialog();
 			if (result != true) return;
-			Generate.Bank(BA, gw.vipClients, gw.simClients, gw.orgClients);
+			generate.Bank(gw.vipClients, gw.simClients, gw.orgClients);
 			MessageBox.Show("Клиенты и счета созданы!");
 		}
 
@@ -89,7 +89,7 @@ namespace GoodBankNS
 			var result = esriw.ShowDialog();
 			if (result != true) return;
 
-			ObservableCollection<IClientDTO> searchResult = BA.Search.GetClientsList(esriw.CheckAllFields);
+			ObservableCollection<IClientDTO> searchResult = BA.Search.FindClients(esriw.CheckAllFields);
 			ShowPersonsSearchResult(searchResult);
 		}
 
@@ -107,7 +107,7 @@ namespace GoodBankNS
 			var result = osriw.ShowDialog();
 			if (result != true) return;
 
-			ObservableCollection<IClientDTO> searchResult = BA.Search.GetClientsList(osriw.CheckAllFields);
+			ObservableCollection<IClientDTO> searchResult = BA.Search.FindClients(osriw.CheckAllFields);
 			ShowOrganizationsSearchResult(searchResult);
 		}
 

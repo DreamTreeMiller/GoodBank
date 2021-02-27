@@ -1,22 +1,21 @@
-﻿using ClientClasses;
+﻿using System;
+using AccountClasses;
+using ClientClasses;
 using Interfaces_Data;
-using System;
 using DTO;
 using Binding_UI_CondeBehind;
-using AccountClasses;
-using BankInside;
 
 namespace Imitation
 {
-	public static class Generate
+	public class Generate
 	{
-		static BankActions BA;
-		static Random	   r		= new Random();
-		static int		   orgCount = 1;
+		private BankActions BA;
+		private Random		r		 = new Random();
+		private int			orgCount = 1;
 
-		public static void Bank(BankActions ba, int vip, int sim, int org)
+		public Generate(BankActions ba) { BA = ba; }
+		public void Bank(int vip, int sim, int org)
 		{
-			BA = ba;
 			GenerateVIPclientsAndAccounts(vip);
 			GenerateSIMclientsAndAccounts(sim);
 			GenerateORGclientsAndAccounts(org);
@@ -24,7 +23,7 @@ namespace Imitation
 
 		#region Создание клиентов
 
-		private static void GenerateVIPclientsAndAccounts(int num)
+		private void GenerateVIPclientsAndAccounts(int num)
 		{
 			string FN, MN, LN;
 			for (int i = 0; i < num; i++)
@@ -50,7 +49,7 @@ namespace Imitation
 			}
 		}
 
-		private static void GenerateSIMclientsAndAccounts(int num)
+		private void GenerateSIMclientsAndAccounts(int num)
 		{
 			string FN, MN, LN;
 			for (int i = 0; i < num; i++)
@@ -76,7 +75,7 @@ namespace Imitation
 			}
 		}
 
-		private static void GenerateORGclientsAndAccounts(int num)
+		private void GenerateORGclientsAndAccounts(int num)
 		{
 			string DFN, DMN, DLN;
 			int regcode;
@@ -107,17 +106,17 @@ namespace Imitation
 
 		#region Генерация счетов
 
-		private static void GenerateAccountsForClient(IClientDTO client)
+		private void GenerateAccountsForClient(IClientDTO client)
 		{
 			GenerateCurrentAccounts(client, r.Next(0, 6));
 			GenerateDeposits(client, r.Next(0, 6));
 			GenerateCredits(client, r.Next(0, 6));
 		}
 
-		private static void GenerateCurrentAccounts(IClientDTO c, int num) 
+		private void GenerateCurrentAccounts(IClientDTO c, int num) 
 		{
 			for (int i = 0; i < num; i++)
-				BA.Accounts.GenerateAccount(
+				BA.Accounts.AddAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Current,
 									r.Next(0,100) * 1000, 					// сумма на текущем счеты
 									0,										// процент по вкладу
@@ -125,7 +124,7 @@ namespace Imitation
 					GenAccOpeningDate(c), true, true, RecalcPeriod.NoRecalc, 0, 0));
 		}
 
-		private static void GenerateDeposits(IClientDTO c, int num) 
+		private void GenerateDeposits(IClientDTO c, int num) 
 		{
 			for (int i = 0; i < num; i++)
 			{
@@ -147,7 +146,7 @@ namespace Imitation
 						break;
 				}
 
-				BA.Accounts.GenerateAccount(
+				BA.Accounts.AddAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Deposit,
 									r.Next(100, 300) * 10000,		// сумма на счету. У ВИП > 1 mln
 									interest,	// процент
@@ -163,7 +162,7 @@ namespace Imitation
 			}
 		}
 
-		private static void GenerateCredits(IClientDTO c, int num)
+		private void GenerateCredits(IClientDTO c, int num)
 		{
 			for (int i = 0; i < num; i++)
 			{
@@ -186,7 +185,7 @@ namespace Imitation
 						break;
 				}
 
-				BA.Accounts.GenerateAccount(
+				BA.Accounts.AddAccount(
 					 new AccountDTO(c.ClientType, c.ID, AccountType.Credit,
 									-amount,				// долг
 									interest,				// процент
@@ -202,7 +201,7 @@ namespace Imitation
 			}
 		}
 
-		private static bool TrueFalse()
+		private bool TrueFalse()
 		{
 			return r.Next(0, 2) == 0 ? false : true;
 		}
@@ -212,16 +211,16 @@ namespace Imitation
 		/// Она должна быть после рождения клиента и даты создания банка
 		/// </summary>
 		/// <returns></returns>
-		private static DateTime GenAccOpeningDate(IClientDTO c)
+		private DateTime GenAccOpeningDate(IClientDTO c)
 		{
-			if ((DateTime)c.CreationDate < GoodBank.BankFoundationDay)
-				return GenDate(GoodBank.BankFoundationDay, GoodBank.Today);
-			return GenDate((DateTime)c.CreationDate, GoodBank.Today);
+			if ((DateTime)c.CreationDate < BA.GBDateTime.BankFoundationDay())
+				return GenDate(BA.GBDateTime.BankFoundationDay(), BA.GBDateTime.Today());
+			return GenDate((DateTime)c.CreationDate, BA.GBDateTime.Today());
 		}
 
-		private static int GenDepositCreditDuration(DateTime sd, out int monthsElapsed)
+		private int GenDepositCreditDuration(DateTime sd, out int monthsElapsed)
 		{
-			monthsElapsed = (int)(GoodBank.Today.Subtract(sd).TotalDays / 365.25 * 12);
+			monthsElapsed = (int)(BA.GBDateTime.Today().Subtract(sd).TotalDays / 365.25 * 12);
 			return monthsElapsed + r.Next(1, 61);
 		}
 
@@ -229,79 +228,79 @@ namespace Imitation
 
 		#region Генерация полей имени клиента
 
-		private static string GenMFN()
+		private string GenMFN()
 		{
 			return Names.MFN[r.Next(0, Names.MFN.Length)];
 		}
 
-		private static string GenMMN()
+		private string GenMMN()
 		{
 			return Names.MMN[r.Next(0, Names.MMN.Length)];
 		}
 
-		private static string GenMLN()
+		private string GenMLN()
 		{
 			return Names.MLN[r.Next(0, Names.MLN.Length)];
 		}
 
-		private static string GenFFN()
+		private string GenFFN()
 		{
 			return Names.FFN[r.Next(0, Names.FFN.Length)];
 		}
 
-		private static string GenFMN()
+		private string GenFMN()
 		{
 			return Names.FMN[r.Next(0, Names.FMN.Length)];
 		}
 
-		private static string GenFLN()
+		private string GenFLN()
 		{
 			return Names.FLN[r.Next(0, Names.FLN.Length)];
 		}
 
-		private static string GenOrgName()
+		private string GenOrgName()
 		{
 			return $"Организация {orgCount++}";
 		}
 
-		private static string GenPassportNum()
+		private string GenPassportNum()
 		{
 			return $"{r.Next(1, 10_000):0000} {r.Next(1,1_000_000):000000}"; 
 		}
 
-		private static string GenTIN(out int region)
+		private string GenTIN(out int region)
 		{
 			region = r.Next(1, 86);
 			return $"{region:00}{r.Next(1,100):00}{r.Next(1,1_000_000):000000}";
 		}
-		private static string GenTel()
+		private string GenTel()
 		{
 			return "+7 9" + $"{r.Next(0, 100):00} "                        // area code
 					+ $"{r.Next(1, 1000):000}-" + $"{r.Next(0, 10000):0000}";	// telephone
 		}
 
-		private static DateTime GenBirthDate()
+		private DateTime GenBirthDate()
 		{
 			DateTime startDate =
-				new DateTime(GoodBank.Today.Year - 100,
-							 GoodBank.Today.Month,
-							 GoodBank.Today.Day);
+				new DateTime(BA.GBDateTime.Today().Year - 100,
+							 BA.GBDateTime.Today().Month,
+							 BA.GBDateTime.Today().Day);
 			DateTime endDate =
-				new DateTime(GoodBank.Today.Year - 19,
-							 GoodBank.Today.Month,
-							 GoodBank.Today.Day);
+				new DateTime(BA.GBDateTime.Today().Year - 19,
+							 BA.GBDateTime.Today().Month,
+							 BA.GBDateTime.Today().Day);
 			return GenDate(startDate, endDate);
 		}
 
-		private static DateTime GenRegDate()
+		private DateTime GenRegDate()
 		{
 			DateTime startDate = new DateTime(1990, 1, 1);
-			DateTime endDate   = GoodBank.Today;
+			DateTime endDate   = BA.GBDateTime.Today();
 			return GenDate(startDate, endDate);
 		}
 
 
-		private static DateTime GenDate(DateTime sd, DateTime ed)
+		private DateTime GenDate(DateTime sd, DateTime ed)
 		{
 			if (sd >= ed) return ed;
 			DateTime ndate;
@@ -318,25 +317,25 @@ namespace Imitation
 			return ndate;
 		}
 
-		private static string GenEmail()
+		private string GenEmail()
 		{
 			return "email" + Name() + "@" + Domain[r.Next(0, Domain.Length)] + TopDomain[r.Next(0, TopDomain.Length)];
 		}
 
-		public static string[] Domain = { "gmail", "yahoo", "outlook", "mail", "mymail", "yourmail", "onemail", "bmail", "cmail", "paper"};
-		public static string[] TopDomain = { ".com", ".org", ".edu", ".gov", ".ru", ".net", ".xyz" };
+		public string[] Domain = { "gmail", "yahoo", "outlook", "mail", "mymail", "yourmail", "onemail", "bmail", "cmail", "paper"};
+		public string[] TopDomain = { ".com", ".org", ".edu", ".gov", ".ru", ".net", ".xyz" };
 
-		public static string Name()
+		public string Name()
 		{
 			return Guid.NewGuid().ToString().Substring(0, 5);
 		}
 
-		private static string GenOrgAddress(int region)
+		private string GenOrgAddress(int region)
 		{
 			return $"Город_{region}, ул. Улица_{r.Next(0, 100)}, {r.Next(0, 100)} офс. {r.Next(0, 1000)}";
 		}
 
-		private static RecalcPeriod GenDepositRecalc()
+		private RecalcPeriod GenDepositRecalc()
 		{
 			int toss = r.Next(1, 8);
 			if (1 <= toss && toss <= 4) return RecalcPeriod.Monthly;

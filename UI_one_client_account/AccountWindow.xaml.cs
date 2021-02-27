@@ -103,8 +103,8 @@ namespace UI_one_client_account
 
 		private void InitializeClassScopeVars(BankActions ba, IAccountDTO acc)
 		{
-			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			BA = ba;
+			BankTodayDate.Text = $"Сегодня {BA.GBDateTime.Today():dd.MM.yyyy} г.";
 			client	= BA.Clients.GetClientDTObyID(acc.ClientID);
 
 			AccountID					= acc.AccountID;

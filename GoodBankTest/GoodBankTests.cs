@@ -1,9 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AccountClasses;
 using ClientClasses;
+using Interfaces_Actions;
 using Interfaces_Data;
 using DTO;
-using System;
+using Repository;
 
 namespace BankInside.Tests
 {
@@ -17,15 +19,16 @@ namespace BankInside.Tests
 			
 			// Arrange
 			// Создаём банк
-			GoodBank goodBank = new GoodBank();
+			IRepository dbe = new DataBaseEngine();
+			AccountActions accActionsTest = new AccountActions(dbe);
 			// Создаём контейнер данных о клиенте
-			IClientDTO client = new ClientDTO
-				(ClientType.VIP, "John", "", "Doe", new DateTime(1980, 1, 12),
-				"1111 223344", "+1234567890","e@mail.ru", "1-23, Long Street, City 321 Nation");
-			// Создаём запись о клиенте в базе, на основе данных из контейнера
-			client = goodBank.AddClient(client);
-			// Получаем ID созданного клиента, точнее ID в базе записи о клиенте
-			int clientID = client.ID;
+			//IClientDTO client = new ClientDTO
+			//	(ClientType.VIP, "John", "", "Doe", new DateTime(1980, 1, 12),
+			//	"1111 223344", "+1234567890","e@mail.ru", "1-23, Long Street, City 321 Nation");
+			//// Создаём запись о клиенте в базе, на основе данных из контейнера
+			//client = dbe.AddClient(client);
+			//// Получаем ID созданного клиента, точнее ID в базе записи о клиенте
+			//int clientID = client.ID;
 
 			// Создаём контейнер данных о счёте
 			IAccountDTO testAcc = new AccountDTO()
@@ -34,7 +37,7 @@ namespace BankInside.Tests
 				AccType = AccountType.Credit,
 				AccumulatedInterest = 0,
 				Balance = 1000.0,
-				ClientID = clientID,
+				ClientID = 1,
 				ClientType = ClientType.VIP,
 				Closed = null,
 				Compounding = true,
@@ -53,7 +56,7 @@ namespace BankInside.Tests
 
 			// Act 
 			// Создаём в базе запись о счёте
-			IAccountDTO acc = goodBank.GenerateAccount(testAcc);
+			IAccountDTO acc = accActionsTest.AddAccount(testAcc);
 
 			// Assert
 			// Проверяем, что в результате сформировалась запись о счёте в базен

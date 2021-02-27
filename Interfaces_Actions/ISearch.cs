@@ -6,6 +6,6 @@ namespace Interfaces_Actions
 {
 	public interface ISearch
 	{
-		ObservableCollection<IClientDTO> GetClientsList(Compare predicate);
+		ObservableCollection<IClientDTO> FindClients(Compare predicate);
 	}
 }
