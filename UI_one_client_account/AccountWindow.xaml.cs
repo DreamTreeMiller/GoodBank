@@ -1,15 +1,15 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.UserControlsLists;
+﻿using AccountClasses;
+using Binding_UI_CondeBehind;
+using ClientClasses;
+using DTO;
+using Interfaces_Data;
+using UserControlsLists;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for AccountWindow.xaml
@@ -18,7 +18,7 @@ namespace GoodBankNS.UI_one_client_account
 	{
 		#region Account Fields in Window
 
-		private uint		AccID;
+		private int			AccountID;
 		private AccountType	accountType;
 		private string		accountNumber;
 		public	string		AccountNumber
@@ -103,11 +103,11 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void InitializeClassScopeVars(BankActions ba, IAccountDTO acc)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			BA = ba;
-			client	= new ClientDTO(BA.Clients.GetClientByID(acc.ClientID));
+			client	= BA.Clients.GetClientDTObyID(acc.ClientID);
 
-			AccID						= acc.AccID;
+			AccountID					= acc.AccountID;
 			accountType					= acc.AccType;
 			AccountNumber				= acc.AccountNumber;
 			Balance						= acc.Balance;
@@ -168,7 +168,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void UpdateAccountTransactionsLog()
 		{
-			var accTransLog = BA.Log.GetAccountTransactionsLog(AccID);
+			var accTransLog = BA.Log.GetAccountTransactionsLog(AccountID);
 			transLogUC.TransactionsLog.ItemsSource = accTransLog;
 		}
 		private void TopUpButton_Click(object sender, RoutedEventArgs e)
@@ -194,8 +194,8 @@ namespace GoodBankNS.UI_one_client_account
 			var result = cashWin.ShowDialog();
 			if (result != true) return;
 
-			IAccount updatedAcc = BA.Accounts.TopUpCash(AccID, cashWin.amount);
-			Balance = updatedAcc.Balance;
+			IAccountDTO updatedAcc = BA.Accounts.TopUpCash(AccountID, cashWin.amount);
+			Balance   = updatedAcc.Balance;
 			IsBlocked = updatedAcc.IsBlocked;
 			accountsNeedUpdate = true;
 			UpdateAccountTransactionsLog();
@@ -234,7 +234,7 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Недостаточно средств для снятия!");
 				return;
 			}
-			IAccount updatedAcc = BA.Accounts.WithdrawCash(AccID, cashWin.amount);
+			IAccountDTO updatedAcc = BA.Accounts.WithdrawCash(AccountID, cashWin.amount);
 			Balance = updatedAcc.Balance;
 			accountsNeedUpdate = true;
 			UpdateAccountTransactionsLog();
@@ -260,7 +260,7 @@ namespace GoodBankNS.UI_one_client_account
 				return;
 			}
 
-			var topupableAccountsList = BA.Accounts.GetTopupableAccountsToWireFrom(AccID);
+			var topupableAccountsList = BA.Accounts.GetTopupableAccountsToWireTo(AccountID);
 			EnterAmountAndAccountWindow eaawin = new EnterAmountAndAccountWindow(topupableAccountsList);
 			var result = eaawin.ShowDialog();
 			if (result != true) return;
@@ -271,8 +271,8 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Недостаточно средств для перевода");
 				return;
 			}
-			uint destAccID = eaawin.destinationAccount.AccID;
-			BA.Accounts.Wire(AccID, destAccID, wireAmount);
+			int destAccID = eaawin.destinationAccount.AccountID;
+			BA.Accounts.Wire(AccountID, destAccID, wireAmount);
 
 			Balance -= wireAmount;
 			MessageBox.Show($"Сумма {wireAmount:N2} руб. успешно переведена");
@@ -301,7 +301,7 @@ namespace GoodBankNS.UI_one_client_account
 			}
 
 			double accumulatedAmount;
-			IAccount closedAcc = BA.Accounts.CloseAccount(AccID, out accumulatedAmount);
+			IAccountDTO closedAcc = BA.Accounts.CloseAccount(AccountID, out accumulatedAmount);
 
 			if (accumulatedAmount > 0)
 			{
@@ -310,8 +310,7 @@ namespace GoodBankNS.UI_one_client_account
 
 			// Обновляем суммы, даты, флажки в окошке
 			Balance				= closedAcc.Balance;
-			if (closedAcc is IAccountDeposit)
-				AccumulatedInterest = (closedAcc as IAccountDeposit).AccumulatedInterest;
+			AccumulatedInterest = closedAcc.AccumulatedInterest;
 
 			AccClosed			= closedAcc.Closed;
 			Topupable			= closedAcc.Topupable;

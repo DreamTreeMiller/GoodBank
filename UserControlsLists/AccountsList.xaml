@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="GoodBankNS.UserControlsLists.AccountsList"
+﻿<UserControl x:Class="UserControlsLists.AccountsList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GoodBankNS.UserControlsLists"
+             xmlns:local="clr-namespace:UserControlsLists"
              mc:Ignorable="d" 
              d:DesignHeight="180" d:DesignWidth="680">
 	<Grid>
@@ -91,7 +91,7 @@
 				</Style>
 			</DataGrid.RowStyle>			
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="№"	Binding="{Binding AccID}"/>
+				<DataGridTextColumn Header="№"	Binding="{Binding AccountID}"/>
 				<DataGridTextColumn x:Name="ClientTypeColumn" 
 								Header="Клиент"	
 								Binding="{Binding ClientType}"

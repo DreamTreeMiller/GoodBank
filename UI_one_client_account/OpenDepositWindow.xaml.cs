@@ -1,15 +1,15 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using BankInside;
+using ClientClasses;
+using Interfaces_Data;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for OpenDepositWindow.xaml
@@ -183,16 +183,16 @@ namespace GoodBankNS.UI_one_client_account
 			});
 		}
 
-		public OpenDepositWindow(ObservableCollection<AccountDTO> accumulationAccounts, ClientType clientType)
+		public OpenDepositWindow(ObservableCollection<IAccountDTO> accumulationAccounts, ClientType clientType)
 		{
 			InitializeComponent();
 			InitializeWindowLabelsAndData(accumulationAccounts, clientType);
 			SetFocusOnDepositAmountEntryBox();
 		}
 
-		private void InitializeWindowLabelsAndData(ObservableCollection<AccountDTO> accumulationAccounts, ClientType clientType)
+		private void InitializeWindowLabelsAndData(ObservableCollection<IAccountDTO> accumulationAccounts, ClientType clientType)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {GoodBank.Today:dd.MM.yyyy} г.";
 			AccumulationAccount.ItemsSource = accumulationAccounts;
 
 			switch (clientType)

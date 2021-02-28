@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -29,6 +30,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,7 +53,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,14 +81,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BankInside\GoodBank-AccountsActions.cs" />
+    <Compile Include="BankInside\GoodBank-Search.cs" />
     <Compile Include="BankInside\GoodBank-ClientsActions.cs" />
-    <Compile Include="BankInside\GoodBank-TransactionsLog.cs" />
+    <Compile Include="BankInside\GoodBank-Date.cs" />
+    <Compile Include="BankInside\GoodBank-Logging.cs" />
+    <Compile Include="BankDateTime\GoodBankDate.cs" />
     <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="Account Classes\Account.cs" />
     <Compile Include="Account Classes\AccountEnums.cs" />
     <Compile Include="Account Classes\AccountCredit.cs" />
     <Compile Include="Account Classes\AccountCurrent.cs" />
     <Compile Include="Account Classes\AccountDeposit.cs" />
+    <Compile Include="EF\BankContext.cs" />
     <Compile Include="Imitation\Generate.cs" />
     <Compile Include="Imitation\GenerateWindow.xaml.cs">
       <DependentUpon>GenerateWindow.xaml</DependentUpon>
@@ -90,7 +104,8 @@
     <Compile Include="Imitation\Names-MaleLast.cs" />
     <Compile Include="Imitation\Names-MaleMiddle.cs" />
     <Compile Include="Interfaces_Actions\IAccountsActions.cs" />
-    <Compile Include="Interfaces_Actions\ITransactions.cs" />
+    <Compile Include="Interfaces_Actions\ISearch.cs" />
+    <Compile Include="Interfaces_Actions\ILogActions.cs" />
     <Compile Include="BankInside\GoodBank.cs" />
     <Compile Include="Binding_UI_CondeBehind\BankActions.cs" />
     <Compile Include="Client Classes\ClientEnums.cs" />
@@ -100,16 +115,9 @@
     <Compile Include="Client Classes\ClientVIP.cs" />
     <Compile Include="Interfaces_Actions\IClientsActions.cs" />
     <Compile Include="Client Classes\Client.cs" />
-    <Compile Include="Interfaces_Data\IAccount.cs" />
-    <Compile Include="Interfaces_Data\IAccountDeposit.cs" />
     <Compile Include="Interfaces_Data\IAccountDTO.cs" />
-    <Compile Include="Interfaces_Data\IClient.cs" />
     <Compile Include="Interfaces_Data\IClientDTO.cs" />
-    <Compile Include="Interfaces_Data\IGoodBank.cs" />
-    <Compile Include="Interfaces_Data\IClientOrg.cs" />
-    <Compile Include="Interfaces_Data\IClientSimple.cs" />
-    <Compile Include="Interfaces_Data\ITransaction.cs" />
-    <Compile Include="Interfaces_Data\IClientVIP.cs" />
+    <Compile Include="Interfaces_Data\ITransactionDTO.cs" />
     <Compile Include="Search\DelegateCompare.cs" />
     <Compile Include="Search\IndividualComparators.cs" />
     <Compile Include="Search\IndividualsSearchRequestWindow.cs">
@@ -123,7 +131,7 @@
       <DependentUpon>ClientsSearchResultWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\SharedComparators.cs" />
-    <Compile Include="Transaction Class\Transaction.cs" />
+    <Compile Include="Logging\Transaction.cs" />
     <Compile Include="UI_clients\DepartmentWindow.cs">
       <DependentUpon>DepartmentWindow.xaml</DependentUpon>
     </Compile>
@@ -260,6 +268,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -282,4 +291,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
 </Project>

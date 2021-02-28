@@ -1,11 +1,11 @@
-﻿using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Data;
+﻿using ClientClasses;
+using Interfaces_Data;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace GoodBankNS.DTO
+namespace DTO
 {
 	/// <summary>
 	/// Data Transfer Object для передачи данных при работе с клиентом 
@@ -16,7 +16,7 @@ namespace GoodBankNS.DTO
 	{
 		#region Свойства
 
-		public uint			ID						{ get; }
+		public int			ID						{ get; }
 		public ClientType	ClientType				{ get; set; }
 		public string		ClientTypeTag			
 		{
@@ -221,7 +221,7 @@ namespace GoodBankNS.DTO
 		/// Подразумевается, что все данные введены корректно
 		/// </summary>
 		/// <param name="c">Клиент из базы</param>
-		public ClientDTO(IClient c)
+		public ClientDTO(Client c)
 		{
 			ID						= c.ID;
 			_telephone				= c.Telephone;
@@ -232,36 +232,36 @@ namespace GoodBankNS.DTO
 			NumberOfCredits			= c.NumberOfCredits;
 			NumberOfClosedAccounts  = c.NumberOfClosedAccounts;
 
-			if (c is IClientVIP)
+			if (c is ClientVIP)
 			{
 				ClientType		= ClientType.VIP;
-				_firstName		= (c as IClientVIP).FirstName;
-				_middleName		= (c as IClientVIP).MiddleName;
-				_lastName		= (c as IClientVIP).LastName;
-				_passportOrTIN	= (c as IClientVIP).PassportNumber;
-				_creationDate	= (c as IClientVIP).BirthDate;
+				_firstName		= (c as ClientVIP).FirstName;
+				_middleName		= (c as ClientVIP).MiddleName;
+				_lastName		= (c as ClientVIP).LastName;
+				_passportOrTIN	= (c as ClientVIP).PassportNumber;
+				_creationDate	= (c as ClientVIP).BirthDate;
 				return;
 			}
 
-			if (c is IClientSimple)
+			if (c is ClientSIM)
 			{
 				ClientType		= ClientType.Simple;
-				_firstName		= (c as IClientSimple).FirstName;
-				_middleName		= (c as IClientSimple).MiddleName;
-				_lastName		= (c as IClientSimple).LastName;
-				_passportOrTIN	= (c as IClientSimple).PassportNumber;
-				_creationDate	= (c as IClientSimple).BirthDate;
+				_firstName		= (c as ClientSIM).FirstName;
+				_middleName		= (c as ClientSIM).MiddleName;
+				_lastName		= (c as ClientSIM).LastName;
+				_passportOrTIN	= (c as ClientSIM).PassportNumber;
+				_creationDate	= (c as ClientSIM).BirthDate;
 			}
 
-			if (c is IClientOrg)
+			if (c is ClientORG)
 			{
 				ClientType		= ClientType.Organization;
-				_orgName		= (c as IClientOrg).OrgName;
-				_firstName		= (c as IClientOrg).DirectorFirstName;
-				_middleName		= (c as IClientOrg).DirectorMiddleName;
-				_lastName		= (c as IClientOrg).DirectorLastName;
-				_passportOrTIN	= (c as IClientOrg).TIN;
-				_creationDate	= (c as IClientOrg).RegistrationDate;
+				_orgName		= (c as ClientORG).OrgName;
+				_firstName		= (c as ClientORG).DirectorFirstName;
+				_middleName		= (c as ClientORG).DirectorMiddleName;
+				_lastName		= (c as ClientORG).DirectorLastName;
+				_passportOrTIN	= (c as ClientORG).TIN;
+				_creationDate	= (c as ClientORG).RegistrationDate;
 			}
 		}
 

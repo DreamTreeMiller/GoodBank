@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
-using GoodBankNS.AccountClasses;
+using AccountClasses;
 using System.Globalization;
-using GoodBankNS.DTO;
+using DTO;
 
-namespace GoodBankNS.UserControlsLists
+namespace UserControlsLists
 {
 	/// <summary>
 	/// Interaction logic for AccountsList.xaml

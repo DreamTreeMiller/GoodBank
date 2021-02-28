@@ -1,26 +1,34 @@
-﻿using GoodBankNS.AccountClasses;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.DTO;
-using GoodBankNS.Interfaces_Actions;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Search;
+﻿using AccountClasses;
+using ClientClasses;
+using DTO;
+using Interfaces_Actions;
+using Interfaces_Data;
+using Search;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace GoodBankNS.BankInside
+namespace BankInside
 {
 	public partial class GoodBank : IClientsActions
 	{
-		private List<Client> clients;
+		/// <summary>
+		/// Находит клиента с указанным ID
+		/// </summary>
+		/// <param name="id">ID клиента</param>
+		/// <returns></returns>
+		public Client GetClientByID(int id)
+		{
+			return db.Clients.Find(id);
+		}
 
 		/// <summary>
 		/// Находит клиента с указанным ID
 		/// </summary>
 		/// <param name="id">ID клиента</param>
 		/// <returns></returns>
-		public IClient GetClientByID(uint id)
+		public IClientDTO GetClientDTObyID(int id)
 		{
-			return clients.Find(c => c.ID == id);
+			return new ClientDTO(db.Clients.Find(id));
 		}
 
 		public IClientDTO AddClient(IClientDTO client)
@@ -32,39 +40,47 @@ namespace GoodBankNS.BankInside
 					newClient = new ClientVIP(client);
 					break;
 				case ClientType.Simple:
-					newClient = new СlientSIM(client);
+					newClient = new ClientSIM(client);
 					break;
 				case ClientType.Organization:
-					newClient = new СlientORG(client);
+					newClient = new ClientORG(client);
 					break;
 			}
-			clients.Add(newClient);
+			db.Clients.Add(newClient);
+			db.SaveChanges();
 			return new ClientDTO(newClient);
 		}
 
-		public ObservableCollection<ClientDTO> GetClientsList<TClient>()
+		public ObservableCollection<IClientDTO> GetClientsList(ClientType clientType)
 		{
-			ObservableCollection<ClientDTO> clientsList = new ObservableCollection<ClientDTO>();
-			foreach (var c in clients)
+			// Here should be ling to entity query
+			switch(clientType)
+			{
+				case ClientType.VIP:
+					return GetClientsList<ClientVIP>();
+				case ClientType.Simple:
+					return GetClientsList<ClientSIM>();
+				case ClientType.Organization:
+					return GetClientsList<ClientORG>();
+			}
+			return GetClientsList<Client>();
+		}
+
+		private ObservableCollection<IClientDTO> GetClientsList<TClient>()
+		{
+			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
+
+			// TODO Here should be linq to entity query
+			foreach (Client c in db.Clients)
 				if (c is TClient) clientsList.Add(new ClientDTO(c));
 			return clientsList;
 		}
 
-		public ObservableCollection<IClientDTO> GetClientsList(Compare predicate)
-		{
-			ObservableCollection<IClientDTO> clientsList = new ObservableCollection<IClientDTO>();
-			foreach (var c in clients)
-			{
-				bool flag = true;
-				flag = predicate(c, ref flag);
-				if (flag) clientsList.Add(new ClientDTO(c));
-			}
-			return clientsList;
-		}
 		public void UpdateClient(IClientDTO updatedClient)
 		{
-			int ci = clients.FindIndex(c => c.ID == updatedClient.ID);
-			clients[ci].UpdateMyself(updatedClient);
+			Client client = db.Clients.Find(updatedClient.ID);
+			client.UpdateMyself(updatedClient);
+			db.SaveChanges();
 		}
 	}
 }

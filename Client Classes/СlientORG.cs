@@ -1,13 +1,11 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public class СlientORG : Client, IClientOrg
+	[Table("ClientsORG")]
+	public class ClientORG : Client
 	{
 		#region Название организации, ФИО директора, ИНН, дата регистрации
 
@@ -19,7 +17,7 @@ namespace GoodBankNS.ClientClasses
 		/// <summary>
 		/// ИНН - Taxpayer Individual Number
 		/// </summary>
-		public string	TIN	{ get; set; }
+		public string	TIN					{ get; set; }
 
 		/// <summary>
 		/// Дата регистрации организации
@@ -28,9 +26,14 @@ namespace GoodBankNS.ClientClasses
 
 		#endregion
 
-		#region Конструктор
+		#region Конструкторы
 
-		public СlientORG(IClientDTO newClient)
+		/// <summary>
+		/// Конструктор для корректной работы Entity Framework
+		/// </summary>
+		public ClientORG() { }
+
+		public ClientORG(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)
 		{
 			OrgName				= newClient.MainName;

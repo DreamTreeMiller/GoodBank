@@ -1,4 +1,4 @@
-﻿using GoodBankNS.DTO;
+﻿using DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.UserControlsLists
+namespace UserControlsLists
 {
 	/// <summary>
 	/// Interaction logic for ClientsList.xaml

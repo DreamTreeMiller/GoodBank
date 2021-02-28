@@ -1,6 +1,6 @@
-﻿using GoodBankNS.DTO;
-using GoodBankNS.UserControlsLists;
-using GoodBankNS.ClientClasses;
+﻿using DTO;
+using UserControlsLists;
+using ClientClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +14,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.AccountClasses;
-using GoodBankNS.BankInside;
+using Binding_UI_CondeBehind;
+using Interfaces_Data;
+using AccountClasses;
+using BankInside;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for ClientWindow.xaml
@@ -43,7 +43,7 @@ namespace GoodBankNS.UI_one_client_account
 
 		private void InitializeAccountsView(BankActions ba, IClientDTO client)
 		{
-			BankTodayDate.Text = $"Сегодня {GoodBankNS.BankInside.GoodBank.Today:dd.MM.yyyy} г.";
+			BankTodayDate.Text = $"Сегодня {BankInside.GoodBank.Today:dd.MM.yyyy} г.";
 			BA = ba;
 			OrganizationInfo.Visibility = Visibility.Collapsed;
 			PersonalInfo.Visibility		= Visibility.Visible;
@@ -114,7 +114,7 @@ namespace GoodBankNS.UI_one_client_account
 				MessageBox.Show("Выберите счет для показа");
 				return;
 			}
-			IClient client = BA.Clients.GetClientByID(account.ClientID);
+			//IClientDTO client = BA.Clients.GetClientDTObyID(account.ClientID);
 			AccountWindow accountWindow = new AccountWindow(BA, account);
 			accountWindow.ShowDialog();
 			if (accountWindow.accountsNeedUpdate)
@@ -165,7 +165,7 @@ namespace GoodBankNS.UI_one_client_account
 			// его ID == 0, AccountNumber == "внутренний счет"
 
 			int		AccumAccIndx		= odwin.AccumulationAccount.SelectedIndex;
-			uint	AccumulationAccID	= (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).AccID;
+			int	AccumulationAccID	= (odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).AccountID;
 			string	InterestAccumAccNum =
 				(odwin.AccumulationAccount.Items[AccumAccIndx] as AccountDTO).AccountNumber;
 
@@ -215,7 +215,7 @@ namespace GoodBankNS.UI_one_client_account
 			// Получаем номер счета в базе счетов, на котором будет перечислена выданная сумма
 			// Если было выбрано "получить наличными", то его ID == 0
 			int		CreRecipAccIndx		  =  ocrwin.CreditRecipientAccount.SelectedIndex;
-			uint	CreditRecipientAccID  = (ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).AccID;
+			int	CreditRecipientAccID  = (ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).AccountID;
 			string	CreditRecipientAccNum =
 				(ocrwin.CreditRecipientAccount.Items[CreRecipAccIndx] as AccountDTO).AccountNumber;
 

@@ -1,19 +1,20 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Transaction_Class;
+﻿using BankInside;
+using Interfaces_Data;
+using LoggingNS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoodBankNS.AccountClasses
+namespace AccountClasses
 {
+	[Table("AccountsCredit")]
 	public class AccountCredit : Account
 	{
-		public override AccountType AccType { get => AccountType.Credit; }
-		public override double		Balance { get; set; }
-		public double				AccumulatedInterest { get; set; }
+		public double AccumulatedInterest { get; set; }
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public AccountCredit() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных
@@ -35,14 +36,14 @@ namespace GoodBankNS.AccountClasses
 		/// RecalcPeriod  =							--> monthly
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountCredit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Credit, acc.Compounding, acc.Interest,
 				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{
 			AccountNumber	= "CRE" + AccountNumber;
 			Balance			= acc.Balance;
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				"",
@@ -62,7 +63,8 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountCredit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, 
+				   AccountType.Credit, acc.Compounding, acc.Interest,
 				   opened,
 				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
 		{
@@ -71,7 +73,7 @@ namespace GoodBankNS.AccountClasses
 			MonthsElapsed	= acc.MonthsElapsed;
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				Opened,
 				"",
 				"",
@@ -105,7 +107,7 @@ namespace GoodBankNS.AccountClasses
 			Balance					 += calculatedInterest;
 
 			Transaction interestAccrualTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				AccountNumber,

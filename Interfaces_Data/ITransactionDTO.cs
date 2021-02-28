@@ -1,23 +1,23 @@
-﻿using GoodBankNS.AccountClasses;
+﻿using AccountClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodBankNS.Interfaces_Data
+namespace Interfaces_Data
 {
-	public interface ITransaction
+	public interface ITransactionDTO
 	{
 		/// <summary>
 		/// Уникальный ID транзакции
 		/// </summary>
-		uint			TransactionID		{ get; }
+		int			TransactionID		{ get; }
 
 		/// <summary>
 		/// Счет, над которым совершено действие
 		/// </summary>
-		uint			TransactionAccountID { get; }
+		int			TransactionAccountID { get; }
 
 		/// <summary>
 		/// Дата и время транзакции

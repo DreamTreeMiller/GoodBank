@@ -1,4 +1,4 @@
-﻿using GoodBankNS.AccountClasses;
+﻿using AccountClasses;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	[ValueConversion(typeof(DateTime?), typeof(string))]
 	public class UnlimitedDateConverter : IValueConverter

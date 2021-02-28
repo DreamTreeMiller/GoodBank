@@ -1,23 +1,18 @@
-﻿using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Interfaces_Actions;
+﻿using ClientClasses;
+using Interfaces_Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoodBankNS.DTO;
-using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.AccountClasses;
-using GoodBankNS.BankInside;
+using DTO;
+using Binding_UI_CondeBehind;
+using AccountClasses;
+using BankInside;
 
-namespace GoodBankNS.Imitation
+namespace Imitation
 {
 	public static class Generate
 	{
 		static BankActions BA;
-		static Random r = new Random();
-		static int orgCount = 1;
+		static Random	   r		= new Random();
+		static int		   orgCount = 1;
 
 		public static void Bank(BankActions ba, int vip, int sim, int org)
 		{

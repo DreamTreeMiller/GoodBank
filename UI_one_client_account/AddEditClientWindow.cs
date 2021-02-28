@@ -1,24 +1,15 @@
-﻿using GoodBankNS.DTO;
-using GoodBankNS.UserControlsLists;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Data;
+﻿using DTO;
+using UserControlsLists;
+using ClientClasses;
+using Interfaces_Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Threading;
-using GoodBankNS.BankInside;
+using BankInside;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	public class ClientTypeTuple
 	{

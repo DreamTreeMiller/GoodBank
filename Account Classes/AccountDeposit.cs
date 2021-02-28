@@ -1,26 +1,20 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Transaction_Class;
+﻿using BankInside;
+using Interfaces_Data;
+using LoggingNS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoodBankNS.AccountClasses
+namespace AccountClasses
 {
-	public class AccountDeposit : Account, IAccountDeposit
+	[Table("AccountsDeposit")]
+	public class AccountDeposit : Account
 	{
-		public override AccountType AccType { get => AccountType.Deposit; }
-
-		public override double Balance { get; set; }
-
 		/// <summary>
 		/// ID счета, куда перечислять проценты.
 		/// При капитализации, совпадает с ИД счета депозита
 		/// Без капитализации равен 0
 		/// </summary>
-		public uint InterestAccumulationAccID { get; } = 0;
+		public int InterestAccumulationAccID { get; } = 0;
 
 		/// <summary>
 		/// Номер счета, куда перечислять проценты.
@@ -33,6 +27,11 @@ namespace GoodBankNS.AccountClasses
 		/// Накомпленные проценты 
 		/// </summary>
 		public double AccumulatedInterest { get; set; } = 0;
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public AccountDeposit() { }
 
 		/// <summary>
 		/// Создание счета на основе введенных данных
@@ -54,7 +53,7 @@ namespace GoodBankNS.AccountClasses
 		/// RecalcPeriod  =							--> из IAccountDTO acc
 		/// EndDate		  =							--> из IAccountDTO acc 
 		public AccountDeposit(IAccountDTO acc, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
 				  writeloghandler)
 		{
@@ -62,7 +61,7 @@ namespace GoodBankNS.AccountClasses
 			Balance			= acc.Balance;
 			if (acc.Compounding)
 			{
-				InterestAccumulationAccID  = AccID;
+				InterestAccumulationAccID  = AccountID;
 				InterestAccumulationAccNum = AccountNumber;
 			}
 			else
@@ -72,7 +71,7 @@ namespace GoodBankNS.AccountClasses
 			}
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				"",
@@ -92,7 +91,7 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
 		public AccountDeposit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
-			: base(acc.ClientID, acc.ClientType, acc.Compounding, acc.Interest,
+			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
 				  opened,
 				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
 				  writeloghandler)
@@ -101,7 +100,7 @@ namespace GoodBankNS.AccountClasses
 			Balance = acc.Balance;
 			if (acc.Compounding)
 			{
-				InterestAccumulationAccID  = AccID;
+				InterestAccumulationAccID  = AccountID;
 				InterestAccumulationAccNum = AccountNumber;
 			}
 			else
@@ -113,7 +112,7 @@ namespace GoodBankNS.AccountClasses
 			MonthsElapsed = acc.MonthsElapsed;
 
 			Transaction openAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				Opened,
 				"",
 				"",
@@ -219,17 +218,17 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="destAcc"></param>
 		/// <param name="accumulatedInterest"></param>
-		public void SendInterestToAccount(IAccount destAcc, double accumulatedInterest)
+		public void SendInterestToAccount(string destAccNum, double accumulatedInterest)
 		{
 			Transaction withdrawCashTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"накопленный процент",
-				destAcc.AccountNumber,
+				destAccNum,
 				OperationType.SendWireToAccount,
 				accumulatedInterest,
 				"Перевод накопленных процентов"
-				+ " на счет " + destAcc.AccountNumber
+				+ " на счет " + destAccNum
 				+ $" в размере {accumulatedInterest:N2} руб."
 				);
 			OnWriteLog(withdrawCashTransaction);
@@ -251,7 +250,7 @@ namespace GoodBankNS.AccountClasses
 
 
 			Transaction interestAccrualTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				InterestAccumulationAccNum,

@@ -1,6 +1,6 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.Binding_UI_CondeBehind;
-using GoodBankNS.Interfaces_Data;
+﻿using BankInside;
+using Binding_UI_CondeBehind;
+using Interfaces_Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GoodBankNS.UI_one_client_account
+namespace UI_one_client_account
 {
 	/// <summary>
 	/// Interaction logic for EnterAccountNumberWindow.xaml
@@ -73,10 +73,10 @@ namespace GoodBankNS.UI_one_client_account
 			return true;
 		}
 
-		public IAccount destinationAccount;
+		public IAccountDTO destinationAccount;
 
-		ObservableCollection<IAccount> destinationAccountsList { get; set; }
-		public EnterAmountAndAccountWindow(ObservableCollection<IAccount> destAccList)
+		ObservableCollection<IAccountDTO> destinationAccountsList { get; set; }
+		public EnterAmountAndAccountWindow(ObservableCollection<IAccountDTO> destAccList)
 		{
 			InitializeComponent();
 			DestinationAccount.ItemsSource = destAccList;
@@ -99,7 +99,7 @@ namespace GoodBankNS.UI_one_client_account
 			}
 			if (IsInputValid(AmountEnterBox.Text, out double tmp))
 			{
-				destinationAccount = DestinationAccount.SelectedItem as IAccount;
+				destinationAccount = DestinationAccount.SelectedItem as IAccountDTO;
 				amount = tmp;
 				DialogResult = true;
 			}

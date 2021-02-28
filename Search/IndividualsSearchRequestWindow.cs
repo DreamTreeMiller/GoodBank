@@ -1,22 +1,10 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ClientClasses;
 
-namespace GoodBankNS.Search
+namespace Search
 {
 	/// <summary>
 	/// Interaction logic for EnterSearchRequestForIndividualWindow.xaml
@@ -279,10 +267,10 @@ namespace GoodBankNS.Search
 			DialogResult = true;
 		}
 
-		private bool CheckIfPerson(IClient p, ref bool flag)
+		private bool CheckIfPerson(Client p, ref bool flag)
 		{
 			flag = false;
-			if (p is IClientOrg) return false;
+			if (p is ClientORG) return false;
 			flag = true;
 			return true;
 		}

@@ -1,48 +1,16 @@
-﻿using GoodBankNS.Interfaces_Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Interfaces_Data;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public abstract class Client : IClient
+	public abstract class Client
 	{
-
-		#region Статическая часть для генерации уникального ID
-
-		/// <summary>
-		/// Текущий ID счета
-		/// </summary>
-		private static uint staticID;
-
-		/// <summary>
-		/// Статический конструктор. Обнуляет счетчик ID
-		/// </summary>
-		static Client()
-		{
-			staticID = 0;
-		}
-
-		/// <summary>
-		/// Герерирует следующий ID
-		/// </summary>
-		/// <returns>New unique ID</returns>
-		private static uint NextID()
-		{
-			staticID++;
-			return staticID;
-		}
-
-		#endregion
 
 		#region Свойства одинаковые для всех клиентов
 
 		/// <summary>
 		/// ID клиента в базе
 		/// </summary>
-		public uint		ID						{ get; }
+		public int		ID						{ get; set; }
 
 		public string	Telephone				{ get; set; }
 		public string	Email					{ get; set; }
@@ -55,7 +23,7 @@ namespace GoodBankNS.ClientClasses
 
 		#endregion
 
-		#region Конструктор нового клиента
+		#region Конструкторы
 
 		/// <summary>
 		/// Базовый конструктор для любого клиента. Обнуляет количество всех счетов
@@ -65,7 +33,6 @@ namespace GoodBankNS.ClientClasses
 		/// <param name="address">Адрес</param>
 		public Client(string tel, string email, string address)
 		{
-			ID						= NextID();
 			Telephone				= tel;
 			Email					= email;
 			Address					= address;
@@ -74,6 +41,11 @@ namespace GoodBankNS.ClientClasses
 			NumberOfCredits			= 0;
 			NumberOfClosedAccounts	= 0;
 		}
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public Client() { }
 
 		#endregion
 

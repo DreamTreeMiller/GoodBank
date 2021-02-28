@@ -1,13 +1,11 @@
-﻿using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoodBankNS.ClientClasses
+namespace ClientClasses
 {
-	public class ClientVIP : Client, IClientVIP
+	[Table("ClientsVIP")]
+	public class ClientVIP : Client
 	{
 		#region ФИО, № паспорта, дата рождения
 
@@ -19,7 +17,12 @@ namespace GoodBankNS.ClientClasses
 
 		#endregion
 
-		#region Конструктор
+		#region Конструкторы
+
+		/// <summary>
+		/// Конструктор для корректной работы Entity Framework
+		/// </summary>
+		public ClientVIP() { }
 
 		public ClientVIP(IClientDTO newClient)
 			: base(newClient.Telephone, newClient.Email, newClient.Address)

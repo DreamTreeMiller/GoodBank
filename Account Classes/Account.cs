@@ -1,44 +1,12 @@
-﻿using GoodBankNS.BankInside;
-using GoodBankNS.ClientClasses;
-using GoodBankNS.Interfaces_Data;
-using GoodBankNS.Transaction_Class;
+﻿using BankInside;
+using ClientClasses;
+using LoggingNS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GoodBankNS.AccountClasses
+namespace AccountClasses
 {
-	public abstract class Account : IAccount
+	public abstract class Account
 	{
-		#region Статическая часть для генерации уникального ID
-
-		/// <summary>
-		/// Текущий ID счета
-		/// </summary>
-		private static uint		staticID;
-
-		/// <summary>
-		/// Статический конструктор. Обнуляет счетчик ID
-		/// </summary>
-		static Account()
-		{
-			staticID = 0;
-		}
-
-		/// <summary>
-		/// Герерирует следующий ID
-		/// </summary>
-		/// <returns>New unique ID</returns>
-		private static uint		NextID()
-		{
-			staticID++;
-			return staticID;
-		}
-
-		#endregion
-
 		#region Общие поля для всех счетов
 		
 		/// <summary>
@@ -51,18 +19,18 @@ namespace GoodBankNS.AccountClasses
 		/// <summary>
 		/// ID владельца счета. 
 		/// </summary>
-		public uint				ClientID			{ get; set; }
+		public int				ClientID			{ get; set; }
 
 		/// <summary>
 		/// Тип счета текущий, вклад или кредит
 		/// Дублирование, т.к. тип счета определяется его классом
 		/// </summary>
-		public abstract AccountType		AccType		{ get; }
+		public AccountType		AccType				{ get; set; }
 
 		/// <summary>
 		/// Уникальный ID счёта - используем для базы
 		/// </summary>
-		public uint				AccID				{ get; }
+		public int				AccountID			{ get; set; }
 
 		/// <summary>
 		/// Уникальный номер счёта. 
@@ -77,7 +45,7 @@ namespace GoodBankNS.AccountClasses
 		/// Вклад	- сумма вклада
 		/// Кредит	- сумма долга
 		/// </summary>
-		public abstract double	Balance				{ get; set; }
+		public double			Balance				{ get; set; }
 
 		/// <summary>
 		/// Процент. 0 для текущего, прирорст для вклада, минус для долга
@@ -109,7 +77,7 @@ namespace GoodBankNS.AccountClasses
 		/// Дата окончания вклада/кредита. 
 		/// null - бессрочно
 		/// </summary>
-		public DateTime?		EndDate				{ get; }
+		public DateTime?		EndDate				{ get; set; }
 
 		/// <summary>
 		/// Дата закрытия счета. Только для закрытых
@@ -136,9 +104,9 @@ namespace GoodBankNS.AccountClasses
 
 		#endregion
 
-		#region Поля противодействия отмыванию денег
+		#region Свойства противодействия отмыванию денег
 
-		protected int NumberOfTopUpsInDay = 0;
+		protected int NumberOfTopUpsInDay			{ get; set; } = 0;
 
 		public bool				IsBlocked			{ get; set; } = false;
 
@@ -154,14 +122,15 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account( uint clientID, ClientType clientType, bool compounding, double interest,
+		public Account( int clientID, ClientType clientType, 
+						AccountType accType, bool compounding, double interest,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
 						Action<Transaction> writeloghandler)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
-			AccID				= NextID();
-			AccountNumber		= $"{AccID:000000000000}";
+			AccType				= accType;
+			AccountNumber		= $"{AccountID:000000000000}";
 			Compounding			= compounding;
 			Balance				= 0;
 			Interest			= interest;
@@ -183,15 +152,16 @@ namespace GoodBankNS.AccountClasses
 		/// <param name="compounding"></param>
 		/// <param name="compAccID"></param>
 		/// <param name="interest"></param>
-		public Account(uint clientID, ClientType clientType, bool compounding, double interest,
+		public Account(int clientID, ClientType clientType, 
+						AccountType accType, bool compounding, double interest,
 						DateTime opened,
 						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
 						Action<Transaction> writeloghandler)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
-			AccID				= NextID();
-			AccountNumber		= $"{AccID:000000000000}";
+			AccType				= accType;
+			AccountNumber		= $"{AccountID:000000000000}";
 			Compounding			= compounding;
 			Balance				= 0;
 			Interest			= interest;
@@ -203,6 +173,11 @@ namespace GoodBankNS.AccountClasses
 			EndDate = Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
 			WriteLog		   += writeloghandler;
 		}
+
+		/// <summary>
+		/// Конструктор для работы Entity Framework
+		/// </summary>
+		public Account() { }
 
 		#endregion
 
@@ -239,7 +214,7 @@ namespace GoodBankNS.AccountClasses
 					IsBlocked = true;
 
 					Transaction blockAccountTransaction = new Transaction(
-						AccID,
+						AccountID,
 						GoodBank.GetBanksTodayWithCurrentTime(),
 						"",
 						AccountNumber,
@@ -254,7 +229,7 @@ namespace GoodBankNS.AccountClasses
 			}
 			Balance += cashAmount;
 			Transaction topUpCashTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				AccountNumber,
@@ -274,7 +249,7 @@ namespace GoodBankNS.AccountClasses
 			if (IsBlocked) return 0;
 			Balance -= cashAmount;
 			Transaction withdrawCashTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				AccountNumber,
 				"",
@@ -291,18 +266,18 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="sourceAcc">Счет-источник</param>
 		/// <param name="wireAmount">сумма перевода</param>
-		public void ReceiveFromAccount(IAccount sourceAcc, double wireAmount)
+		public void ReceiveFromAccount(string sourceAccNum, double wireAmount)
 		{
 			if (IsBlocked) return;
 			Balance += wireAmount;
 			Transaction DepositFromAccountTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
-				sourceAcc.AccountNumber,
+				sourceAccNum,
 				AccountNumber,
 				OperationType.ReceiveWireFromAccount,
 				wireAmount,
-				"Получение со счета " + sourceAcc.AccountNumber
+				"Получение со счета " + sourceAccNum
 				+ " на счет " + AccountNumber 
 				+ $" средств на сумму {wireAmount:N2} руб."
 				);
@@ -314,20 +289,20 @@ namespace GoodBankNS.AccountClasses
 		/// </summary>
 		/// <param name="destAcc">Счет-получатель</param>
 		/// <param name="wireAmount">Сумма перевода</param>
-		public void SendToAccount(IAccount destAcc, double wireAmount)
+		public void SendToAccount(string destAccNum, double wireAmount)
 		{
 			if (IsBlocked) return;
 
 			Balance -= wireAmount;
 			Transaction withdrawCashTransaction = new Transaction(
-				AccID,
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				AccountNumber,
-				destAcc.AccountNumber,
+				destAccNum,
 				OperationType.SendWireToAccount,
 				wireAmount,
 				"Перевод со счета " + AccountNumber
-				+ " на счет " + destAcc.AccountNumber
+				+ " на счет " + destAccNum
 				+ $" средств на сумму {wireAmount:N2} руб."
 				);
 			WriteLog?.Invoke(withdrawCashTransaction);
@@ -363,8 +338,8 @@ namespace GoodBankNS.AccountClasses
 			WithdrawalAllowed	= false;
 			Closed				= GoodBank.Today;
 
-			Transaction closeTransaction = new Transaction(
-				AccID,
+			Transaction closeAccountTransaction = new Transaction(
+				AccountID,
 				GoodBank.GetBanksTodayWithCurrentTime(),
 				"",
 				"",
@@ -372,7 +347,7 @@ namespace GoodBankNS.AccountClasses
 				0,
 				"Счет " + AccountNumber + " закрыт."
 				);
-			WriteLog?.Invoke(closeTransaction);
+			WriteLog?.Invoke(closeAccountTransaction);
 
 			return tmp;
 		}

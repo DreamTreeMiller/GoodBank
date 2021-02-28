@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoodBankNS.Interfaces_Actions;
-using GoodBankNS.Interfaces_Data;
+﻿using Interfaces_Actions;
+using BankInside;
 
-namespace GoodBankNS.Binding_UI_CondeBehind
+namespace Binding_UI_CondeBehind
 {
 	public class BankActions
 	{
 		public IClientsActions	Clients;
 		public IAccountsActions	Accounts;
-		public ITransactions	Log;
+		public ILogActions		Log;
+		public ISearch			Search;
+		private GoodBank		bank; 
 
-		public BankActions(IGoodBank bank)
+		public BankActions()
 		{
-			Clients  = bank as IClientsActions;
-			Accounts = bank as IAccountsActions;
-			Log		 = bank as ITransactions;
+			bank	 = new GoodBank();
+			Clients  = bank;
+			Accounts = bank;
+			Log		 = bank;
+			Search	 = bank;
 		}
 	}
 }
