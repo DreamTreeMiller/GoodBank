@@ -1,8 +1,6 @@
-﻿using BankInside;
-using Interfaces_Data;
-using LoggingNS;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Interfaces_Data;
 
 namespace AccountClasses
 {
@@ -20,39 +18,24 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountCurrent(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
+		public AccountCurrent(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, AccountType.Current, acc.Compounding, acc.Interest,
 				   opened,
-				   true, true, RecalcPeriod.NoRecalc, 0,
-				   writeloghandler)
+				   true, true, RecalcPeriod.NoRecalc, 0)
 		{
-			AccountNumber = "CUR" + AccountNumber;
-			Balance		  = acc.Balance;
-
-			Transaction openAccountTransaction = new Transaction(
-				AccountID,
-				Opened,
-				"",
-				"",
-				OperationType.OpenAccount,
-				Balance,
-				"Текущий счет " + AccountNumber
-				+ " с начальной суммой " + Balance + " руб."
-				+ " открыт."
-				);
-			OnWriteLog(openAccountTransaction);
+			Balance	= acc.Balance;
 		}
 
-		public override double RecalculateInterest(DateTime currentBankTime)
+		public override double RecalculateInterest()
 		{
 			NumberOfTopUpsInDay = 0;
 			// Do nothing since no interest recalculation for current account
 			return 0;
 		}
 
-		public override double CloseAccount(DateTime currentBankTime)
+		public override double CloseAccount(DateTime closingDate)
 		{
-			return base.CloseAccount(currentBankTime);
+			return base.CloseAccount(closingDate);
 		}
 	}
 }

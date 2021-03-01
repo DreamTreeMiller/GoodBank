@@ -2,6 +2,7 @@
 using BankInside;
 using Repository;
 using Search;
+using LoggingNS;
 
 namespace Binding_UI_CondeBehind
 {

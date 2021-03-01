@@ -1,8 +1,6 @@
-﻿using BankInside;
-using Interfaces_Data;
-using LoggingNS;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Interfaces_Data;
 
 namespace AccountClasses
 {
@@ -14,19 +12,19 @@ namespace AccountClasses
 		/// При капитализации, совпадает с ИД счета депозита
 		/// Без капитализации равен 0
 		/// </summary>
-		public int InterestAccumulationAccID { get; } = 0;
+		public int		InterestAccumulationAccID	{ get; set; } = 0;
 
 		/// <summary>
 		/// Номер счета, куда перечислять проценты.
 		/// При капитализации, совпадает с номером счета депозита
 		/// Без капитализации имеет значение "внутренний счет"
 		/// </summary>
-		public string InterestAccumulationAccNum { get; } 
+		public string	InterestAccumulationAccNum	{ get; set; } 
 
 		/// <summary>
 		/// Накомпленные проценты 
 		/// </summary>
-		public double AccumulatedInterest { get; set; } = 0;
+		public double	AccumulatedInterest			{ get; set; } = 0;
 
 		/// <summary>
 		/// Конструктор для работы Entity Framework
@@ -39,13 +37,11 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountDeposit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
+		public AccountDeposit(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, AccountType.Deposit, acc.Compounding, acc.Interest,
 				  opened,
-				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration,
-				  writeloghandler)
+				  acc.Topupable, acc.WithdrawalAllowed, acc.RecalcPeriod, acc.Duration)
 		{
-			AccountNumber = "DEP" + AccountNumber;
 			Balance = acc.Balance;
 			if (acc.Compounding)
 			{
@@ -59,26 +55,13 @@ namespace AccountClasses
 			}
 
 			MonthsElapsed = acc.MonthsElapsed;
-
-			Transaction openAccountTransaction = new Transaction(
-				AccountID,
-				Opened,
-				"",
-				"",
-				OperationType.OpenAccount,
-				Balance,
-				"Вклад " + AccountNumber
-				+ $" с начальной суммой {Balance:N2} руб."
-				+ " открыт."
-				);
-			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
 		/// Этот метод вызывается точно один раз в месяц
 		/// </summary>
 		/// <param name="date"></param>
-		public override double RecalculateInterest(DateTime currentBankTime)
+		public override double RecalculateInterest()
 		{
 			if (Closed != null) return 0;
 
@@ -88,6 +71,7 @@ namespace AccountClasses
 
 			// Пересчёт не нужен. Клиент должен снять средства и закрыть счет
 			if (Duration == MonthsElapsed) return 0;
+
 			double calculatedInterest = 0;
 			MonthsElapsed++;
 
@@ -103,9 +87,6 @@ namespace AccountClasses
 						// Владельцу счета надо снять деньги и закрыть счет
 						Topupable		  = false;
 						WithdrawalAllowed = true;
-
-							UpdateLog(calculatedInterest, currentBankTime);
-
 					}
 					break;
 
@@ -116,8 +97,6 @@ namespace AccountClasses
 					{
 						calculatedInterest   = Balance * Interest;
 						AccumulatedInterest += calculatedInterest;
-
-						UpdateLog(calculatedInterest, currentBankTime);
 					}
 
 					if (MonthsElapsed == Duration)
@@ -134,11 +113,10 @@ namespace AccountClasses
 						{
 							calculatedInterest   = Balance * Interest * MonthsRemained / 12;
 							AccumulatedInterest += calculatedInterest;
-
-							UpdateLog(calculatedInterest, currentBankTime);
 						}
 					}	
 					break;
+
 				// Счет, у которого начисление происходит раз в месяц
 				case RecalcPeriod.Monthly:
 					calculatedInterest   = Balance * Interest / 12;
@@ -151,67 +129,14 @@ namespace AccountClasses
 						Topupable		  = false;
 						WithdrawalAllowed = true;
 					}
-
-					UpdateLog(calculatedInterest, currentBankTime);
 					break;
 			}
-
 			if (Compounding) Balance += calculatedInterest;
 
 			return calculatedInterest;
 		}
 
-		/// <summary>
-		/// Переводит на другой счет накопленный процент.
-		/// Это нельзя делать обычным переводом, т.к. деньги не списываются с основного счета
-		/// </summary>
-		/// <param name="destAcc"></param>
-		/// <param name="accumulatedInterest"></param>
-		public void SendInterestToAccount(string destAccNum, double accumulatedInterest, DateTime currentBankTime)
-		{
-			Transaction withdrawCashTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				"накопленный процент",
-				destAccNum,
-				OperationType.SendWireToAccount,
-				accumulatedInterest,
-				"Перевод накопленных процентов"
-				+ " на счет " + destAccNum
-				+ $" в размере {accumulatedInterest:N2} руб."
-				);
-			OnWriteLog(withdrawCashTransaction);
-		}
-
-		private void UpdateLog(double calculatedInterest, DateTime currentBankTime)
-		{
-			string comment;
-
-			if (InterestAccumulationAccID == 0)
-			{
-				comment = "Начисление процентов на внутренний счет"
-							+ $" на сумму {calculatedInterest:N2} руб.";
-			}
-			else
-			{
-				comment = $"Начисление процентов на сумму {calculatedInterest:N2} руб.";
-			}
-
-
-			Transaction interestAccrualTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				"",
-				InterestAccumulationAccNum,
-				OperationType.InterestAccrual,
-				calculatedInterest,
-				comment
-				);
-
-			OnWriteLog(interestAccrualTransaction);
-		}
-
-		public override double CloseAccount(DateTime currentBankTime)
+		public override double CloseAccount(DateTime closingDate)
 		{
 			// Если без капитализации и накапливали на внутреннем счету,
 			// тогда этот процент переводим на основной счет
@@ -220,8 +145,7 @@ namespace AccountClasses
 				Balance += AccumulatedInterest;
 				AccumulatedInterest = 0;
 			}
-
-			return base.CloseAccount(currentBankTime);
+			return base.CloseAccount(closingDate);
 		}
 
 	}

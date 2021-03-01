@@ -1,38 +1,38 @@
-﻿using AccountClasses;
-using DTO;
+﻿using LoggingNS;
 using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media.Imaging;
 
 namespace UserControlsLists
 {
-	[ValueConversion(typeof(OperationType), typeof(string))]
+	[ValueConversion(typeof(TransactionType), typeof(string))]
 	public class TransactionTypeConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			switch ((OperationType)value)
+			switch ((TransactionType)value)
 			{
-				case OperationType.OpenAccount:
+				case TransactionType.OpenAccount:
 					return "открытие счета";
-				case OperationType.CloseAccount:
+				case TransactionType.CloseAccount:
 					return "закрытие счета";
-				case OperationType.CashDeposit:
+				case TransactionType.CashDeposit:
 					return "внесение наличных";
-				case OperationType.CashWithdrawal:
+				case TransactionType.CashWithdrawal:
 					return "снятие наличных";
-				case OperationType.ReceiveWireFromAccount:
+				case TransactionType.ReceiveWireFromAccount:
 					return "получение на счет";
-				case OperationType.SendWireToAccount:
+				case TransactionType.SendWireToAccount:
 					return "перевод со счета";
-				case OperationType.InterestAccrual:
+				case TransactionType.InterestAccrual:
 					return "начисление процентов";
-				case OperationType.BlockAccount:
+				case TransactionType.BlockAccount:
 					return "счет заблокирован";
+				case TransactionType.TransactionFailed:
+					return "неудача";
+				default:
+					return "неизвестная операция";
 			}
-			return "";
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

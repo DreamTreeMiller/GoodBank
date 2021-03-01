@@ -1,13 +1,12 @@
-﻿using AccountClasses;
-using Binding_UI_CondeBehind;
-using ClientClasses;
-using DTO;
-using Interfaces_Data;
-using UserControlsLists;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using AccountClasses;
+using Binding_UI_CondeBehind;
+using ClientClasses;
+using Interfaces_Data;
+using UserControlsLists;
 
 namespace UI_one_client_account
 {

@@ -12,14 +12,11 @@ namespace BankInside
 {
 	public class AccountActions : IAccountActions
 	{
-		private readonly IRepository		 dbe;
-		private readonly Action<Transaction> WriteLog;
+		private readonly IRepository dbe;
 
-		public AccountActions(IRepository dbrep)
-		{ 
-			dbe		 = dbrep;
-			WriteLog = dbe.WriteLog;
-		}
+		public AccountActions(IRepository dbrep) { dbe = dbrep; }
+
+		#region DB part
 
 		public Account GetAccountByID(int id)
 		{
@@ -38,63 +35,138 @@ namespace BankInside
 			switch (acc.AccType)
 			{
 				case AccountType.Current:
-					newAcc = new AccountCurrent(acc, acc.Opened, WriteLog);
+					newAcc = new AccountCurrent(acc, acc.Opened);
 					client.NumberOfCurrentAccounts++;
 					break;
 				case AccountType.Deposit:
-					newAcc = new AccountDeposit(acc, acc.Opened, WriteLog);
+					newAcc = new AccountDeposit(acc, acc.Opened);
 					client.NumberOfDeposits++;
 					break;
 				case AccountType.Credit:
-					newAcc = new AccountCredit(acc, acc.Opened, WriteLog);
+					newAcc = new AccountCredit(acc, acc.Opened);
 					client.NumberOfCredits++;
 					break;
 			}
-			// делает ДВА действия db.Accounts.Add + db.SaveChanges
-			// это необходимо, чтобы база вернула уникальный ID (IDENTITY(1,1),
-			// который потом должен быть записан в AccountID
 			newAcc = dbe.AddAccount(newAcc);
 
-			// Необходим этот костыль, чтобы сгенерировать номер счёта,
-			// основываясь на AccountID, которую можно получить,
-			// только после добавления записи о счёте в базу.
-			// Пока не знаю, как за одно обращение к базе генерировать AccountID 
-			// и на его основе генерировать номре счёта
+			#region WriteLog
+
+			string msg = "";
 			switch (acc.AccType)
 			{
 				case AccountType.Current:
-					newAcc.AccountNumber = $"SAV{newAcc.AccountID:000000000000}";
+					msg =  "Текущий счет " + newAcc.AccountNumber
+						+ $" с начальной суммой {newAcc.Balance:N2} руб."
+						+  " открыт.";
 					break;
 				case AccountType.Deposit:
-					newAcc.AccountNumber = $"DEP{newAcc.AccountID:000000000000}";
+					msg =  "Вклад " + newAcc.AccountNumber
+						+ $" с начальной суммой {newAcc.Balance:N2} руб."
+						+  " открыт.";
 					break;
 				case AccountType.Credit:
-					newAcc.AccountNumber = $"CRE{newAcc.AccountID:000000000000}";
+					msg =  "Кредитный счет " + newAcc.AccountNumber
+						+ $" на сумму {newAcc.Balance:N2} руб."
+						+  " открыт.";
 					break;
 			}
-			dbe.SaveChanges();
+			Transaction t = new Transaction()
+			{
+				TransactionAccountID = newAcc.AccountID,
+				TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+				TransactionType		 = TransactionType.OpenAccount,
+				SourceAccount		 = "",
+				DestinationAccount	 = "",
+				Amount				 = newAcc.Balance,
+				Comment				 = msg
+			};
+			dbe.WriteLog(t); dbe.SaveChanges();
+
+			#endregion
+
 			return new AccountDTO(client, newAcc);
 		}
 
 		public IAccountDTO TopUpCash(int accID, double cashAmount)
 		{
 			Account acc = dbe.GetAccountByID(accID);
-			DateTime gbCurrentDateTime = dbe.GetBankCurrentDateAndTime();
-			acc.WriteLog += WriteLog;
 
-			if (acc.Topupable) acc.TopUpCash(cashAmount, gbCurrentDateTime);
-			dbe.SaveChanges();
+			if (acc.Topupable)
+			{
+				Transaction t = null;
+				switch(acc.Deposit(cashAmount))
+				{
+					case 0:		// Topup successful
+
+						// Update account which was topupped
+						dbe.SaveChanges();
+
+						#region Preparing log record 
+						t = new Transaction()
+						{ 
+							TransactionAccountID = acc.AccountID,
+							TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.CashDeposit,
+							SourceAccount		 = "",
+							DestinationAccount	 = acc.AccountNumber,
+							Amount				 = cashAmount,
+							Comment				 =
+								"Пополнение счета " + acc.AccountNumber + 
+								$" наличными средствами на сумму {cashAmount:N2} руб."
+						};
+						#endregion
+						
+						break;
+
+					case -1:    // Account was blocked. Nothing to update except log
+						#region Preparing log record
+						t = new Transaction()
+						{
+							TransactionAccountID = acc.AccountID,
+							TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.BlockAccount,
+							SourceAccount		 = "",
+							DestinationAccount	 = acc.AccountNumber,
+							Amount				 = 0,
+							Comment				 =
+								  "Счет заблокирован." 
+								+ " Количество пополнений больших или равных 1000 руб." 
+								+ " превысило 3."
+						};
+						#endregion
+						break;
+				}
+				dbe.WriteLog(t); dbe.SaveChanges();
+			}
 			return new AccountDTO(acc);
 		}
 
 		public IAccountDTO WithdrawCash(int accID, double cashAmount)
 		{
 			Account acc = dbe.GetAccountByID(accID);
-			DateTime gbCurrentDateTime = dbe.GetBankCurrentDateAndTime();
-			acc.WriteLog += WriteLog;
 
-			if (acc.WithdrawalAllowed) acc.WithdrawCash(cashAmount, gbCurrentDateTime);
-			dbe.SaveChanges();
+			if (acc.WithdrawalAllowed)
+			{
+				acc.Withdraw(cashAmount);
+
+				#region Write Log
+				Transaction t = new Transaction()
+				{
+					TransactionAccountID = acc.AccountID,
+					TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+					TransactionType		 = TransactionType.CashWithdrawal,
+					SourceAccount		 = acc.AccountNumber,
+					DestinationAccount	 = "",
+					Amount				 = cashAmount,
+					Comment				 =
+						   "Снятие со счета " + acc.AccountNumber 
+						+ $" наличных средств на сумму {cashAmount:N2} руб."
+				};
+				dbe.WriteLog(t);
+				#endregion
+
+				dbe.SaveChanges();
+			}
 			return new AccountDTO(acc);
 		}
 
@@ -107,20 +179,74 @@ namespace BankInside
 		public void Wire(int sourceAccID, int destAccID, double wireAmount)
 		{
 			Account sourceAcc = dbe.GetAccountByID(sourceAccID);
-			DateTime gbCurrentDateTime = dbe.GetBankCurrentDateAndTime();
-			sourceAcc.WriteLog += WriteLog;
-
 			if (sourceAcc.WithdrawalAllowed)
 			{
 				if (sourceAcc.Balance >= wireAmount)
 				{
 					Account destAcc = dbe.GetAccountByID(destAccID);
-					destAcc.WriteLog += WriteLog;
-
 					if (destAcc.Topupable)
 					{
-						sourceAcc.SendToAccount(destAcc.AccountNumber, wireAmount, gbCurrentDateTime);
-						destAcc.ReceiveFromAccount(sourceAcc.AccountNumber, wireAmount, gbCurrentDateTime);
+						sourceAcc.Withdraw(wireAmount);
+						switch(destAcc.Deposit(wireAmount))
+						{
+							case 0:
+								#region Write Log - send success, receive success
+
+								Transaction sendSuccessTr = new Transaction()
+								{
+									TransactionAccountID = sourceAccID,
+									TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+									TransactionType		 = TransactionType.SendWireToAccount,
+									SourceAccount		 = sourceAcc.AccountNumber,
+									DestinationAccount	 = destAcc.AccountNumber,
+									Amount				 = wireAmount,
+									Comment				 =
+											 "Перевод со счета " + sourceAcc.AccountNumber
+										  +  " на счет " + destAcc.AccountNumber
+										  + $" средств на сумму {wireAmount:N2} руб."
+								};
+								dbe.WriteLog(sendSuccessTr);
+
+								Transaction receiveSuccessTr = new Transaction()
+								{
+									TransactionAccountID = destAccID,
+									TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+									TransactionType		 = TransactionType.ReceiveWireFromAccount,
+									SourceAccount		 = sourceAcc.AccountNumber,
+									DestinationAccount	 = destAcc.AccountNumber,
+									Amount				 = wireAmount,
+									Comment				 =
+										   "Получение со счета " + sourceAcc.AccountNumber
+										+  " на счет " + destAcc.AccountNumber
+										+ $" средств на сумму {wireAmount:N2} руб."
+								};
+								dbe.WriteLog(receiveSuccessTr);
+								#endregion
+
+								break;
+							case -1:  // cannot deposit
+								// Return money back
+								sourceAcc.DepositNonCash(wireAmount);
+
+								#region Write Log - sending failed
+
+								Transaction wireFailedTr = new Transaction()
+								{
+									TransactionAccountID = sourceAccID,
+									TransactionDateTime  = dbe.GetBankCurrentDateAndTime(),
+									TransactionType		 = TransactionType.TransactionFailed,
+									SourceAccount		 = sourceAcc.AccountNumber,
+									DestinationAccount	 = destAcc.AccountNumber,
+									Amount				 = wireAmount,
+									Comment				 =
+										  $"Неудалось перевести средства на сумму {wireAmount:N2} руб."
+										+  " Счет получателя " + destAcc.AccountNumber + " заблокирован."
+								};
+								dbe.WriteLog(wireFailedTr);
+								#endregion
+
+								break;
+						}
 						dbe.SaveChanges();
 					}
 				}
@@ -136,9 +262,43 @@ namespace BankInside
 		public IAccountDTO CloseAccount(int accID, out double accumulatedAmount)
 		{
 			Account acc		  = dbe.GetAccountByID(accID);
-			DateTime gbCurrentDateTime = dbe.GetBankCurrentDateAndTime();
-			acc.WriteLog	 += WriteLog;
-			accumulatedAmount = acc.CloseAccount(gbCurrentDateTime);
+			if (acc.IsBlocked)
+			{
+				accumulatedAmount = 0;
+				return new AccountDTO(acc);
+			}
+
+			DateTime closingDate = dbe.GetBankCurrentDateAndTime();
+			accumulatedAmount = acc.CloseAccount(closingDate);
+
+			#region Write Log : Withdraw the rest and Close account
+			if(accumulatedAmount > 0)
+			{
+				Transaction withdrawTr = new Transaction()
+				{
+					TransactionAccountID = acc.AccountID,
+					TransactionDateTime  = closingDate,
+					TransactionType		 = TransactionType.CashWithdrawal,
+					SourceAccount		 = acc.AccountNumber,
+					DestinationAccount	 = "",
+					Amount				 = accumulatedAmount,
+					Comment				 =
+						   "Снятие со счета " + acc.AccountNumber
+						+ $" наличных средств на сумму {accumulatedAmount:N2} руб."
+				};
+				dbe.WriteLog(withdrawTr);
+			}
+			Transaction closeAccTr = new Transaction()
+			{
+				TransactionAccountID = acc.AccountID,
+				TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+				TransactionType		 = TransactionType.CloseAccount,
+				SourceAccount		 = "",
+				Amount				 = 0,
+				Comment				 = $"Счёт {acc.AccountNumber} закрыт."
+			};
+			dbe.WriteLog(closeAccTr);
+			#endregion
 
 			Client client = dbe.GetClientByID(acc.ClientID);
 			client.NumberOfClosedAccounts++;
@@ -162,34 +322,153 @@ namespace BankInside
 		public void AddOneMonth()
 		{
 			dbe.AddOneMonthToBankDate();
-			DateTime gbCurrentDateTime = dbe.GetBankCurrentDateAndTime();
 
 			foreach (Account acc in dbe.GetAccounts())
 			{
-				acc.WriteLog += WriteLog;
-				double currInterest = acc.RecalculateInterest(gbCurrentDateTime);
-				if (acc is AccountDeposit)
+				double accumulatedInterest = acc.RecalculateInterest();
+
+				// У текущего счета accumulatedInterest всегда равен 0
+				// Если счёт закрыт или заблокирован, то accumulatedInterest тоже равен 0
+				if (accumulatedInterest == 0) continue;
+
+				// Пишем журнал и, если надо, 
+				// пересылаем проценты с депозита на другой счёт
+				#region Write Log and send interest to another account, if necessary
+
+
+				// Если счёт с капитализацией, кредит всегда с капитализацией,
+				// тогда только одна запись в журнал. Пересылать процент не надо.
+				if (acc.Compounding)
 				{
-					int destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
-					if (!(acc as AccountDeposit).Compounding && 
-						destAccID    != 0 && 
-						currInterest != 0)
+					#region Write Log
+					Transaction compoundAccuralTr = new Transaction()
 					{
-						Account destAcc = GetAccountByID(destAccID);
-						destAcc.WriteLog += WriteLog;
-						WireInterestToAccount(acc as AccountDeposit, destAcc, currInterest, gbCurrentDateTime);
+						TransactionAccountID = acc.AccountID,
+						TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+						TransactionType		 = TransactionType.InterestAccrual,
+						SourceAccount		 = "накопленный процент",
+						DestinationAccount	 = acc.AccountNumber,
+						Amount				 = accumulatedInterest,
+						Comment				 =
+							$"Начисление процентов на сумму {accumulatedInterest:N2} руб."
+					};
+					dbe.WriteLog(compoundAccuralTr);
+					#endregion
+					continue;
+				}
+
+				// До этого места может дойти только депозит И без капитализации
+				int destAccID = (acc as AccountDeposit).InterestAccumulationAccID;
+
+				// Проверяем, указан ли номер счёта для перечисления процентов
+				if (destAccID != 0)
+				{
+					Account destAcc = GetAccountByID(destAccID);
+
+					// Попытаемся перевести проценты на счёт destAcc
+					if (destAcc.Deposit(accumulatedInterest) == 0)
+					{
+						#region Write Log - sending interest successful
+						Transaction wireInterestTr = new Transaction()
+						{
+							TransactionAccountID = acc.AccountID,
+							TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.SendWireToAccount,
+							SourceAccount		 = "накопленный процент",
+							DestinationAccount	 = destAcc.AccountNumber,
+							Amount				 = accumulatedInterest,
+							Comment				 =
+								$"Перевод процентов на сумму {accumulatedInterest:N2} руб."
+							  +  " на счёт " + destAcc.AccountNumber + "."
+						};
+						dbe.WriteLog(wireInterestTr);
+						#endregion
+
+						#region Write Log - recieving successful
+
+						Transaction receivedSuccessTr = new Transaction()
+						{
+							TransactionAccountID = destAcc.AccountID,
+							TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.ReceiveWireFromAccount,
+							SourceAccount		 = acc.AccountNumber,
+							DestinationAccount	 = destAcc.AccountNumber,
+							Amount				 = accumulatedInterest,
+							Comment				 = 
+								   "Получение со счета " + acc.AccountNumber
+								+  " на счет " + destAcc.AccountNumber
+								+ $" средств на сумму {accumulatedInterest:N2} руб."
+						};
+						dbe.WriteLog(receivedSuccessTr);
+						#endregion
+					}
+					else
+					{
+						// Если не получается перечислить проценты на другой счёт,
+						// например, счёт получатель был закрыт или заблокирован,
+						// Пишем об этом в журнал
+						#region Write Log - sending failed
+
+						Transaction wireFailedTr = new Transaction()
+						{
+							TransactionAccountID = acc.AccountID,
+							TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.TransactionFailed,
+							SourceAccount		 = "накопленный процент",
+							DestinationAccount	 = destAcc.AccountNumber,
+							Amount				 = accumulatedInterest,
+							Comment				 =
+								$"Не удалось перевести проценты на сумму {accumulatedInterest:N2} руб."
+							   + " на счёт " + destAcc.AccountNumber + "."
+						};
+						dbe.WriteLog(wireFailedTr);
+						#endregion
+
+						// то накапливаем их на вклад (капитализация)
+						acc.DepositNonCash(accumulatedInterest);
+
+						#region Write Log - top up sender account
+
+						Transaction topupSenderAccTr = new Transaction()
+						{
+							TransactionAccountID = acc.AccountID,
+							TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+							TransactionType		 = TransactionType.InterestAccrual,
+							SourceAccount		 = "накопленный процент",
+							DestinationAccount	 = acc.AccountNumber,
+							Amount				 = accumulatedInterest,
+							Comment				 =
+							$"Начисление процентов на сумму {accumulatedInterest:N2} руб."
+						};
+						dbe.WriteLog(topupSenderAccTr);
+						#endregion
+
 					}
 				}
+				else // начисляем проценты на внутренний счёт
+				{
+					#region Write Log - internal account interest accrual
+
+					Transaction intAccInterestAccrual = new Transaction()
+					{
+						TransactionAccountID = acc.AccountID,
+						TransactionDateTime	 = dbe.GetBankCurrentDateAndTime(),
+						TransactionType		 = TransactionType.InterestAccrual,
+						SourceAccount		 = "накопленный процент",
+						DestinationAccount	 = "внутренний счет",
+						Amount				 = accumulatedInterest,
+						Comment				 =
+						   "Начисление процентов на внутренний счет"
+						+ $" на сумму {accumulatedInterest:N2} руб."
+					};
+					dbe.WriteLog(intAccInterestAccrual);
+					#endregion
+				}
+				#endregion
 			}
 			dbe.SaveChanges();
 		}
-
-		private void WireInterestToAccount(	AccountDeposit sourceAcc,	Account destAcc, 
-											double accumulatedInterest, DateTime currBankDate)
-		{
-			sourceAcc.SendInterestToAccount(destAcc.AccountNumber, accumulatedInterest, currBankDate);
-			destAcc.ReceiveFromAccount(sourceAcc.AccountNumber, accumulatedInterest, currBankDate);
-		}
+		#endregion
 
 		#region UI part
 
@@ -348,7 +627,6 @@ namespace BankInside
 			//	}
 			return accList;
 		}
-
 		#endregion
 	}
 }

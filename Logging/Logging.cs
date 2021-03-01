@@ -2,18 +2,13 @@
 using System.Collections.ObjectModel;
 using Interfaces_Actions;
 using Interfaces_Data;
-using LoggingNS;
 
-namespace BankInside
+namespace LoggingNS
 {
 	public class Logging : ILogActions
 	{
 		private readonly IRepository dbe;
 		public Logging(IRepository dbengine) { dbe = dbengine; }
-		public void WriteLog(Transaction t)
-		{
-			dbe.WriteLog(t);
-		}
 
 		/// <summary>
 		/// Формирует список всех транзакций указанного счета
@@ -32,6 +27,11 @@ namespace BankInside
 			//	if (t.TransactionAccountID == accID) accountLog.Add(t);
 
 			return accountLog;
+		}
+
+		public void WriteLog(Transaction t)
+		{
+			dbe.WriteLog(t);
 		}
 	}
 }

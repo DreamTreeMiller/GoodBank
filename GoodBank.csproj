@@ -82,9 +82,10 @@
     </ApplicationDefinition>
     <Compile Include="BankInside\AccountActions.cs" />
     <Compile Include="Interfaces_Actions\IDateManagement.cs" />
+    <Compile Include="Logging\TransactionType.cs" />
     <Compile Include="Search_Engine_UI\SearchEngine.cs" />
     <Compile Include="BankInside\ClientActions.cs" />
-    <Compile Include="BankInside\Logging.cs" />
+    <Compile Include="Logging\Logging.cs" />
     <Compile Include="BankDateTime\GoodBankDates.cs" />
     <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="Account Classes\Account.cs" />
@@ -134,7 +135,7 @@
     </Compile>
     <Compile Include="Search_Engine_UI\SharedComparators.cs" />
     <Compile Include="Logging\Transaction.cs" />
-    <Compile Include="UI_clients\DepartmentWindow.cs">
+    <Compile Include="UI_Department\DepartmentWindow.cs">
       <DependentUpon>DepartmentWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_one_client_account\AccountWindow.xaml.cs">
@@ -202,7 +203,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI_clients\DepartmentWindow.xaml">
+    <Page Include="UI_Department\DepartmentWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

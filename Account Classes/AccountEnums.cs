@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AccountClasses
+﻿namespace AccountClasses
 {
 	public enum AccountType
 	{
@@ -18,18 +12,6 @@ namespace AccountClasses
 	{
 		Opened,
 		Closed
-	}
-
-	public enum OperationType
-	{
-		OpenAccount,
-		CloseAccount,
-		CashDeposit,
-		CashWithdrawal,
-		ReceiveWireFromAccount,
-		SendWireToAccount,
-		InterestAccrual,
-		BlockAccount
 	}
 
 	public enum RecalcPeriod

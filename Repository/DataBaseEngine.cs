@@ -76,13 +76,38 @@ namespace Repository
 		public Account GetAccountByID(int id)	 { return db.Accounts.Find(id); }
 		public Account AddAccount(Account account)
 		{
+			// делает ДВА действия db.Accounts.Add + db.SaveChanges
+			// это необходимо, чтобы база вернула уникальный ID (IDENTITY(1,1),
+			// который потом должен быть записан в AccountID
 			db.Accounts.Add(account);
+			db.SaveChanges();
+
+			// Необходим этот костыль, чтобы сгенерировать номер счёта,
+			// основываясь на AccountID, которую можно получить,
+			// только после добавления записи о счёте в базу.
+			// Пока не знаю, как за одно обращение к базе генерировать AccountID 
+			// и на его основе генерировать номре счёта
+			if (account is AccountCurrent)
+			{
+				account.AccountNumber = $"SAV{account.AccountID:000000000000}";
+			}
+			else if (account is AccountDeposit)
+			{
+				account.AccountNumber = $"DEP{account.AccountID:000000000000}";
+			}
+			else // account is AccountCredit
+			{ 
+				account.AccountNumber = $"CRE{account.AccountID:000000000000}";
+			}
 			db.SaveChanges();
 			return account;
 		}
 
 		public IQueryable<Transaction> GetLog()	 { return db.Log; }
-		public void WriteLog(Transaction t)		 { db.Log.Add(t); }
+		public void WriteLog(Transaction t)		 
+		{ 
+			db.Log.Add(t);
+		}
 
 		public void SaveChanges()				 { db.SaveChanges(); }
 	}

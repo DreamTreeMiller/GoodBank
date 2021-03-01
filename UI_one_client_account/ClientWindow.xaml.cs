@@ -1,23 +1,10 @@
-﻿using DTO;
+﻿using System.Windows;
+using DTO;
 using UserControlsLists;
 using ClientClasses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Binding_UI_CondeBehind;
 using Interfaces_Data;
 using AccountClasses;
-using BankInside;
 
 namespace UI_one_client_account
 {
@@ -245,7 +232,7 @@ namespace UI_one_client_account
 			// Если было указано "выдать наличными", то ничего не произойдёт
 			else
 			{
-				BA.Accounts.TopUpCash(CreditRecipientAccID, ocrwin.creditAmount);
+				BA.Accounts.Wire(newAcc.AccountID, CreditRecipientAccID, ocrwin.creditAmount);
 				MessageBox.Show($"Сумма {ocrwin.creditAmount:N2} рублей переведена на\n"
 					+ $"счет №: {CreditRecipientAccNum}" 
 					);

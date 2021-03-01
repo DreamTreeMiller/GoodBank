@@ -1,7 +1,5 @@
-﻿using BankInside;
+﻿using System;
 using ClientClasses;
-using LoggingNS;
-using System;
 
 namespace AccountClasses
 {
@@ -120,8 +118,7 @@ namespace AccountClasses
 		public Account(int clientID, ClientType clientType, 
 						AccountType accType, bool compounding, double interest,
 						DateTime opened,
-						bool topup, bool withdrawal, RecalcPeriod recalc, int duration,
-						Action<Transaction> writeloghandler)
+						bool topup, bool withdrawal, RecalcPeriod recalc, int duration)
 		{
 			ClientID			= clientID;
 			ClientType			= clientType;
@@ -136,7 +133,6 @@ namespace AccountClasses
 			RecalcPeriod		= recalc;
 			Duration			= duration;
 			EndDate = Duration == 0 ? null : (DateTime?)Opened.AddMonths(Duration);
-			WriteLog		   += writeloghandler;
 		}
 
 		/// <summary>
@@ -146,131 +142,55 @@ namespace AccountClasses
 
 		#endregion
 
-		#region События
-
-		/// <summary>
-		/// Запись транзакции в журнал
-		/// </summary>
-		public event Action<Transaction> WriteLog;
-
-		protected virtual void OnWriteLog(Transaction tr)
-		{
-			WriteLog?.Invoke(tr);
-		}
-
-		#endregion
-
 		#region Общие методы для всех типов счетов
 
 		/// <summary>
 		/// Пополнение счета наличкой
 		/// </summary>
 		/// <param name="cashAmount"></param>
-		public void TopUpCash(double cashAmount, DateTime currentBankTime)
+		/// <returns>
+		/// 0  - deposit successful
+		/// -1 - account was blocked
+		/// </returns>
+		public int Deposit(double cashAmount)
 		{
-			if (IsBlocked) return;
+			if (IsBlocked) return -1;
 
+			// Предотвращение отмывания денег
+			// Если за день счёт пытаются пополнить более 3-х раз на сумму от 1000 руб,
+			// то счёт блокируется
 			if (cashAmount >= 1000)
 			{
 				if(++NumberOfTopUpsInDay > 3)
 				{
-					Topupable = false;
-					WithdrawalAllowed = false;
-					IsBlocked = true;
-
-					Transaction blockAccountTransaction = new Transaction(
-						AccountID,
-						currentBankTime,
-						"",
-						AccountNumber,
-						OperationType.BlockAccount,
-						0,
-						"Счет заблокирован, количество пополнений больше или равных 1000 руб. превысило 3."
-						);
-					WriteLog?.Invoke(blockAccountTransaction);
-
-					return;
+					Topupable			= false;
+					WithdrawalAllowed	= false;
+					IsBlocked			= true;
+					
+					return -1;
 				}
 			}
 			Balance += cashAmount;
-			Transaction topUpCashTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				"",
-				AccountNumber,
-				OperationType.CashDeposit,
-				cashAmount,
-				"Пополнение счета " + AccountNumber + $" наличными средствами на сумму {cashAmount:N2} руб."
-				);
-			WriteLog?.Invoke(topUpCashTransaction);
+			return 0;
+		}
+
+		/// <summary>
+		/// Нужно для начисления процентов на вклад на случай, если уже исчерпан лимит пополнений через Deposit
+		/// </summary>
+		/// <param name="interest"></param>
+		public void DepositNonCash(double interest)
+		{
+			Balance += interest;
 		}
 
 		/// <summary>
 		/// Снятие налички со счета
 		/// </summary>
 		/// <param name="cashAmount"></param>
-		public double WithdrawCash(double cashAmount, DateTime currentBankTime)
+		public double Withdraw(double cashAmount)
 		{
-			if (IsBlocked) return 0;
 			Balance -= cashAmount;
-			Transaction withdrawCashTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				AccountNumber,
-				"",
-				OperationType.CashWithdrawal,
-				cashAmount,
-				"Снятие со счета " + AccountNumber + $" наличных средств на сумму {cashAmount:N2} руб."
-				);
-			WriteLog?.Invoke(withdrawCashTransaction);
 			return cashAmount;
-		}
-
-		/// <summary>
-		/// Получение перевода на счет денег со счета-источника
-		/// </summary>
-		/// <param name="sourceAcc">Счет-источник</param>
-		/// <param name="wireAmount">сумма перевода</param>
-		public void ReceiveFromAccount(string sourceAccNum, double wireAmount, DateTime currentBankTime)
-		{
-			if (IsBlocked) return;
-			Balance += wireAmount;
-			Transaction DepositFromAccountTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				sourceAccNum,
-				AccountNumber,
-				OperationType.ReceiveWireFromAccount,
-				wireAmount,
-				"Получение со счета " + sourceAccNum
-				+ " на счет " + AccountNumber 
-				+ $" средств на сумму {wireAmount:N2} руб."
-				);
-			WriteLog?.Invoke(DepositFromAccountTransaction);
-		}
-
-		/// <summary>
-		/// Перевод средств со счета на счет-получатель
-		/// </summary>
-		/// <param name="destAcc">Счет-получатель</param>
-		/// <param name="wireAmount">Сумма перевода</param>
-		public void SendToAccount(string destAccNum, double wireAmount, DateTime currentBankTime)
-		{
-			if (IsBlocked) return;
-
-			Balance -= wireAmount;
-			Transaction withdrawCashTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				AccountNumber,
-				destAccNum,
-				OperationType.SendWireToAccount,
-				wireAmount,
-				"Перевод со счета " + AccountNumber
-				+ " на счет " + destAccNum
-				+ $" средств на сумму {wireAmount:N2} руб."
-				);
-			WriteLog?.Invoke(withdrawCashTransaction);
 		}
 
 		#endregion
@@ -284,7 +204,7 @@ namespace AccountClasses
 		/// <returns>
 		/// Сумму начисленных процентов, если её надо перевести на другой счет
 		/// </returns>
-		public abstract double RecalculateInterest(DateTime currentBankTime);
+		public abstract double RecalculateInterest();
 
 		/// <summary>
 		/// Закрывает счет: обнуляет баланс и накопленный процент
@@ -294,26 +214,12 @@ namespace AccountClasses
 		/// <returns>
 		/// Накопленную сумму
 		/// </returns>
-		public virtual double CloseAccount(DateTime currentBankTime)
+		public virtual double CloseAccount(DateTime closingDate)
 		{
-			if (IsBlocked) return 0;
-
-			double tmp			= WithdrawCash(Balance, currentBankTime);
+			double tmp			= Withdraw(Balance);
 			Topupable			= false;
 			WithdrawalAllowed	= false;
-			Closed				= currentBankTime;
-
-			Transaction closeAccountTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				"",
-				"",
-				OperationType.CloseAccount,
-				0,
-				"Счет " + AccountNumber + " закрыт."
-				);
-			WriteLog?.Invoke(closeAccountTransaction);
-
+			Closed				= closingDate;
 			return tmp;
 		}
 

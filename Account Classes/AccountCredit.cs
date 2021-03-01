@@ -1,7 +1,6 @@
-﻿using Interfaces_Data;
-using LoggingNS;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Interfaces_Data;
 
 namespace AccountClasses
 {
@@ -21,28 +20,14 @@ namespace AccountClasses
 		/// </summary>
 		/// <param name="acc"></param>
 		/// <param name="opened"></param>
-		public AccountCredit(IAccountDTO acc, DateTime opened, Action<Transaction> writeloghandler)
+		public AccountCredit(IAccountDTO acc, DateTime opened)
 			: base(acc.ClientID, acc.ClientType, 
 				   AccountType.Credit, acc.Compounding, acc.Interest,
 				   opened,
-				   true, false, RecalcPeriod.Monthly, acc.Duration, writeloghandler)
+				   true, false, RecalcPeriod.Monthly, acc.Duration)
 		{
-			AccountNumber	= "CRE" + AccountNumber;
 			Balance			= acc.Balance;
 			MonthsElapsed	= acc.MonthsElapsed;
-
-			Transaction openAccountTransaction = new Transaction(
-				AccountID,
-				Opened,
-				"",
-				"",
-				OperationType.OpenAccount,
-				Balance,
-				"Кредитный счет " + AccountNumber
-				+ " на сумму " + Balance + " руб."
-				+ " открыт."
-				);
-			OnWriteLog(openAccountTransaction);
 		}
 
 		/// <summary>
@@ -50,7 +35,7 @@ namespace AccountClasses
 		/// т.е. не раз в год, и не один раз в конце
 		/// </summary>
 		/// <param name="date"></param>
-		public override double RecalculateInterest(DateTime currentBankTime)
+		public override double RecalculateInterest()
 		{
 			if (Closed != null) return 0;
 
@@ -64,24 +49,12 @@ namespace AccountClasses
 			double calculatedInterest = Balance * Interest / 12;
 			AccumulatedInterest		 += calculatedInterest;
 			Balance					 += calculatedInterest;
-
-			Transaction interestAccrualTransaction = new Transaction(
-				AccountID,
-				currentBankTime,
-				"",
-				AccountNumber,
-				OperationType.InterestAccrual,
-				calculatedInterest,
-				"Начисление процентов на счет " + AccountNumber
-				+ $" на сумму {calculatedInterest:N2} руб."
-				);
-			OnWriteLog(interestAccrualTransaction);
 			return calculatedInterest;
 		}
 
-		public override double CloseAccount(DateTime currentBankTime)
+		public override double CloseAccount(DateTime closingDate)
 		{
-			return base.CloseAccount(currentBankTime);
+			return base.CloseAccount(closingDate);
 		}
 	}
 }
