@@ -509,6 +509,7 @@ namespace BankInside
 					}
 					accList.Add(new AccountDTO(dbe.GetClientByID(acc.ClientID), acc));
 				}
+				accList = new ObservableCollection<IAccountDTO>(accList.OrderBy(acc => acc.AccountID));
 				return (accList, totalCurr, totalDeposit, totalCredit);
 			}
 
@@ -538,6 +539,7 @@ namespace BankInside
 				}
 				accList.Add(new AccountDTO(dbe.GetClientByID(acc.ClientID), acc));
 			}
+			accList = new ObservableCollection<IAccountDTO>(accList.OrderBy(acc => acc.AccountID));
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
@@ -575,6 +577,7 @@ namespace BankInside
 				}
 				accList.Add(new AccountDTO(client, acc));
 			}
+			accList = new ObservableCollection<IAccountDTO>(accList.OrderBy(acc => acc.AccountID));
 			return (accList, totalCurr, totalDeposit, totalCredit);
 		}
 
@@ -594,15 +597,8 @@ namespace BankInside
 								 select acc;
 
 			foreach (Account acc in clientAccounts) accList.Add(new AccountDTO(client, acc));
-
-			//foreach (Account acc in db.Accounts)
-			//{
-			//	if (acc.ClientID == clientID && acc.AccType == accType)
-			//		accList.Add(new AccountDTO(client, acc));
-			//}
-
+			accList = new ObservableCollection<IAccountDTO>(accList.OrderBy(acc => acc.AccountID));
 			return accList;
-
 		}
 
 		/// <summary>
@@ -619,12 +615,7 @@ namespace BankInside
 									select acc;
 
 			foreach (Account tAcc in topupableAccounts) accList.Add(new AccountDTO(tAcc));
-
-			//foreach (Account acc in db.Accounts)
-			//	if (acc.Topupable && acc.AccountID != sourceAccID)
-			//	{
-			//		accList.Add(new AccountDTO(acc));
-			//	}
+			accList = new ObservableCollection<IAccountDTO>(accList.OrderBy(acc => acc.AccountID));
 			return accList;
 		}
 		#endregion

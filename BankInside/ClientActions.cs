@@ -1,11 +1,9 @@
-﻿using AccountClasses;
+﻿using System.Linq;
+using System.Collections.ObjectModel;
 using ClientClasses;
 using DTO;
 using Interfaces_Actions;
 using Interfaces_Data;
-using Search;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace BankInside
 {
@@ -75,6 +73,7 @@ namespace BankInside
 			// TODO Here should be linq to entity query
 			foreach (Client c in dbe.GetClients())
 				if (c is TClient) clientsList.Add(new ClientDTO(c));
+			clientsList = new ObservableCollection<IClientDTO>(clientsList.OrderBy(c => c.ID));
 			return clientsList;
 		}
 

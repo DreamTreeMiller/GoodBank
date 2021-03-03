@@ -232,7 +232,7 @@ namespace UI_one_client_account
 			// Если было указано "выдать наличными", то ничего не произойдёт
 			else
 			{
-				BA.Accounts.Wire(newAcc.AccountID, CreditRecipientAccID, ocrwin.creditAmount);
+				BA.Accounts.TopUpCash(CreditRecipientAccID, ocrwin.creditAmount);
 				MessageBox.Show($"Сумма {ocrwin.creditAmount:N2} рублей переведена на\n"
 					+ $"счет №: {CreditRecipientAccNum}" 
 					);
