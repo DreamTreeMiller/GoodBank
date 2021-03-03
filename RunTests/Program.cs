@@ -1,4 +1,4 @@
-﻿using BankInside.Tests;
+﻿using GoodBankTest;
 namespace RunTest
 {
 	class Program

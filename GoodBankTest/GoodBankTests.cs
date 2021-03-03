@@ -5,9 +5,9 @@ using ClientClasses;
 using Interfaces_Actions;
 using Interfaces_Data;
 using DTO;
-using Repository;
+using BankInside;
 
-namespace BankInside.Tests
+namespace GoodBankTest
 {
 	[TestClass()]
 	public class GoodBankTests
@@ -19,16 +19,12 @@ namespace BankInside.Tests
 			
 			// Arrange
 			// Создаём банк
-			IRepository dbe = new DataBaseEngine();
+			IRepository dbe = new MockRepository();
 			AccountActions accActionsTest = new AccountActions(dbe);
-			// Создаём контейнер данных о клиенте
-			//IClientDTO client = new ClientDTO
-			//	(ClientType.VIP, "John", "", "Doe", new DateTime(1980, 1, 12),
-			//	"1111 223344", "+1234567890","e@mail.ru", "1-23, Long Street, City 321 Nation");
-			//// Создаём запись о клиенте в базе, на основе данных из контейнера
-			//client = dbe.AddClient(client);
-			//// Получаем ID созданного клиента, точнее ID в базе записи о клиенте
-			//int clientID = client.ID;
+
+			// Создаём запись о клиенте в базе, на основе данных из контейнера
+			Client client = new ClientVIP() { ID = 1 };
+			client = dbe.AddClient(client);
 
 			// Создаём контейнер данных о счёте
 			IAccountDTO testAcc = new AccountDTO()
@@ -37,14 +33,14 @@ namespace BankInside.Tests
 				AccType = AccountType.Credit,
 				AccumulatedInterest = 0,
 				Balance = 1000.0,
-				ClientID = 1,
+				ClientID = client.ID,
 				ClientType = ClientType.VIP,
 				Closed = null,
 				Compounding = true,
 				Duration = 24,
 				Interest = 0.07,
 				InterestAccumulationAccID = 0,
-				InterestAccumulationAccNum = "internal account",
+				InterestAccumulationAccNum = "внутренний счёт",
 				IsBlocked = false,
 				MonthsElapsed = 0,
 				Opened = DateTime.Now,
@@ -52,7 +48,6 @@ namespace BankInside.Tests
 				Topupable = true,
 				WithdrawalAllowed = false
 			};
-
 
 			// Act 
 			// Создаём в базе запись о счёте

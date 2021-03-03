@@ -13,11 +13,10 @@ namespace Binding_UI_CondeBehind
 		public ILogActions		Log;
 		public IDateManagement	GBDateTime;
 		public ISearch			Search;
-		private IRepository		dbe; 
 
 		public BankActions()
 		{
-			dbe	 = new DataBaseEngine();
+			DataBaseEngine dbe = new DataBaseEngine();
 			Accounts	= new AccountActions(dbe);
 			Clients		= new ClientActions(dbe);
 			Log			= new Logging(dbe);

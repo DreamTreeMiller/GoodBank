@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Data.Entity;
 using Interfaces_Actions;
 using BankDateTime;
 using AccountClasses;
@@ -62,8 +63,8 @@ namespace Repository
 			db.SaveChanges();
 		}
 
-		public IQueryable<Client>  GetClients()	 { return db.Clients; }
-		public Client GetClientByID(int id)		 { return db.Clients.Find(id);
+		public IQueryable<Client>  GetClients()	{ return db.Clients; }
+		public Client GetClientByID(int id)	{ return db.Clients.Find(id);
 		}
 		public Client AddClient(Client client)
 		{
@@ -72,8 +73,8 @@ namespace Repository
 			return client;
 		}
 
-		public IQueryable<Account> GetAccounts() { return db.Accounts; }
-		public Account GetAccountByID(int id)	 { return db.Accounts.Find(id); }
+		public IQueryable<Account> GetAccounts()	  { return db.Accounts; }
+		public Account GetAccountByID(int id) { return db.Accounts.Find(id); }
 		public Account AddAccount(Account account)
 		{
 			// делает ДВА действия db.Accounts.Add + db.SaveChanges
@@ -103,12 +104,9 @@ namespace Repository
 			return account;
 		}
 
-		public IQueryable<Transaction> GetLog()	 { return db.Log; }
-		public void WriteLog(Transaction t)		 
-		{ 
-			db.Log.Add(t);
-		}
+		public IQueryable<Transaction> GetLog()  { return db.Log; }
+		public void WriteLog(Transaction t) { db.Log.Add(t); }
 
-		public void SaveChanges()				 { db.SaveChanges(); }
+		public void SaveChanges() { db.SaveChanges(); }
 	}
 }

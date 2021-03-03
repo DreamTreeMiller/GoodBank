@@ -81,6 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BankInside\AccountActions.cs" />
+    <Compile Include="Interfaces_Actions\IAccountActions.cs" />
     <Compile Include="Interfaces_Actions\IDateManagement.cs" />
     <Compile Include="Logging\TransactionType.cs" />
     <Compile Include="Search_Engine_UI\SearchEngine.cs" />
@@ -104,7 +105,6 @@
     <Compile Include="Imitation\Names-MaleFirst.cs" />
     <Compile Include="Imitation\Names-MaleLast.cs" />
     <Compile Include="Imitation\Names-MaleMiddle.cs" />
-    <Compile Include="Interfaces_Actions\IAccountActions.cs" />
     <Compile Include="Interfaces_Actions\IRepository.cs" />
     <Compile Include="Interfaces_Actions\ISearch.cs" />
     <Compile Include="Interfaces_Actions\ILogActions.cs" />

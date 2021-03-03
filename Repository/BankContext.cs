@@ -10,9 +10,9 @@ namespace Repository
 	{
 		public BankContext() : base("dbBankConnection") { }
 
-		public DbSet<Account>			 Accounts { get; set; }
-		public DbSet<Client>			 Clients  { get; set; }
-		public DbSet<Transaction>		 Log	  { get; set; }
-		public DbSet<GoodBankDates> GBDate	  { get; set; }
+		public DbSet<Account>		Accounts { get; set; }
+		public DbSet<Client>		Clients  { get; set; }
+		public DbSet<Transaction>	Log		 { get; set; }
+		public DbSet<GoodBankDates> GBDate	 { get; set; }
 	}
 }
